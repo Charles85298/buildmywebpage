@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Static — Vinyl, Games & Junk Worth Keeping</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A0B2E; --bg2:#241242; --ink:#F4EEFF; --pink:#FF2E9A; --cyan:#00E5FF; --yellow:#FFE156; --line:rgba(244,238,255,0.15);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:'Space Mono', monospace; overflow-x:hidden;}
+  a{color:inherit; text-decoration:none;}
+  .display{font-family:'Rubik Mono One', sans-serif;}
+  .wrap{max-width:1160px; margin:0 auto; padding:0 28px;}
+  .back{
+    position:fixed; top:18px; left:18px; z-index:99; background:var(--bg2); border:1px solid var(--cyan); color:var(--cyan);
+    font-size:11px; font-weight:700; padding:8px 13px;
+  }
+  .chrome-text{
+    background:linear-gradient(180deg, #fff 0%, var(--cyan) 45%, var(--pink) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  header{padding:20px 0; border-bottom:2px solid var(--line);}
+  .nav-row{display:flex; justify-content:space-between; align-items:center;}
+  .logo{font-family:'Rubik Mono One'; font-size:16px; color:var(--cyan); letter-spacing:0.02em;}
+  nav ul{list-style:none; display:flex; gap:26px;}
+  nav a{font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink);}
+  .nav-btn{background:var(--pink); color:var(--bg) !important; padding:9px 16px; font-weight:700;}
+
+  .hero{
+    padding:80px 0 60px; text-align:center; position:relative; overflow:hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,46,154,0.25), transparent 55%),
+      radial-gradient(ellipse at 20% 100%, rgba(0,229,255,0.15), transparent 55%);
+  }
+  .grid-floor{
+    position:absolute; bottom:0; left:0; right:0; height:260px;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.35) 1px, transparent 1px);
+    background-size:48px 48px;
+    transform:perspective(300px) rotateX(60deg);
+    transform-origin:bottom;
+    mask-image:linear-gradient(to top, black, transparent);
+    -webkit-mask-image:linear-gradient(to top, black, transparent);
+  }
+  .hero > .wrap{position:relative; z-index:2;}
+  .hero-bg-photo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.35; filter:saturate(1.3) contrast(1.1); z-index:0; mix-blend-mode:luminosity;}
+  .eyebrow{font-size:12px; color:var(--yellow); letter-spacing:0.1em; margin-bottom:20px; text-transform:uppercase;}
+  h1.hero-title{font-family:'Rubik Mono One'; font-size:clamp(32px,6.4vw,68px); line-height:1.15; margin-bottom:24px;}
+  .hero-sub{font-size:14px; max-width:480px; margin:0 auto 34px; line-height:1.8; color:rgba(244,238,255,0.75);}
+  .hero-actions{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:80px;}
+  .btn{background:var(--cyan); color:var(--bg); padding:14px 24px; font-weight:700; font-size:13px; text-transform:uppercase; border:2px solid var(--cyan);}
+  .btn.alt{background:transparent; color:var(--pink); border-color:var(--pink);}
+
+  .ticker{background:var(--pink); color:var(--bg); padding:10px 0; overflow:hidden; white-space:nowrap;}
+  .ticker span{display:inline-block; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; animation:t 18s linear infinite;}
+  @keyframes t{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  .catalog{padding:90px 0;}
+  .section-head{text-align:center; max-width:520px; margin:0 auto 50px;}
+  .section-head h2{font-family:'Rubik Mono One'; font-size:28px; margin-bottom:14px; color:var(--yellow);}
+  .section-head p{font-size:13px; color:rgba(244,238,255,0.7); line-height:1.7;}
+  .cat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--line); border:2px solid var(--line);}
+  @media(max-width:860px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+  .cat-item{background:var(--bg2); padding:26px 20px; text-align:center;}
+  .cat-item .em{font-size:32px; margin-bottom:14px;}
+  .cat-item h3{font-family:'Space Mono'; font-weight:700; font-size:13px; text-transform:uppercase; margin-bottom:8px; color:var(--cyan);}
+  .cat-item p{font-size:11.5px; color:rgba(244,238,255,0.6); line-height:1.5;}
+
+  .featured{padding:0 0 100px;}
+  .feat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media(max-width:860px){.feat-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:560px){.feat-grid{grid-template-columns:1fr;}}
+  .feat-card{border:2px solid var(--line); background:var(--bg2);}
+  .feat-card .ph{aspect-ratio:1/1; background:linear-gradient(135deg, var(--pink), var(--cyan)); position:relative; overflow:hidden;}
+  .feat-card .ph img{width:100%; height:100%; object-fit:cover; mix-blend-mode:luminosity; opacity:0.85;}
+  .feat-card .ph::before{content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,46,154,0.55), rgba(0,229,255,0.45)); mix-blend-mode:color; z-index:1;}
+  .feat-card .ph::after{content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0 2px, transparent 2px 4px); z-index:2;}
+  .feat-card .info{padding:16px 18px 20px;}
+  .feat-card h3{font-size:13px; font-weight:700; margin-bottom:6px;}
+  .feat-card .price{color:var(--yellow); font-size:13px; font-weight:700;}
+
+  .cta-block{
+    margin:0 28px 100px; padding:60px 40px; text-align:center; border:2px solid var(--cyan);
+    background:linear-gradient(135deg, rgba(255,46,154,0.12), rgba(0,229,255,0.12));
+    max-width:1160px; margin-left:auto; margin-right:auto;
+  }
+  .cta-block h2{font-family:'Rubik Mono One'; font-size:26px; margin-bottom:16px; color:var(--ink);}
+  .cta-block p{font-size:13px; color:rgba(244,238,255,0.75); margin-bottom:26px;}
+
+  footer{border-top:2px solid var(--line); padding:32px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:11px; text-transform:uppercase; color:rgba(244,238,255,0.6);}
+
+  .menu-toggle{display:none; border:0; background:transparent; color:var(--ink); font-size:22px; cursor:pointer; padding:4px 6px; line-height:1;}
+  @media(max-width:860px){
+    .menu-toggle{display:block;}
+    .nav-links{
+      position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); z-index:200;
+      background:var(--bg); border-left:1px solid var(--line);
+      flex-direction:column !important; align-items:flex-start !important; justify-content:flex-start !important;
+      padding:90px 28px 28px; gap:22px !important;
+      transform:translateX(100%); transition:transform .25s ease;
+      box-shadow:-20px 0 50px rgba(0,0,0,0.25);
+    }
+    .nav-links.open{transform:translateX(0);}
+    .nav-links li{width:100%;}
+  }
+  .nav-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:150; opacity:0; pointer-events:none; transition:opacity .25s ease;}
+  .nav-overlay.open{opacity:1; pointer-events:auto;}
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="back">← STYLE LIBRARY</a>
+
+<header>
+<div class="nav-overlay" id="nav-overlay"></div>
+  <div class="wrap nav-row">
+    <div class="logo">NEON STATIC</div>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">☰</button>
+    <nav><ul class="nav-links" id="nav-links">
+      <li><a href="#catalog">Catalog</a></li>
+      <li><a href="#" class="nav-btn">Visit Shop</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<section class="hero">
+  <img class="hero-bg-photo" src="https://loremflickr.com/1400/900/record,store,vinyl/all?lock=131" alt="" onerror="this.style.display='none'">
+  <div class="grid-floor"></div>
+  <div class="wrap">
+    <div class="eyebrow">◈ Est. 1998 · Reopened 2021 ◈</div>
+    <h1 class="hero-title chrome-text">VINYL. CARTRIDGES.<br>GOOD JUNK.</h1>
+    <p class="hero-sub">A used record and retro game shop for people who think the best decade was whichever one they grew up in. We buy, sell, and trade — no appointment needed.</p>
+    <div class="hero-actions">
+      <a href="#catalog" class="btn">Browse the Bins</a>
+      <a href="#" class="btn alt">Sell Your Collection</a>
+    </div>
+  </div>
+</section>
+
+<div class="ticker"><span>NEW SHIPMENT OF SNES CARTRIDGES ★ WE BUY COLLECTIONS ★ TRADE-IN CREDIT DOUBLED THIS WEEK ★ NEW SHIPMENT OF SNES CARTRIDGES ★ WE BUY COLLECTIONS ★&nbsp;</span></div>
+
+<section class="catalog" id="catalog">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>WHAT'S IN THE BINS</h2>
+      <p>Four crates, endlessly rotating. If it's good, it doesn't last the week.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-item"><div class="em">💿</div><h3>Used Vinyl</h3><p>Rock, funk, soul &amp; soundtracks. 3,000+ in stock.</p></div>
+      <div class="cat-item"><div class="em">🕹️</div><h3>Retro Consoles</h3><p>NES through PS2, tested and working.</p></div>
+      <div class="cat-item"><div class="em">📼</div><h3>VHS &amp; Cassettes</h3><p>Cult films, mixtapes, weird finds.</p></div>
+      <div class="cat-item"><div class="em">🧩</div><h3>Oddities</h3><p>Zines, pins, and stuff we can't categorize.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="featured">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>THIS WEEK'S FINDS</h2>
+      <p>Updated every Friday — first come, first served.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="ph"><img src="https://loremflickr.com/400/400/vinyl,record/all?lock=120" alt="" onerror="this.style.display='none'"></div><div class="info"><h3>Talking Heads — Remain in Light</h3><span class="price">$24</span></div></div>
+      <div class="feat-card"><div class="ph"><img src="https://loremflickr.com/400/400/super,nintendo/all?lock=121" alt="" onerror="this.style.display='none'"></div><div class="info"><h3>Super Nintendo (boxed)</h3><span class="price">$140</span></div></div>
+      <div class="feat-card"><div class="ph"><img src="https://loremflickr.com/400/400/vinyl,album/all?lock=122" alt="" onerror="this.style.display='none'"></div><div class="info"><h3>Chromatics — Kill for Love</h3><span class="price">$32</span></div></div>
+      <div class="feat-card"><div class="ph"><img src="https://loremflickr.com/400/400/gameboy/all?lock=123" alt="" onerror="this.style.display='none'"></div><div class="info"><h3>Game Boy Color, Grape</h3><span class="price">$65</span></div></div>
+      <div class="feat-card"><div class="ph"><img src="https://loremflickr.com/400/400/playstation,disc/all?lock=124" alt="" onerror="this.style.display='none'"></div><div class="info"><h3>Original PlayStation Disc Lot</h3><span class="price">$48</span></div></div>
+      <div class="feat-card"><div class="ph"><img src="https://loremflickr.com/400/400/vinyl,soul/all?lock=125" alt="" onerror="this.style.display='none'"></div><div class="info"><h3>Stevie Wonder — Innervisions</h3><span class="price">$28</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-block">
+  <h2>GOT A COLLECTION GATHERING DUST?</h2>
+  <p>We buy full collections on the spot — cash or store credit, your call.</p>
+  <a href="#" class="btn">Bring It In</a>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+    <span>Neon Static Records &amp; Games</span>
+    <span>Design demo by Fleming Solutions</span>
+  </div>
+</footer>
+
+
+<script>
+  (function(){
+    const toggle = document.getElementById('menu-toggle');
+    const links = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+    if(!toggle || !links) return;
+    function closeMenu(){ links.classList.remove('open'); overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    function openMenu(){ links.classList.add('open'); overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+    toggle.addEventListener('click', function(){ links.classList.contains('open') ? closeMenu() : openMenu(); });
+    overlay.addEventListener('click', closeMenu);
+    links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  })();
+</script>
+</body>
+</html>
