@@ -159,6 +159,22 @@
     };
     return map[p?.code] || ["#0E2A47","#1697E6","#FFFFFF","#F6F9FC"];
   }
+
+  const DESIGN_STORE='fs-design-system-v1';
+  const defaultDesignSystem=()=>({
+    primary:'#1697E6',secondary:'#0E2A47',accent:'#69BE28',background:'#FFFFFF',surface:'#F6F9FC',
+    heading:'#0E2A47',body:'#334155',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'
+  });
+  function readDesignSystem(){try{return {...defaultDesignSystem(),...JSON.parse(localStorage.getItem(DESIGN_STORE)||'{}')}}catch(e){return defaultDesignSystem()}}
+  function writeDesignSystem(x){localStorage.setItem(DESIGN_STORE,JSON.stringify(x));}
+  function contrastRatio(hex1,hex2){
+    const lum=h=>{const s=h.replace('#','');const rgb=[0,2,4].map(i=>parseInt(s.slice(i,i+2),16)/255).map(c=>c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4));return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]};
+    const a=lum(hex1),b=lum(hex2),hi=Math.max(a,b),lo=Math.min(a,b);return (hi+.05)/(lo+.05);
+  }
+  function contrastBadge(bg,fg){
+    const r=contrastRatio(bg,fg); const ok=r>=4.5;
+    return `<span class="contrast-badge ${ok?'good':'warn'}">${ok?'✓':'⚠'} ${r.toFixed(1)}:1 ${ok?'Readable':'Low contrast'}</span>`;
+  }
   function targetsForCard(card){
     const pair=$('.variant-pair',card);
     const roots=pair ? $$('.variant-sample',pair) : [$('.sample',card)].filter(Boolean);
@@ -172,32 +188,32 @@
     targetsForCard(card).forEach(t=>{if(t.dataset.fsOriginalCaptured==='1'){const o=t.dataset.fsOriginalStyle||'';if(o)t.setAttribute('style',o);else t.removeAttribute('style');}});
     card.classList.remove('custom-color-preview','palette-color-preview');
   }
-  function styleVariant(t,primary,secondary,text,variant){
+  function styleVariant(t,bg,text,border,hover,pressed,variant){
     if(!t)return;
-    if(variant==='secondary'){
-      t.style.setProperty('background',secondary,'important');
-      t.style.setProperty('background-color',secondary,'important');
-      t.style.setProperty('color',text,'important');
-      t.style.setProperty('border-color',secondary,'important');
-      t.style.setProperty('box-shadow',`0 6px 16px color-mix(in srgb, ${secondary} 24%, transparent)`,'important');
-    }else{
-      t.style.setProperty('background',primary,'important');
-      t.style.setProperty('background-color',primary,'important');
-      t.style.setProperty('color',text,'important');
-      t.style.setProperty('border-color',primary,'important');
-      t.style.setProperty('box-shadow',`0 8px 22px color-mix(in srgb, ${primary} 35%, transparent)`,'important');
-    }
+    t.style.setProperty('background',bg,'important');
+    t.style.setProperty('background-color',bg,'important');
+    t.style.setProperty('color',text,'important');
+    t.style.setProperty('border-color',border,'important');
+    t.style.setProperty('--fs-hover',hover);
+    t.style.setProperty('--fs-pressed',pressed);
+    t.style.setProperty('--fs-base',bg);
+    t.classList.add('customer-live-state');
+    t.style.setProperty('box-shadow',variant==='primary'?`0 8px 22px color-mix(in srgb, ${bg} 35%, transparent)`:`0 6px 16px color-mix(in srgb, ${bg} 24%, transparent)`,'important');
   }
   function applyColorPreview(card,prefs){
     const targets=targetsForCard(card);if(!targets.length)return;rememberOriginalStyle(card);
-    const mode=prefs?.colorMode||'as-shown';
+    const mode=prefs?.colorMode||'global';
     if(mode==='as-shown'){restoreOriginalStyle(card);return;}
-    let primary,secondary,text,bg;
-    if(mode==='palette'){const p=selectedPaletteColors();[secondary,primary,text,bg]=[p[0],p[1],p[3]||'#FFFFFF',p[2]||'#F6F9FC'];card.classList.add('palette-color-preview');card.classList.remove('custom-color-preview');}
-    else{primary=prefs.primary||'#1697E6';secondary=prefs.secondary||'#0E2A47';text=prefs.text||'#FFFFFF';bg=prefs.background||'#FFFFFF';card.classList.add('custom-color-preview');card.classList.remove('palette-color-preview');}
-    styleVariant(targets[0],primary,secondary,text,'primary');
-    styleVariant(targets[1],primary,secondary,text,'secondary');
-    $$('.variant-sample',card).forEach(x=>x.style.setProperty('--customer-bg',bg));
+    let c={...defaultColorPrefs(),...prefs};
+    if(mode==='global'){
+      const g=readDesignSystem();
+      c={...c,primaryBg:g.primary,primaryText:g.primaryText,primaryBorder:g.primary,primaryHover:g.accent,primaryPressed:g.secondary,
+        secondaryBg:g.secondary,secondaryText:g.secondaryText,secondaryBorder:g.secondary,secondaryHover:g.primary,secondaryPressed:g.heading,previewBg:g.surface};
+      card.classList.add('palette-color-preview');card.classList.remove('custom-color-preview');
+    } else {card.classList.add('custom-color-preview');card.classList.remove('palette-color-preview');}
+    styleVariant(targets[0],c.primaryBg,c.primaryText,c.primaryBorder,c.primaryHover,c.primaryPressed,'primary');
+    styleVariant(targets[1],c.secondaryBg,c.secondaryText,c.secondaryBorder,c.secondaryHover,c.secondaryPressed,'secondary');
+    $$('.variant-sample',card).forEach(x=>x.style.setProperty('--customer-bg',c.previewBg||'#fff'));
   }
   function selected(code){return !!read()[code]}
   function setCard(card,on){
@@ -208,33 +224,61 @@
     if(on){const data=read(), info=getInfo(card); applyColorPreview(card,data[info.code]?.colors||defaultColorPrefs());}
     else restoreOriginalStyle(card);
   }
-  function defaultColorPrefs(){return {colorMode:'as-shown',primary:'#1697E6',secondary:'#0E2A47',text:'#FFFFFF',background:'#FFFFFF'};}
+  function defaultColorPrefs(){return {
+    colorMode:'global',
+    primaryBg:'#1697E6',primaryText:'#FFFFFF',primaryBorder:'#1697E6',primaryHover:'#0E86CF',primaryPressed:'#0874B5',
+    secondaryBg:'#0E2A47',secondaryText:'#FFFFFF',secondaryBorder:'#0E2A47',secondaryHover:'#163B60',secondaryPressed:'#0A2035',
+    previewBg:'#FFFFFF'
+  };}
   function renderColorControls(card,on){
     let panel=$('.item-color-controls',card);
     if(!on){panel?.remove();return;}
     const info=getInfo(card), data=read(), item=data[info.code]||{}, prefs={...defaultColorPrefs(),...(item.colors||{})};
     if(!panel){panel=document.createElement('div');panel.className='item-color-controls';card.appendChild(panel);}
-    panel.innerHTML=`<div class="color-control-title">Primary + Secondary appearance</div>
+    const global=readDesignSystem();
+    const mode=prefs.colorMode||'global';
+    panel.innerHTML=`<div class="color-control-title">Primary + Secondary appearance <span class="inheritance-pill">${mode==='global'?'Using Website Colors':mode==='as-shown'?'As Shown':'Custom Override'}</span></div>
       <div class="color-mode-row">
-        <label><input type="radio" name="mode-${info.code}" value="as-shown" ${prefs.colorMode==='as-shown'?'checked':''}> As Shown</label>
-        <label><input type="radio" name="mode-${info.code}" value="palette" ${prefs.colorMode==='palette'?'checked':''}> Use My Palette</label>
-        <label><input type="radio" name="mode-${info.code}" value="custom" ${prefs.colorMode==='custom'?'checked':''}> Customize Pair</label>
+        <label><input type="radio" name="mode-${info.code}" value="global" ${mode==='global'?'checked':''}> Use Website Colors</label>
+        <label><input type="radio" name="mode-${info.code}" value="as-shown" ${mode==='as-shown'?'checked':''}> As Shown</label>
+        <label><input type="radio" name="mode-${info.code}" value="custom" ${mode==='custom'?'checked':''}> Custom Override</label>
       </div>
-      <div class="custom-color-grid" ${prefs.colorMode==='custom'?'':'hidden'}>
-        ${[['primary','Primary Button'],['secondary','Secondary Button'],['text','Text'],['background','Preview Background']].map(([k,l])=>`<label>${l}<span><input type="color" data-color="${k}" value="${prefs[k]}"><input class="hex-color" data-hex="${k}" value="${prefs[k]}" maxlength="7" aria-label="${l} hex color"></span></label>`).join('')}
+      <div class="dual-style-editor" ${mode==='custom'?'':'hidden'}>
+        <section><h4>PRIMARY</h4>${[
+          ['primaryBg','Background'],['primaryText','Text'],['primaryBorder','Border'],['primaryHover','Hover'],['primaryPressed','Pressed']
+        ].map(([k,l])=>`<label>${l}<span><input type="color" data-color="${k}" value="${prefs[k]}"><input class="hex-color" data-hex="${k}" value="${prefs[k]}" maxlength="7"></span></label>`).join('')}
+        <div class="contrast-slot" data-contrast="primary"></div></section>
+        <section><h4>SECONDARY</h4>${[
+          ['secondaryBg','Background'],['secondaryText','Text'],['secondaryBorder','Border'],['secondaryHover','Hover'],['secondaryPressed','Pressed']
+        ].map(([k,l])=>`<label>${l}<span><input type="color" data-color="${k}" value="${prefs[k]}"><input class="hex-color" data-hex="${k}" value="${prefs[k]}" maxlength="7"></span></label>`).join('')}
+        <div class="contrast-slot" data-contrast="secondary"></div></section>
+        <div class="pair-tools"><button type="button" class="swap-pair">⇄ Swap Primary / Secondary</button></div>
       </div>`;
+    const current=()=>{const d=read();return {...defaultColorPrefs(),...(d[info.code]?.colors||{})}};
+    const refreshContrast=(colors)=>{
+      const p=$('[data-contrast="primary"]',panel),s=$('[data-contrast="secondary"]',panel);
+      if(p)p.innerHTML=contrastBadge(colors.primaryBg,colors.primaryText);
+      if(s)s.innerHTML=contrastBadge(colors.secondaryBg,colors.secondaryText);
+    };
     const save=()=>{
       const d=read(), x=d[info.code]; if(!x)return;
-      const mode=$(`input[name="mode-${info.code}"]:checked`,panel)?.value||'as-shown';
-      const colors={...(x.colors||defaultColorPrefs()),colorMode:mode};
+      const selectedMode=$(`input[name="mode-${info.code}"]:checked`,panel)?.value||'global';
+      const colors={...(x.colors||defaultColorPrefs()),colorMode:selectedMode};
       $$('[data-color]',panel).forEach(inp=>colors[inp.dataset.color]=inp.value.toUpperCase());
       d[info.code]={...x,colors};write(d);
-      $('.custom-color-grid',panel).hidden=mode!=='custom';
-      applyColorPreview(card,colors);
+      $('.dual-style-editor',panel).hidden=selectedMode!=='custom';
+      $('.inheritance-pill',panel).textContent=selectedMode==='global'?'Using Website Colors':selectedMode==='as-shown'?'As Shown':'Custom Override';
+      refreshContrast(colors); applyColorPreview(card,colors);
     };
     $$(`input[name="mode-${info.code}"]`,panel).forEach(r=>r.addEventListener('change',save));
     $$('[data-color]',panel).forEach(inp=>inp.addEventListener('input',()=>{const hex=$(`[data-hex="${inp.dataset.color}"]`,panel);hex.value=inp.value.toUpperCase();save()}));
-    $$('[data-hex]',panel).forEach(inp=>inp.addEventListener('change',()=>{let v=inp.value.trim();if(/^#[0-9a-fA-F]{6}$/.test(v)){const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);cp.value=v;save()}else{const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);inp.value=cp.value.toUpperCase();}}));
+    $$('[data-hex]',panel).forEach(inp=>inp.addEventListener('change',()=>{const v=inp.value.trim();const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);if(/^#[0-9a-fA-F]{6}$/.test(v)){cp.value=v;save()}else inp.value=cp.value.toUpperCase()}));
+    $('.swap-pair',panel)?.addEventListener('click',()=>{
+      const d=read(),x=d[info.code];if(!x)return;const c={...defaultColorPrefs(),...(x.colors||{})};
+      ['Bg','Text','Border','Hover','Pressed'].forEach(suf=>{const a='primary'+suf,b='secondary'+suf,tmp=c[a];c[a]=c[b];c[b]=tmp});
+      c.colorMode='custom'; d[info.code]={...x,colors:c};write(d);renderColorControls(card,true);applyColorPreview(card,c);
+    });
+    refreshContrast(prefs);
   }
   function toggle(card){const info=getInfo(card); if(!info.code)return; const data=read(); if(data[info.code]) delete data[info.code]; else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()}; write(data); setCard(card,!!data[info.code]);}
   
@@ -274,14 +318,33 @@
   const groups=$('#selection-groups'); if(groups){
     const empty=$('#empty-selections'), num=$('#selection-count');
     const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    function colorSummary(x){const c=x.colors||{};const mode=c.colorMode||'as-shown';if(mode==='as-shown')return '<small class="selection-color-note">Color: As Shown</small>';if(mode==='palette')return '<small class="selection-color-note">Color: Use My Palette</small>';return `<small class="selection-color-note">Colors: <i style="background:${esc(c.primary||'#1697E6')}"></i>${esc(c.primary||'')} · <i style="background:${esc(c.secondary||'#0E2A47')}"></i>${esc(c.secondary||'')}<br>Text ${esc(c.text||'')} · Background ${esc(c.background||'')}</small>`;}
+    function colorSummary(x){const c=x.colors||{};const mode=c.colorMode||'as-shown';if(mode==='as-shown')return '<small class="selection-color-note">Appearance: As Shown</small>';if(mode==='global')return '<small class="selection-color-note">Appearance: Using Website Colors</small>';return `<small class="selection-color-note">Primary ${esc(c.primaryBg||'')} / ${esc(c.primaryText||'')} · Secondary ${esc(c.secondaryBg||'')} / ${esc(c.secondaryText||'')}</small>`;}
     function render(){const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));num.textContent=data.length;groups.innerHTML='';empty.style.display=data.length?'none':'';const by={};data.forEach(x=>(by[x.category]??=[]).push(x));Object.entries(by).forEach(([cat,items])=>{const sec=document.createElement('section');sec.className='selection-group';sec.innerHTML=`<h2>${esc(cat)} <span class="code">${items.length}</span></h2>`+items.map(x=>`<div class="selection-item"><div class="selection-thumb">${esc(x.code)}</div><div><h3>${esc(x.name)}</h3><p>${esc(x.code)} · ${esc(x.page)}</p>${colorSummary(x)}</div><button type="button" class="remove-selection" data-code="${esc(x.code)}">Remove</button></div>`).join('');groups.appendChild(sec)});$$('.remove-selection',groups).forEach(b=>b.onclick=()=>{const d=read();delete d[b.dataset.code];write(d);render()});applyPreview(data);}
     const detailIds=['client-name','client-business','client-email','client-notes'];let details={};try{details=JSON.parse(localStorage.getItem(DETAILS)||'{}')}catch(e){}detailIds.forEach(id=>{const el=$('#'+id);if(!el)return;el.value=details[id]||'';el.addEventListener('input',()=>{details[id]=el.value;localStorage.setItem(DETAILS,JSON.stringify(details))})});
-    const summary=()=>{const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));const lines=['FLEMING SOLUTIONS — WEBSITE DESIGN SELECTIONS',''];if($('#client-name')?.value)lines.push(`Name: ${$('#client-name').value}`);if($('#client-business')?.value)lines.push(`Business: ${$('#client-business').value}`);if($('#client-email')?.value)lines.push(`Email: ${$('#client-email').value}`);if(lines.length>2)lines.push('');let last='';data.forEach(x=>{if(x.category!==last){lines.push(x.category.toUpperCase());last=x.category}{let cs='As Shown';const c=x.colors||{};if(c.colorMode==='palette')cs='Use My Palette';else if(c.colorMode==='custom')cs=`Primary ${c.primary}; Secondary ${c.secondary}; Text ${c.text}; Background ${c.background}`;lines.push(`- ${x.code} — ${x.name} | Color: ${cs}`)}});if($('#client-notes')?.value)lines.push('','Notes:', $('#client-notes').value);return lines.join('\n')};
+    const summary=()=>{const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));const lines=['FLEMING SOLUTIONS — WEBSITE DESIGN SELECTIONS',''];if($('#client-name')?.value)lines.push(`Name: ${$('#client-name').value}`);if($('#client-business')?.value)lines.push(`Business: ${$('#client-business').value}`);if($('#client-email')?.value)lines.push(`Email: ${$('#client-email').value}`);if(lines.length>2)lines.push('');let last='';data.forEach(x=>{if(x.category!==last){lines.push(x.category.toUpperCase());last=x.category}{let cs='Using Website Colors';const c=x.colors||{};if(c.colorMode==='as-shown')cs='As Shown';else if(c.colorMode==='custom')cs=`Primary ${c.primaryBg}/${c.primaryText}; Secondary ${c.secondaryBg}/${c.secondaryText}`;lines.push(`- ${x.code} — ${x.name} | Appearance: ${cs}`)}});if($('#client-notes')?.value)lines.push('','Notes:', $('#client-notes').value);return lines.join('\n')};
     $('#copy-summary').onclick=async()=>{try{await navigator.clipboard.writeText(summary());alert('Selection summary copied to your clipboard.')}catch(e){prompt('Copy your selections:',summary())}};$('#print-summary').onclick=()=>window.print();$('#attach-contact')?.addEventListener('click',()=>{location.href='../index.html?attachSelections=1#contact'});$('#clear-selections').onclick=()=>{if(confirm('Clear all saved website selections?')){localStorage.removeItem(STORE);render()}};$('#email-selections').onclick=()=>{const subject=encodeURIComponent(`Website selections${$('#client-business')?.value?' — '+$('#client-business').value:''}`);const body=encodeURIComponent(summary());location.href=`mailto:charles.flemingiii@outlook.com?subject=${subject}&body=${body}`};
     function applyPreview(data){const p=$('#website-preview');if(!p)return;const palette=data.find(x=>x.code?.startsWith('CP-'));let colors=['#0E2A47','#1697E6','#EAF6FF','#FFFFFF'];if(palette){const source=document.querySelector(`[data-palette]`); // builder page has no source; use known map from code
       const map={"CP-01":["#0E2A47","#1697E6","#F6F9FC","#FFFFFF"],"CP-02":["#081A2B","#35B8FF","#7C3AED","#F8FAFC"],"CP-03":["#111111","#C9A227","#F5E7B2","#FFFFFF"],"CP-04":["#061A2D","#0066FF","#35B8FF","#EAF6FF"],"CP-05":["#0F2D28","#16A34A","#86EFAC","#F0FDF4"],"CP-06":["#342A24","#C26D3A","#F3E9DC","#FFFDF8"],"CP-07":["#3B2F2F","#D97745","#EAB676","#F7E8D0"],"CP-08":["#0B3B60","#0EA5A8","#DDF8F6","#FFFFFF"],"CP-09":["#102A43","#2F80ED","#B8D8FF","#F7FAFC"],"CP-10":["#2C1810","#A9442B","#D4A373","#FFF8EC"],"CP-11":["#18212B","#F59E0B","#FFD166","#F7F7F7"],"CP-12":["#172554","#6366F1","#C7D2FE","#F8FAFC"],"CP-13":["#4A2337","#E11D74","#FBCFE8","#FFF7FB"],"CP-14":["#243B2F","#53734B","#B7C9A8","#F5F7EF"],"CP-15":["#0F172A","#475569","#CBD5E1","#FFFFFF"],"CP-16":["#231942","#7C3AED","#C4B5FD","#FAF5FF"],"CP-17":["#082F49","#0284C7","#67E8F9","#ECFEFF"],"CP-18":["#431407","#EA580C","#FDBA74","#FFF7ED"],"CP-19":["#111827","#374151","#D1D5DB","#F9FAFB"],"CP-20":["#050816","#00E5FF","#B026FF","#E6FBFF"],"CP-21":["#29251F","#8B6F47","#D6C4A1","#F7F2E8"],"CP-22":["#3F1D2E","#FB7185","#FBCFE8","#FFF1F2"],"CP-23":["#0F3437","#0F766E","#B87333","#F0FDFA"],"CP-24":["#14213D","#2563EB","#F97316","#F8FAFC"]};colors=map[palette.code]||colors;}
       p.style.setProperty('--preview-dark',colors[0]);p.style.setProperty('--preview-accent',colors[1]);p.style.setProperty('--preview-soft',colors[2]);}
     render();
   }
+})();
+
+
+// ===== Global Website Design System controls =====
+(()=>{
+  if(!document.getElementById('global-color-grid'))return;
+  const KEY='fs-design-system-v1';
+  const defaults={primary:'#1697E6',secondary:'#0E2A47',accent:'#69BE28',background:'#FFFFFF',surface:'#F6F9FC',heading:'#0E2A47',body:'#334155',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'};
+  const read=()=>{try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return {...defaults}}};
+  const grid=document.getElementById('global-color-grid'), summary=document.getElementById('global-contrast-summary');
+  const labels={primary:'Primary',secondary:'Secondary',accent:'Accent',background:'Background',surface:'Surface',heading:'Heading Text',body:'Body Text',primaryText:'Primary Button Text',secondaryText:'Secondary Button Text'};
+  const lum=h=>{const s=h.replace('#','');const rgb=[0,2,4].map(i=>parseInt(s.slice(i,i+2),16)/255).map(c=>c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4));return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]};
+  const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+  function render(){const d=read();grid.innerHTML=Object.entries(labels).map(([k,l])=>`<label>${l}<span><input type="color" data-k="${k}" value="${d[k]}"><input data-hex="${k}" value="${d[k]}" maxlength="7"></span></label>`).join('');
+    const p=ratio(d.primary,d.primaryText),s=ratio(d.secondary,d.secondaryText),b=ratio(d.background,d.body);
+    summary.innerHTML=`<b>Contrast check</b><span class="${p>=4.5?'good':'warn'}">${p>=4.5?'✓':'⚠'} Primary ${p.toFixed(1)}:1</span><span class="${s>=4.5?'good':'warn'}">${s>=4.5?'✓':'⚠'} Secondary ${s.toFixed(1)}:1</span><span class="${b>=4.5?'good':'warn'}">${b>=4.5?'✓':'⚠'} Body ${b.toFixed(1)}:1</span>`;
+    grid.querySelectorAll('[data-k]').forEach(x=>x.oninput=()=>{const q=read();q[x.dataset.k]=x.value.toUpperCase();localStorage.setItem(KEY,JSON.stringify(q));render()});
+    grid.querySelectorAll('[data-hex]').forEach(x=>x.onchange=()=>{if(/^#[0-9a-fA-F]{6}$/.test(x.value)){const q=read();q[x.dataset.hex]=x.value.toUpperCase();localStorage.setItem(KEY,JSON.stringify(q));render()}else render()});
+  }render();
 })();

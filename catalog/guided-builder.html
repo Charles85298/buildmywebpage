@@ -38,10 +38,35 @@ const sels=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e
 const features=['Contact Form','Google Maps','Google Reviews','Photo Gallery','Before / After Slider','Appointment Booking','Blog / Resources','E-commerce','Online Payments','Live Chat','Social Media','Newsletter Signup','FAQ','Site Search','Customer Portal','Analytics','SEO Setup','Scroll Animations','Accessibility Options','CMS / Easy Editing'];
 const content=document.getElementById('guided-content'), stepsEl=document.getElementById('guided-steps');
 function drawSteps(){stepsEl.innerHTML=steps.map((s,i)=>`<button class="${i===state.step?'active':''} ${i<state.step?'done':''}" data-i="${i}"><i>${i<state.step?'✓':i+1}</i><span>${s.n}</span></button>`).join('');stepsEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{state.step=+b.dataset.i;save();render()})}
+
+function applyStarterKit(name){
+  const design={
+    'Local Business':{primary:'#1697E6',secondary:'#0E2A47',accent:'#69BE28',background:'#FFFFFF',surface:'#F6F9FC',heading:'#0E2A47',body:'#334155'},
+    'Contractor':{primary:'#F59E0B',secondary:'#18212B',accent:'#FFD166',background:'#FFFFFF',surface:'#F7F7F7',heading:'#18212B',body:'#374151'},
+    'Restaurant':{primary:'#A9442B',secondary:'#2C1810',accent:'#D4A373',background:'#FFF8EC',surface:'#FFFFFF',heading:'#2C1810',body:'#5C4033'},
+    'Professional':{primary:'#2F80ED',secondary:'#102A43',accent:'#B8D8FF',background:'#FFFFFF',surface:'#F7FAFC',heading:'#102A43',body:'#334E68'},
+    'Finance':{primary:'#6366F1',secondary:'#172554',accent:'#C7D2FE',background:'#FFFFFF',surface:'#F8FAFC',heading:'#172554',body:'#334155'},
+    'E-commerce':{primary:'#7C3AED',secondary:'#231942',accent:'#C4B5FD',background:'#FFFFFF',surface:'#FAF5FF',heading:'#231942',body:'#4C3F63'},
+    'Technology':{primary:'#00E5FF',secondary:'#050816',accent:'#B026FF',background:'#050816',surface:'#0B1220',heading:'#E6FBFF',body:'#C9E9F0'},
+    'Luxury':{primary:'#C9A227',secondary:'#111111',accent:'#F5E7B2',background:'#FFFFFF',surface:'#FBF8EF',heading:'#111111',body:'#3F3F3F'}
+  }[name];
+  if(design){design.primaryText='#FFFFFF';design.secondaryText='#FFFFFF';localStorage.setItem('fs-design-system-v1',JSON.stringify(design));state.kit=name;save();alert(`${name} starter kit applied. You can customize every choice.`);updatePreview();}
+}
 function render(){drawSteps();const s=steps[state.step];document.getElementById('guided-step-label').textContent=`Step ${state.step+1} of ${steps.length} — ${s.n}`;const pct=Math.round((state.step+1)/steps.length*100);document.getElementById('guided-percent').textContent=`${pct}% Complete`;document.getElementById('guided-progress-bar').style.width=pct+'%';
 if(s.features){content.innerHTML=`<span class="code">STEP 7</span><h2>What should your website do?</h2><p>${s.d}</p><div class="feature-menu">${features.map(f=>`<label class="${state.features.includes(f)?'chosen':''}"><input type="checkbox" value="${f}" ${state.features.includes(f)?'checked':''}><b>${f}</b><span>${/E-commerce|Portal|Booking|Payments/.test(f)?'Advanced':'Available'}</span></label>`).join('')}</div>`;content.querySelectorAll('input').forEach(x=>x.onchange=()=>{state.features=[...content.querySelectorAll('input:checked')].map(y=>y.value);save();render();});}
-else if(s.review){content.innerHTML=`<span class="code">FINAL STEP</span><h2>Your website direction is ready.</h2><p>You have <strong>${Object.keys(sels()).length}</strong> design selections and <strong>${state.features.length}</strong> requested features.</p><div class="guided-review-actions"><a class="demo-btn" href="builder.html">Review My Selections</a><a class="demo-btn secondary" href="../index.html?attachSelections=1#contact">Attach to Contact Request</a></div>`;}
-else{content.innerHTML=`<span class="code">STEP ${state.step+1}</span><h2>${s.n}</h2><p>${s.d}</p><div class="guided-callout"><h3>Browse ${s.n}</h3><p>Open the full visual catalog, select the examples you like, then return here to continue.</p><a class="demo-btn" href="${s.href}">Choose ${s.n} →</a></div>`;}
+else if(s.review){content.innerHTML=`<span class="code">FINAL STEP</span><h2>Your website direction is ready.</h2><p>You have <strong>${Object.keys(sels()).length}</strong> design selections and <strong>${state.features.length}</strong> requested features.</p><div class="guided-review-actions"><button type="button" id="fleming-recommended" class="demo-btn">Fleming Recommended ✦</button><a class="demo-btn" href="builder.html">Review My Selections</a><a class="demo-btn secondary" href="../index.html?attachSelections=1#contact">Attach to Contact Request</a></div><p class="builder-muted">Fleming Recommended keeps your choices and fills in a coordinated design direction for anything you left undecided.</p>`;}
+else{
+if(state.step===0){
+content.innerHTML=`<span class="code">STEP 1</span><h2>Start with a direction</h2><p>Choose a starter kit or browse everything yourself.</p>
+<div class="starter-kits">
+${['Local Business','Contractor','Restaurant','Professional','Finance','E-commerce','Technology','Luxury'].map(x=>`<button type="button" data-kit="${x}"><b>${x}</b><span>Preload a coordinated starting direction</span></button>`).join('')}
+</div>
+<div class="guided-callout"><h3>Prefer to choose everything?</h3><p>Browse the full style library instead.</p><a class="demo-btn" href="${s.href}">Browse Styles →</a></div>`;
+content.querySelectorAll('[data-kit]').forEach(b=>b.onclick=()=>{applyStarterKit(b.dataset.kit);});
+}else{
+content.innerHTML=`<span class="code">STEP ${state.step+1}</span><h2>${s.n}</h2><p>${s.d}</p><div class="guided-callout"><h3>Browse ${s.n}</h3><p>Open the full visual catalog, select the examples you like, then return here to continue.</p><a class="demo-btn" href="${s.href}">Choose ${s.n} →</a></div>`;
+}}
+document.getElementById('fleming-recommended')?.addEventListener('click',()=>{if(!state.kit)applyStarterKit('Professional');state.flemingRecommended=true;save();alert('Fleming Recommended is on. Your existing selections will be preserved and the remaining design direction can follow a coordinated professional system.');});
 document.getElementById('guided-back').disabled=state.step===0;document.getElementById('guided-next').textContent=state.step===7?'Review Selections →':'Next →';updatePreview();}
 function updatePreview(){const data=Object.values(sels()),count=data.length;document.getElementById('guided-count').textContent=`${count} design selection${count===1?'':'s'} · ${state.features.length} features`;const advanced=state.features.filter(x=>/E-commerce|Portal|Booking|Payments/.test(x)).length;document.getElementById('guided-package').textContent=(count>10||state.features.length>5||advanced)?'Recommended: Elevate — Starting at $750':'Recommended: Launch — Starting at $350';
 const palette=data.find(x=>String(x.code||'').startsWith('CP-'));const map={"CP-01":["#0E2A47","#1697E6","#F6F9FC"],"CP-03":["#111111","#C9A227","#F5E7B2"],"CP-05":["#0F2D28","#16A34A","#F0FDF4"],"CP-12":["#172554","#6366F1","#F8FAFC"],"CP-20":["#050816","#00E5FF","#E6FBFF"]};const c=map[palette?.code]||["#0E2A47","#1697E6","#F6F9FC"];const site=document.getElementById('guided-site');site.style.setProperty('--gp-dark',c[0]);site.style.setProperty('--gp-accent',c[1]);site.style.setProperty('--gp-light',c[2]);}
