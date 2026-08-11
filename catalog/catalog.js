@@ -424,3 +424,17 @@
  function renderDrawer(){const d=document.querySelector('.design-cart-drawer');if(!d)return;const data=vals();d.querySelector('.cart-body').innerHTML=FLOW.map(([p,n,page])=>{const x=data.find(v=>String(v.code||'').startsWith(p+'-')),skip=localStorage.getItem('fs-skip-'+p)==='1';return `<div class="cart-row"><span>${n}</span>${x?`<a href="${page}">✓ ${x.code}</a>`:skip?`<em>Skipped</em>`:`<a href="${page}">Choose</a>`}</div>`}).join('')}
  window.addEventListener('fs-selection-change',updateFlow);addSkip();updateFlow();
 })();
+
+
+// Normalize floating design-cart label so it never duplicates "My Website".
+document.addEventListener('DOMContentLoaded',()=>{
+  const normalizeCart=()=>{
+    document.querySelectorAll('.design-cart').forEach(cart=>{
+      let count=cart.querySelector('b')?.textContent || '0';
+      cart.innerHTML=`<span>My Website</span><b>${count}</b>`;
+      cart.setAttribute('aria-label',`My Website — ${count} selections`);
+    });
+  };
+  normalizeCart();
+  window.addEventListener('fs-selection-change',()=>setTimeout(normalizeCart,0));
+});
