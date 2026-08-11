@@ -183,3 +183,25 @@ body.dark .dual-style-editor section,body.dark .starter-kits button{border-color
 .guided-feature-list span{padding:6px 9px;border-radius:999px;background:color-mix(in srgb,var(--blue) 10%,var(--panel));border:1px solid var(--line);font-size:.72rem;font-weight:750}
 .guided-package-line{display:flex;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .guided-package-line span{color:var(--blue);font-weight:850}
+
+/* Supabase cloud project controls */
+.cloud-account-panel{border-color:color-mix(in srgb,var(--blue) 45%,var(--line))!important}
+.cloud-signed-in{font-size:.82rem;margin:8px 0 12px}
+.cloud-actions{display:flex;flex-wrap:wrap;gap:7px}
+.cloud-actions button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:9px;padding:8px 10px;font-weight:800;cursor:pointer}
+.cloud-actions .demo-btn{border-color:var(--blue)}
+.cloud-projects-title{font-size:.82rem;margin:18px 0 8px}
+.cloud-project-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:11px;padding:10px;margin:7px 0}
+.cloud-project-row.active{border-color:var(--blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 12%,transparent)}
+.cloud-project-row div{min-width:0}.cloud-project-row strong{display:block;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cloud-project-row small{display:block;color:var(--muted);font-size:.62rem;margin-top:2px}
+.cloud-project-row button{border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--blue);font-weight:800;padding:6px 9px;cursor:pointer}
+.cloud-status{min-height:1.3em;margin:10px 0 0;font-size:.72rem;color:var(--muted)}
+.cloud-status.success{color:#16803a}.cloud-status.error,.cloud-error{color:#b42318}
+#cloud-otp-wrap{margin-top:10px}
+body.dark .cloud-project-row{border-color:#35516e}
+@media(max-width:560px){.cloud-project-row{align-items:flex-start}.cloud-actions{flex-direction:column}.cloud-actions button{width:100%}}
+
+/* Account access in catalog header */
+.catalog-account-button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:7px 11px;font-weight:800;cursor:pointer}
+.catalog-account-button:hover{border-color:var(--blue);color:var(--blue)}
