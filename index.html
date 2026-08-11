@@ -1005,6 +1005,8 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <button class="back-top" id="back-top" aria-label="Back to top">↑</button>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-app.js"></script>
 <script>
   // Mobile nav
   const menuToggle = document.getElementById('menu-toggle');
@@ -1090,15 +1092,6 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
   }
   window.addEventListener('scroll', updatePageProgress, {passive:true});
   updatePageProgress();
-
-  // Contact form -> mailto
-  document.getElementById('contact-form').addEventListener('submit', function(e){
-    e.preventDefault();
-    const f = new FormData(this);
-    const body = `Name: ${f.get('name')}\nBusiness: ${f.get('business')}\nEmail: ${f.get('email')}\nPhone: ${f.get('phone')}\nService: ${f.get('service')}\n\n${f.get('message')}`;
-    window.location.href = `mailto:charles.flemingiii@outlook.com?subject=${encodeURIComponent('New project inquiry — ' + (f.get('business') || f.get('name')))}&body=${encodeURIComponent(body)}`;
-    document.getElementById('form-status').textContent = 'Opening your email app...';
-  });
 
   // Attach Website Builder selections to the contact request
   (() => {

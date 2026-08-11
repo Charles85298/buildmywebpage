@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wheat & Ash — Neighborhood Bakery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F5EE; --bg2:#E7ECDF; --ink:#28331F; --olive:#5B6B4F; --plum:#8B5A6B; --line:rgba(40,51,31,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  a{color:inherit; text-decoration:none;}
+  .serif{font-family:'Fraunces', serif;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  .back{
+    position:fixed; top:18px; left:18px; z-index:99; background:var(--ink); color:var(--bg);
+    font-size:11px; font-weight:600; padding:8px 13px; border-radius:100px;
+  }
+
+  header{padding:26px 0;}
+  .nav-row{display:flex; justify-content:space-between; align-items:center;}
+  .logo{font-family:'Fraunces'; font-style:italic; font-size:23px;}
+  nav ul{list-style:none; display:flex; gap:30px; align-items:center;}
+  nav a{font-size:14px; font-weight:500; opacity:0.75;}
+  .nav-btn{background:var(--olive); color:#fff !important; opacity:1 !important; padding:10px 18px; border-radius:100px; font-size:13px; font-weight:600;}
+
+  .hero{padding:50px 0 90px;}
+  .hero-grid{display:grid; grid-template-columns:1fr 0.85fr; gap:60px; align-items:center;}
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{font-size:13px; font-weight:600; color:var(--plum); letter-spacing:0.04em; margin-bottom:18px;}
+  h1.hero-title{font-family:'Fraunces'; font-weight:600; font-size:clamp(38px,5.6vw,64px); line-height:1.05; margin-bottom:22px;}
+  h1.hero-title em{font-style:italic; color:var(--olive); font-weight:500;}
+  .hero-sub{font-size:16px; line-height:1.7; color:rgba(40,51,31,0.7); max-width:440px; margin-bottom:32px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{background:var(--ink); color:var(--bg); padding:14px 24px; border-radius:100px; font-size:14px; font-weight:600;}
+  .btn.alt{background:transparent; border:1px solid var(--line); color:var(--ink);}
+  .hero-visual{
+    aspect-ratio:4/5; border-radius:24px; background:linear-gradient(160deg, var(--plum), var(--olive));
+    position:relative; overflow:hidden;
+  }
+  .hero-visual img{width:100%; height:100%; object-fit:cover; position:relative; z-index:0;}
+  .hero-visual::before{
+    content:''; position:absolute; inset:0; z-index:1;
+    background-image: linear-gradient(160deg, rgba(139,90,107,0.45), rgba(91,107,79,0.35)), radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 40%);
+  }
+  .hero-visual .cap{
+    position:absolute; bottom:24px; left:24px; right:24px; color:#fff; font-size:13px;
+    background:rgba(0,0,0,0.18); backdrop-filter:blur(6px); padding:12px 16px; border-radius:12px;
+  }
+
+  .strip{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0; background:var(--bg2);}
+  .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px;}
+  .strip .item{font-size:13px; font-weight:500; display:flex; align-items:center; gap:8px;}
+  .strip .item b{font-family:'Fraunces'; font-style:italic; font-weight:500;}
+
+  .menu{padding:90px 0;}
+  .section-head{margin-bottom:48px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;}
+  .section-head h2{font-family:'Fraunces'; font-weight:600; font-size:38px;}
+  .section-head p{max-width:380px; font-size:14px; color:rgba(40,51,31,0.65); line-height:1.6;}
+  .menu-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:28px;}
+  @media(max-width:900px){.menu-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.menu-grid{grid-template-columns:1fr;}}
+  .menu-card{background:#fff; border-radius:18px; overflow:hidden; border:1px solid var(--line);}
+  .menu-card .ph{height:170px; background:linear-gradient(135deg, #DCE3D2, #C9B3B9); overflow:hidden;}
+  .menu-card .ph img{width:100%; height:100%; object-fit:cover; display:block;}
+  .menu-card .info{padding:20px 22px 24px;}
+  .menu-card .row{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .menu-card h3{font-family:'Fraunces'; font-weight:600; font-size:18px;}
+  .menu-card .price{font-size:14px; font-weight:600; color:var(--plum);}
+  .menu-card p{font-size:13px; line-height:1.6; color:rgba(40,51,31,0.65);}
+
+  .story{padding:20px 0 100px;}
+  .story-inner{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  @media(max-width:860px){.story-inner{grid-template-columns:1fr;}}
+  .story-ph{aspect-ratio:1/1; border-radius:20px; background:linear-gradient(140deg,#C9B3B9,#5B6B4F); overflow:hidden;}
+  .story-ph img{width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.92;}
+  .story h2{font-family:'Fraunces'; font-weight:600; font-size:34px; margin-bottom:18px;}
+  .story p{font-size:15px; line-height:1.75; color:rgba(40,51,31,0.75); margin-bottom:14px;}
+  .quote{font-family:'Fraunces'; font-style:italic; font-size:20px; margin-top:22px; color:var(--olive);}
+
+  .hours{background:var(--ink); color:var(--bg); padding:80px 0;}
+  .hours-inner{display:grid; grid-template-columns:1fr 1fr; gap:50px;}
+  @media(max-width:760px){.hours-inner{grid-template-columns:1fr;}}
+  .hours h2{font-family:'Fraunces'; font-style:italic; font-size:32px; margin-bottom:24px;}
+  .hrow{display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(242,245,238,0.15); font-size:14px;}
+  .addr p{font-size:15px; line-height:1.8; opacity:0.85; margin-bottom:20px;}
+
+  footer{padding:34px 0; font-size:13px; color:rgba(40,51,31,0.6); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+
+  .menu-toggle{display:none; border:0; background:transparent; color:var(--ink); font-size:22px; cursor:pointer; padding:4px 6px; line-height:1;}
+  @media(max-width:860px){
+    .menu-toggle{display:block;}
+    .nav-links{
+      position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); z-index:200;
+      background:var(--bg); border-left:1px solid var(--line);
+      flex-direction:column !important; align-items:flex-start !important; justify-content:flex-start !important;
+      padding:90px 28px 28px; gap:22px !important;
+      transform:translateX(100%); transition:transform .25s ease;
+      box-shadow:-20px 0 50px rgba(0,0,0,0.25);
+    }
+    .nav-links.open{transform:translateX(0);}
+    .nav-links li{width:100%;}
+  }
+  .nav-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:150; opacity:0; pointer-events:none; transition:opacity .25s ease;}
+  .nav-overlay.open{opacity:1; pointer-events:auto;}
+</style>
+</head>
+<body>
+
+<a href="../index.html" class="back">← Style Library</a>
+
+<header>
+<div class="nav-overlay" id="nav-overlay"></div>
+  <div class="wrap nav-row">
+    <div class="logo">Wheat &amp; Ash</div>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">☰</button>
+    <nav><ul class="nav-links" id="nav-links">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#story">Our story</a></li>
+      <li><a href="#hours" class="nav-btn">Visit us</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">SOURDOUGH · PASTRY · COFFEE</div>
+      <h1 class="hero-title">Bread made slow, <em>for a neighborhood in a hurry.</em></h1>
+      <p class="hero-sub">We mill, mix, and bake everything by hand starting at 4am, so it's ready when you walk in. Come for the loaves, stay for the corner table.</p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn">See today's menu</a>
+        <a href="#hours" class="btn alt">Find us</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img src="https://loremflickr.com/700/880/sourdough,bread/all?lock=12" alt="Fresh sourdough loaves" onerror="this.style.display='none'">
+      <div class="cap">This week: rye levain, fig &amp; walnut, and a return of the olive fougasse.</div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="item"><b>Fresh</b> baked daily from 6am</div>
+    <div class="item"><b>Local</b> flour, milled in-state</div>
+    <div class="item"><b>Slow</b> 36-hour fermentation</div>
+    <div class="item"><b>Small</b> batches, sold out most days</div>
+  </div>
+</div>
+
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What's in the case today</h2>
+      <p>A short, changing menu — we'd rather do six things well than twenty things fine.</p>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-card"><div class="ph"><img src="https://loremflickr.com/400/340/sourdough,bread/all?lock=50" alt="" onerror="this.style.display='none'"></div><div class="info"><div class="row"><h3>Country Sourdough</h3><span class="price">$9</span></div><p>Our everyday loaf. Crackling crust, open crumb, ready by 7am.</p></div></div>
+      <div class="menu-card"><div class="ph"><img src="https://loremflickr.com/400/340/fig,bread/all?lock=51" alt="" onerror="this.style.display='none'"></div><div class="info"><div class="row"><h3>Fig &amp; Walnut</h3><span class="price">$11</span></div><p>Sourdough folded with dried fig and toasted walnut. Weekends only.</p></div></div>
+      <div class="menu-card"><div class="ph"><img src="https://loremflickr.com/400/340/cinnamon,bun/all?lock=52" alt="" onerror="this.style.display='none'"></div><div class="info"><div class="row"><h3>Morning Bun</h3><span class="price">$5</span></div><p>Laminated, orange-sugar crust, gone by 9am most days.</p></div></div>
+      <div class="menu-card"><div class="ph"><img src="https://loremflickr.com/400/340/focaccia/all?lock=53" alt="" onerror="this.style.display='none'"></div><div class="info"><div class="row"><h3>Olive Fougasse</h3><span class="price">$8</span></div><p>Rosemary, castelvetrano olives, flaky salt. Back this week.</p></div></div>
+      <div class="menu-card"><div class="ph"><img src="https://loremflickr.com/400/340/coffee,pourover/all?lock=54" alt="" onerror="this.style.display='none'"></div><div class="info"><div class="row"><h3>Pour-Over</h3><span class="price">$4.5</span></div><p>Single-origin, rotating roaster, brewed to order.</p></div></div>
+      <div class="menu-card"><div class="ph"><img src="https://loremflickr.com/400/340/cookie,bakery/all?lock=55" alt="" onerror="this.style.display='none'"></div><div class="info"><div class="row"><h3>Brown Butter Cookie</h3><span class="price">$3.5</span></div><p>Crisp edge, chewy center, flaky sea salt on top.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="story" id="story">
+  <div class="wrap story-inner">
+    <div class="story-ph"><img src="https://loremflickr.com/600/600/baker,kitchen/all?lock=61" alt="Baker kneading dough" onerror="this.style.display='none'"></div>
+    <div>
+      <h2>Started in a home oven, four years ago.</h2>
+      <p>Wheat &amp; Ash began as a Sunday hobby — loaves left on neighbors' porches with a note asking what they thought. Three years later we opened a five-table shop two blocks from where it started.</p>
+      <p>We still bake the same way: slow fermentation, local flour, and small enough batches that we actually taste every loaf before it goes in the case.</p>
+      <p class="quote">"We'd rather sell out by 10am than compromise the bread."</p>
+    </div>
+  </div>
+</section>
+
+<section class="hours" id="hours">
+  <div class="wrap hours-inner">
+    <div>
+      <h2>Hours</h2>
+      <div class="hrow"><span>Tue – Fri</span><span>6:00am – 2:00pm</span></div>
+      <div class="hrow"><span>Saturday</span><span>7:00am – 3:00pm</span></div>
+      <div class="hrow"><span>Sunday</span><span>7:00am – 1:00pm</span></div>
+      <div class="hrow"><span>Monday</span><span>Closed</span></div>
+    </div>
+    <div class="addr">
+      <h2>Find us</h2>
+      <p>412 Ash Lane<br>Surprise, AZ 85374<br><br>We sell out most days — come early, or call ahead for a standing order.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+    <span>© Wheat &amp; Ash Bakery</span>
+    <span>Design demo by Fleming Solutions</span>
+  </div>
+</footer>
+
+
+<script>
+  (function(){
+    const toggle = document.getElementById('menu-toggle');
+    const links = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+    if(!toggle || !links) return;
+    function closeMenu(){ links.classList.remove('open'); overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    function openMenu(){ links.classList.add('open'); overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+    toggle.addEventListener('click', function(){ links.classList.contains('open') ? closeMenu() : openMenu(); });
+    overlay.addEventListener('click', closeMenu);
+    links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  })();
+</script>
+</body>
+</html>
