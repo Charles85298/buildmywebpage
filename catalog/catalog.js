@@ -390,3 +390,37 @@
   ];
   box.innerHTML=items.map(([a,b])=>`<span>${a}: ${b}</span>`).join('');
 })();
+
+
+// ===== Ordered Flow Completion + Design Cart =====
+(()=>{
+ const FLOW=[['HD','Header & Hero','headers.html'],['NV','Navigation / Menu','navigation.html'],['FR','Frames / Sections','frames.html'],['FT','Typography','fonts.html'],['IN','Inputs & Forms','inputs.html'],['BT','Buttons','buttons.html'],['CD','Cards & Labels','cards.html'],['TB','Tables','tables.html'],['GA','Galleries','galleries.html'],['FX','Effects','effects.html'],['FO','Footer','footers.html']];
+ const STORE='fs-builder-selections';
+ const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}};
+ const vals=()=>Object.values(read());
+ function updateFlow(){
+   const data=vals();
+   document.querySelectorAll('.flow-step').forEach(step=>{
+     const href=step.getAttribute('href')||'', item=FLOW.find(x=>href.endsWith(x[2])); if(!item)return;
+     const [p]=item,done=data.some(x=>String(x.code||'').startsWith(p+'-'))||localStorage.getItem('fs-skip-'+p)==='1';
+     step.classList.toggle('done',done);const i=step.querySelector('i');if(i&&done&&!step.classList.contains('active'))i.textContent='✓';
+   });
+   updateCart();
+ }
+ function currentPrefix(){const file=location.pathname.split('/').pop();return FLOW.find(x=>x[2]===file)?.[0]||null}
+ function addSkip(){
+   const p=currentPrefix();if(!p||document.querySelector('.skip-step'))return;
+   const actions=document.querySelector('.design-flow-actions');if(!actions)return;
+   const b=document.createElement('button');b.type='button';b.className='skip-step';b.textContent=localStorage.getItem('fs-skip-'+p)==='1'?'✓ Skipped':'Skip / Not Needed';
+   b.onclick=()=>{const k='fs-skip-'+p;if(localStorage.getItem(k)==='1')localStorage.removeItem(k);else localStorage.setItem(k,'1');b.textContent=localStorage.getItem(k)==='1'?'✓ Skipped':'Skip / Not Needed';updateFlow();};actions.insertBefore(b,actions.lastElementChild);
+ }
+ function updateCart(){
+   if(location.pathname.endsWith('builder.html'))return;
+   let cart=document.querySelector('.design-cart');if(!cart){cart=document.createElement('button');cart.type='button';cart.className='design-cart';cart.innerHTML='<span>My Website</span><b>0</b>';document.body.appendChild(cart);cart.onclick=toggleDrawer}
+   cart.querySelector('b').textContent=vals().length;
+   renderDrawer();
+ }
+ function toggleDrawer(){let d=document.querySelector('.design-cart-drawer');if(!d){d=document.createElement('aside');d.className='design-cart-drawer';d.innerHTML='<div class="cart-head"><strong>My Website</strong><button type="button">×</button></div><div class="cart-body"></div><div class="cart-foot"><a href="website-preview.html">Preview Website</a><a href="builder.html">Review Selections</a></div>';document.body.appendChild(d);d.querySelector('.cart-head button').onclick=()=>d.classList.remove('open')}renderDrawer();d.classList.toggle('open')}
+ function renderDrawer(){const d=document.querySelector('.design-cart-drawer');if(!d)return;const data=vals();d.querySelector('.cart-body').innerHTML=FLOW.map(([p,n,page])=>{const x=data.find(v=>String(v.code||'').startsWith(p+'-')),skip=localStorage.getItem('fs-skip-'+p)==='1';return `<div class="cart-row"><span>${n}</span>${x?`<a href="${page}">✓ ${x.code}</a>`:skip?`<em>Skipped</em>`:`<a href="${page}">Choose</a>`}</div>`}).join('')}
+ window.addEventListener('fs-selection-change',updateFlow);addSkip();updateFlow();
+})();

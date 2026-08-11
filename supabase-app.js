@@ -66,7 +66,8 @@
       selections: Object.values(readJSON(STORE, {})),
       guided_builder: readJSON(GUIDE, {}),
       project_details: readJSON(DETAILS, {}),
-      project_theme: readJSON(THEME, {})
+      project_theme: readJSON(THEME, {}),
+      skipped_steps: ['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].filter(p => localStorage.getItem('fs-skip-'+p)==='1')
     };
   }
 
@@ -109,7 +110,8 @@
       metadata: {
         guide,
         design_system: design,
-        local_snapshot_version: 1
+        local_snapshot_version: 1,
+        skipped_steps: ['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].filter(p => localStorage.getItem('fs-skip-'+p)==='1')
       }
     };
   }
@@ -369,6 +371,9 @@
     writeJSON(STORE, selections);
     writeJSON(DESIGN, design);
     writeJSON(GUIDE, guide);
+    ['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].forEach(k=>localStorage.removeItem('fs-skip-'+k));
+    (p.metadata?.skipped_steps || []).forEach(k=>localStorage.setItem('fs-skip-'+k,'1'));
+
     writeJSON(DETAILS, details);
 
     if (themeResult.data) {
@@ -585,6 +590,65 @@
     });
   }
 
+
+  async function saveReferenceDocument({title, previewHtml, previewData}) {
+    if (!state.user) throw new Error('Please sign in before saving a reference document.');
+    if (!state.activeProjectId) {
+      const project = await saveProject();
+      state.activeProjectId = project.id;
+    }
+
+    const {data:latest, error:versionError} = await client
+      .from('project_reference_documents')
+      .select('version_number')
+      .eq('project_id', state.activeProjectId)
+      .order('version_number', {ascending:false})
+      .limit(1);
+
+    if (versionError) throw versionError;
+
+    const version = (latest?.[0]?.version_number || 0) + 1;
+
+    const {data, error} = await client
+      .from('project_reference_documents')
+      .insert({
+        project_id: state.activeProjectId,
+        user_id: state.user.id,
+        title: title || `Website Preview v${version}`,
+        version_number: version,
+        preview_html: previewHtml,
+        preview_data: previewData || {},
+        status: 'reference'
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async function listReferenceDocuments() {
+    if (!state.user || !state.activeProjectId) return [];
+    const {data, error} = await client
+      .from('project_reference_documents')
+      .select('id,title,version_number,status,created_at,updated_at')
+      .eq('project_id', state.activeProjectId)
+      .order('version_number', {ascending:false});
+    if (error) throw error;
+    return data || [];
+  }
+
+  async function getReferenceDocument(id) {
+    if (!state.user) throw new Error('Please sign in first.');
+    const {data, error} = await client
+      .from('project_reference_documents')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error) throw error;
+    return data;
+  }
+
   async function submitContactRequest(form) {
     const status = $('#form-status');
     const f = new FormData(form);
@@ -661,6 +725,9 @@
     saveProject,
     saveTheme,
     loadProject,
+    saveReferenceDocument,
+    listReferenceDocuments,
+    getReferenceDocument,
     refreshSession,
     buildSnapshot
   };
