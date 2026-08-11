@@ -126,5 +126,72 @@
 
   // A small instruction strip without changing the page architecture.
   const heroP=$('.hero p');
-  if(heroP){const note=document.createElement('p');note.style.cssText='margin-top:10px;font-size:.8rem;font-weight:800;color:var(--blue)';note.textContent='Interactive demos enabled — click controls to test them. Double-click any specimen card to mark it selected.';heroP.after(note)}
+  if(heroP){const note=document.createElement('p');note.style.cssText='margin-top:10px;font-size:.8rem;font-weight:800;color:var(--blue)';note.textContent='Interactive demos enabled — click controls to test them, then press Select on any specimen you want to save to your Website Builder.';heroP.after(note)}
+})();
+
+
+// ===== Persistent Customer Website Builder =====
+(() => {
+  const STORE='fs-builder-selections';
+  const DETAILS='fs-builder-details';
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}};
+  const write=data=>{localStorage.setItem(STORE,JSON.stringify(data)); updateFab();};
+  const category=()=>document.querySelector('.hero h1')?.textContent.trim()||'Catalog';
+  const getInfo=card=>({code:$('.code',card)?.textContent.trim()||'',name:$('h3',card)?.textContent.trim()||'Design option',category:category(),page:location.pathname.split('/').pop()});
+  function selected(code){return !!read()[code]}
+  function setCard(card,on){
+    card.classList.toggle('builder-selected',on);
+    const b=$('.select-design',card);
+    if(b){b.textContent=on?'✓ Selected':'+ Select'; b.setAttribute('aria-pressed',String(on));}
+    renderColorControls(card,on);
+  }
+  function defaultColorPrefs(){return {colorMode:'as-shown',primary:'#1697E6',secondary:'#0E2A47',text:'#FFFFFF',background:'#FFFFFF'};}
+  function renderColorControls(card,on){
+    let panel=$('.item-color-controls',card);
+    if(!on){panel?.remove();return;}
+    const info=getInfo(card), data=read(), item=data[info.code]||{}, prefs={...defaultColorPrefs(),...(item.colors||{})};
+    if(!panel){panel=document.createElement('div');panel.className='item-color-controls';card.appendChild(panel);}
+    panel.innerHTML=`<div class="color-control-title">Color preference</div>
+      <div class="color-mode-row">
+        <label><input type="radio" name="mode-${info.code}" value="as-shown" ${prefs.colorMode==='as-shown'?'checked':''}> As Shown</label>
+        <label><input type="radio" name="mode-${info.code}" value="palette" ${prefs.colorMode==='palette'?'checked':''}> Use My Palette</label>
+        <label><input type="radio" name="mode-${info.code}" value="custom" ${prefs.colorMode==='custom'?'checked':''}> Choose Colors</label>
+      </div>
+      <div class="custom-color-grid" ${prefs.colorMode==='custom'?'':'hidden'}>
+        ${[['primary','Primary'],['secondary','Secondary'],['text','Text'],['background','Background']].map(([k,l])=>`<label>${l}<span><input type="color" data-color="${k}" value="${prefs[k]}"><input class="hex-color" data-hex="${k}" value="${prefs[k]}" maxlength="7" aria-label="${l} hex color"></span></label>`).join('')}
+      </div>`;
+    const save=()=>{
+      const d=read(), x=d[info.code]; if(!x)return;
+      const mode=$(`input[name="mode-${info.code}"]:checked`,panel)?.value||'as-shown';
+      const colors={...(x.colors||defaultColorPrefs()),colorMode:mode};
+      $$('[data-color]',panel).forEach(inp=>colors[inp.dataset.color]=inp.value.toUpperCase());
+      d[info.code]={...x,colors};write(d);
+      $('.custom-color-grid',panel).hidden=mode!=='custom';
+    };
+    $$(`input[name="mode-${info.code}"]`,panel).forEach(r=>r.addEventListener('change',save));
+    $$('[data-color]',panel).forEach(inp=>inp.addEventListener('input',()=>{const hex=$(`[data-hex="${inp.dataset.color}"]`,panel);hex.value=inp.value.toUpperCase();save()}));
+    $$('[data-hex]',panel).forEach(inp=>inp.addEventListener('change',()=>{let v=inp.value.trim();if(/^#[0-9a-fA-F]{6}$/.test(v)){const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);cp.value=v;save()}else{const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);inp.value=cp.value.toUpperCase();}}));
+  }
+  function toggle(card){const info=getInfo(card); if(!info.code)return; const data=read(); if(data[info.code]) delete data[info.code]; else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()}; write(data); setCard(card,!!data[info.code]);}
+  // Add explicit selection buttons to every coded specimen.
+  $$('.specimen').forEach(card=>{const info=getInfo(card);if(!info.code)return;let b=$('.select-design',card);if(!b){b=document.createElement('button');b.type='button';b.className='select-design';b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle(card)});card.appendChild(b)}setCard(card,selected(info.code));card.addEventListener('dblclick',e=>{if(e.target.closest('button,input,textarea,select,a'))return;e.preventDefault();toggle(card)});});
+  function updateFab(){if(location.pathname.endsWith('/builder.html')||location.pathname.endsWith('builder.html'))return;const count=Object.keys(read()).length;let fab=$('.selection-fab');if(!fab){fab=document.createElement('a');fab.href='builder.html';fab.className='selection-fab';fab.innerHTML='My Selections <b>0</b>';document.body.appendChild(fab)}$('b',fab).textContent=count;fab.title=`Review ${count} selected design${count===1?'':'s'}`;}
+  updateFab();
+  // Search/filter on catalog detail pages.
+  const search=$('.catalog-search'); if(search){const cards=$$('.catalog-grid .specimen');const count=$('.catalog-result-count');const run=()=>{const q=search.value.trim().toLowerCase();let shown=0;cards.forEach(c=>{const ok=!q||c.textContent.toLowerCase().includes(q);c.style.display=ok?'':'none';if(ok)shown++});if(count)count.textContent=`${shown} shown`;};search.addEventListener('input',run);run();}
+  // Builder summary page.
+  const groups=$('#selection-groups'); if(groups){
+    const empty=$('#empty-selections'), num=$('#selection-count');
+    const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    function colorSummary(x){const c=x.colors||{};const mode=c.colorMode||'as-shown';if(mode==='as-shown')return '<small class="selection-color-note">Color: As Shown</small>';if(mode==='palette')return '<small class="selection-color-note">Color: Use My Palette</small>';return `<small class="selection-color-note">Colors: <i style="background:${esc(c.primary||'#1697E6')}"></i>${esc(c.primary||'')} · <i style="background:${esc(c.secondary||'#0E2A47')}"></i>${esc(c.secondary||'')}<br>Text ${esc(c.text||'')} · Background ${esc(c.background||'')}</small>`;}
+    function render(){const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));num.textContent=data.length;groups.innerHTML='';empty.style.display=data.length?'none':'';const by={};data.forEach(x=>(by[x.category]??=[]).push(x));Object.entries(by).forEach(([cat,items])=>{const sec=document.createElement('section');sec.className='selection-group';sec.innerHTML=`<h2>${esc(cat)} <span class="code">${items.length}</span></h2>`+items.map(x=>`<div class="selection-item"><div class="selection-thumb">${esc(x.code)}</div><div><h3>${esc(x.name)}</h3><p>${esc(x.code)} · ${esc(x.page)}</p>${colorSummary(x)}</div><button type="button" class="remove-selection" data-code="${esc(x.code)}">Remove</button></div>`).join('');groups.appendChild(sec)});$$('.remove-selection',groups).forEach(b=>b.onclick=()=>{const d=read();delete d[b.dataset.code];write(d);render()});applyPreview(data);}
+    const detailIds=['client-name','client-business','client-email','client-notes'];let details={};try{details=JSON.parse(localStorage.getItem(DETAILS)||'{}')}catch(e){}detailIds.forEach(id=>{const el=$('#'+id);if(!el)return;el.value=details[id]||'';el.addEventListener('input',()=>{details[id]=el.value;localStorage.setItem(DETAILS,JSON.stringify(details))})});
+    const summary=()=>{const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));const lines=['FLEMING SOLUTIONS — WEBSITE DESIGN SELECTIONS',''];if($('#client-name')?.value)lines.push(`Name: ${$('#client-name').value}`);if($('#client-business')?.value)lines.push(`Business: ${$('#client-business').value}`);if($('#client-email')?.value)lines.push(`Email: ${$('#client-email').value}`);if(lines.length>2)lines.push('');let last='';data.forEach(x=>{if(x.category!==last){lines.push(x.category.toUpperCase());last=x.category}{let cs='As Shown';const c=x.colors||{};if(c.colorMode==='palette')cs='Use My Palette';else if(c.colorMode==='custom')cs=`Primary ${c.primary}; Secondary ${c.secondary}; Text ${c.text}; Background ${c.background}`;lines.push(`- ${x.code} — ${x.name} | Color: ${cs}`)}});if($('#client-notes')?.value)lines.push('','Notes:', $('#client-notes').value);return lines.join('\n')};
+    $('#copy-summary').onclick=async()=>{try{await navigator.clipboard.writeText(summary());alert('Selection summary copied to your clipboard.')}catch(e){prompt('Copy your selections:',summary())}};$('#print-summary').onclick=()=>window.print();$('#attach-contact')?.addEventListener('click',()=>{location.href='../index.html?attachSelections=1#contact'});$('#clear-selections').onclick=()=>{if(confirm('Clear all saved website selections?')){localStorage.removeItem(STORE);render()}};$('#email-selections').onclick=()=>{const subject=encodeURIComponent(`Website selections${$('#client-business')?.value?' — '+$('#client-business').value:''}`);const body=encodeURIComponent(summary());location.href=`mailto:charles.flemingiii@outlook.com?subject=${subject}&body=${body}`};
+    function applyPreview(data){const p=$('#website-preview');if(!p)return;const palette=data.find(x=>x.code?.startsWith('CP-'));let colors=['#0E2A47','#1697E6','#EAF6FF','#FFFFFF'];if(palette){const source=document.querySelector(`[data-palette]`); // builder page has no source; use known map from code
+      const map={"CP-01":["#0E2A47","#1697E6","#F6F9FC","#FFFFFF"],"CP-02":["#081A2B","#35B8FF","#7C3AED","#F8FAFC"],"CP-03":["#111111","#C9A227","#F5E7B2","#FFFFFF"],"CP-04":["#061A2D","#0066FF","#35B8FF","#EAF6FF"],"CP-05":["#0F2D28","#16A34A","#86EFAC","#F0FDF4"],"CP-06":["#342A24","#C26D3A","#F3E9DC","#FFFDF8"],"CP-07":["#3B2F2F","#D97745","#EAB676","#F7E8D0"],"CP-08":["#0B3B60","#0EA5A8","#DDF8F6","#FFFFFF"],"CP-09":["#102A43","#2F80ED","#B8D8FF","#F7FAFC"],"CP-10":["#2C1810","#A9442B","#D4A373","#FFF8EC"],"CP-11":["#18212B","#F59E0B","#FFD166","#F7F7F7"],"CP-12":["#172554","#6366F1","#C7D2FE","#F8FAFC"],"CP-13":["#4A2337","#E11D74","#FBCFE8","#FFF7FB"],"CP-14":["#243B2F","#53734B","#B7C9A8","#F5F7EF"],"CP-15":["#0F172A","#475569","#CBD5E1","#FFFFFF"],"CP-16":["#231942","#7C3AED","#C4B5FD","#FAF5FF"],"CP-17":["#082F49","#0284C7","#67E8F9","#ECFEFF"],"CP-18":["#431407","#EA580C","#FDBA74","#FFF7ED"],"CP-19":["#111827","#374151","#D1D5DB","#F9FAFB"],"CP-20":["#050816","#00E5FF","#B026FF","#E6FBFF"],"CP-21":["#29251F","#8B6F47","#D6C4A1","#F7F2E8"],"CP-22":["#3F1D2E","#FB7185","#FBCFE8","#FFF1F2"],"CP-23":["#0F3437","#0F766E","#B87333","#F0FDFA"],"CP-24":["#14213D","#2563EB","#F97316","#F8FAFC"]};colors=map[palette.code]||colors;}
+      p.style.setProperty('--preview-dark',colors[0]);p.style.setProperty('--preview-accent',colors[1]);p.style.setProperty('--preview-soft',colors[2]);}
+    render();
+  }
 })();
