@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset=".55" stop-color="#EAF6FF"/>
+      <stop offset="1" stop-color="#0E2A47"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1697E6"/>
+      <stop offset="1" stop-color="#0E2A47"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-opacity=".18"/></filter>
+  </defs>
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <circle cx="990" cy="110" r="220" fill="#1697E6" opacity=".16"/>
+  <circle cx="1040" cy="600" r="300" fill="#0E2A47" opacity=".18"/>
+  <path d="M0 590 C220 490 340 610 520 520 S850 450 1200 540 L1200 700 L0 700Z" fill="#0E2A47" opacity=".72"/>
+  <path d="M0 615 C250 540 360 640 570 565 S910 505 1200 580" fill="none" stroke="#1697E6" stroke-width="14" opacity=".75"/>
+  <rect x="70" y="70" width="1060" height="92" rx="24" fill="#FFFFFF" opacity=".92" filter="url(#shadow)"/>
+  <rect x="98" y="101" width="150" height="28" rx="14" fill="url(#accent)"/>
+  <rect x="730" y="101" width="90" height="18" rx="9" fill="#0E2A47" opacity=".55"/>
+  <rect x="840" y="101" width="90" height="18" rx="9" fill="#0E2A47" opacity=".55"/>
+  <rect x="950" y="94" width="130" height="32" rx="16" fill="#1697E6" opacity=".9"/>
+  <rect x="90" y="240" width="500" height="58" rx="12" fill="#0E2A47" opacity=".86"/>
+  <rect x="90" y="320" width="430" height="24" rx="12" fill="#0E2A47" opacity=".42"/>
+  <rect x="90" y="360" width="360" height="24" rx="12" fill="#0E2A47" opacity=".28"/>
+  <rect x="90" y="420" width="170" height="48" rx="12" fill="#1697E6" opacity=".95"/>
+  <rect x="720" y="238" width="350" height="260" rx="30" fill="#FFFFFF" opacity=".78" filter="url(#shadow)"/>
+  <rect x="760" y="278" width="270" height="160" rx="22" fill="url(#accent)" opacity=".78"/>
+  <text x="90" y="535" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">all</text>
+</svg>
