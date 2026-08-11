@@ -139,12 +139,74 @@
   const write=data=>{localStorage.setItem(STORE,JSON.stringify(data)); updateFab();};
   const category=()=>document.querySelector('.hero h1')?.textContent.trim()||'Catalog';
   const getInfo=card=>({code:$('.code',card)?.textContent.trim()||'',name:$('h3',card)?.textContent.trim()||'Design option',category:category(),page:location.pathname.split('/').pop()});
+  const PALETTE_STORE='fs-builder-selections';
+  function selectedPaletteColors(){
+    const data=Object.values(read());
+    const p=data.find(x=>String(x.code||'').startsWith('CP-'));
+    const map={
+      "CP-01":["#0E2A47","#1697E6","#F6F9FC","#FFFFFF"],"CP-02":["#081A2B","#35B8FF","#7C3AED","#F8FAFC"],
+      "CP-03":["#111111","#C9A227","#F5E7B2","#FFFFFF"],"CP-04":["#061A2D","#0066FF","#35B8FF","#EAF6FF"],
+      "CP-05":["#0F2D28","#16A34A","#86EFAC","#F0FDF4"],"CP-06":["#342A24","#C26D3A","#F3E9DC","#FFFDF8"],
+      "CP-07":["#3B2F2F","#D97745","#EAB676","#F7E8D0"],"CP-08":["#0B3B60","#0EA5A8","#DDF8F6","#FFFFFF"],
+      "CP-09":["#102A43","#2F80ED","#B8D8FF","#F7FAFC"],"CP-10":["#2C1810","#A9442B","#D4A373","#FFF8EC"],
+      "CP-11":["#18212B","#F59E0B","#FFD166","#F7F7F7"],"CP-12":["#172554","#6366F1","#C7D2FE","#F8FAFC"],
+      "CP-13":["#4A2337","#E11D74","#FBCFE8","#FFF7FB"],"CP-14":["#243B2F","#53734B","#B7C9A8","#F5F7EF"],
+      "CP-15":["#0F172A","#475569","#CBD5E1","#FFFFFF"],"CP-16":["#231942","#7C3AED","#C4B5FD","#FAF5FF"],
+      "CP-17":["#082F49","#0284C7","#67E8F9","#ECFEFF"],"CP-18":["#431407","#EA580C","#FDBA74","#FFF7ED"],
+      "CP-19":["#111827","#374151","#D1D5DB","#F9FAFB"],"CP-20":["#050816","#00E5FF","#B026FF","#E6FBFF"],
+      "CP-21":["#29251F","#8B6F47","#D6C4A1","#F7F2E8"],"CP-22":["#3F1D2E","#FB7185","#FBCFE8","#FFF1F2"],
+      "CP-23":["#0F3437","#0F766E","#B87333","#F0FDFA"],"CP-24":["#14213D","#2563EB","#F97316","#F8FAFC"]
+    };
+    return map[p?.code] || ["#0E2A47","#1697E6","#FFFFFF","#F6F9FC"];
+  }
+  function targetsForCard(card){
+    const pair=$('.variant-pair',card);
+    const roots=pair ? $$('.variant-sample',pair) : [$('.sample',card)].filter(Boolean);
+    return roots.map(r=>$('button',r)||$('a',r)||$('input[type="button"]',r)||$('.btn',r)||r).filter(Boolean);
+  }
+  function targetForCard(card){return targetsForCard(card)[0]||null;}
+  function rememberOriginalStyle(card){
+    targetsForCard(card).forEach(t=>{if(t.dataset.fsOriginalCaptured!=='1'){t.dataset.fsOriginalCaptured='1';t.dataset.fsOriginalStyle=t.getAttribute('style')||'';}});
+  }
+  function restoreOriginalStyle(card){
+    targetsForCard(card).forEach(t=>{if(t.dataset.fsOriginalCaptured==='1'){const o=t.dataset.fsOriginalStyle||'';if(o)t.setAttribute('style',o);else t.removeAttribute('style');}});
+    card.classList.remove('custom-color-preview','palette-color-preview');
+  }
+  function styleVariant(t,primary,secondary,text,variant){
+    if(!t)return;
+    if(variant==='secondary'){
+      t.style.setProperty('background',secondary,'important');
+      t.style.setProperty('background-color',secondary,'important');
+      t.style.setProperty('color',text,'important');
+      t.style.setProperty('border-color',secondary,'important');
+      t.style.setProperty('box-shadow',`0 6px 16px color-mix(in srgb, ${secondary} 24%, transparent)`,'important');
+    }else{
+      t.style.setProperty('background',primary,'important');
+      t.style.setProperty('background-color',primary,'important');
+      t.style.setProperty('color',text,'important');
+      t.style.setProperty('border-color',primary,'important');
+      t.style.setProperty('box-shadow',`0 8px 22px color-mix(in srgb, ${primary} 35%, transparent)`,'important');
+    }
+  }
+  function applyColorPreview(card,prefs){
+    const targets=targetsForCard(card);if(!targets.length)return;rememberOriginalStyle(card);
+    const mode=prefs?.colorMode||'as-shown';
+    if(mode==='as-shown'){restoreOriginalStyle(card);return;}
+    let primary,secondary,text,bg;
+    if(mode==='palette'){const p=selectedPaletteColors();[secondary,primary,text,bg]=[p[0],p[1],p[3]||'#FFFFFF',p[2]||'#F6F9FC'];card.classList.add('palette-color-preview');card.classList.remove('custom-color-preview');}
+    else{primary=prefs.primary||'#1697E6';secondary=prefs.secondary||'#0E2A47';text=prefs.text||'#FFFFFF';bg=prefs.background||'#FFFFFF';card.classList.add('custom-color-preview');card.classList.remove('palette-color-preview');}
+    styleVariant(targets[0],primary,secondary,text,'primary');
+    styleVariant(targets[1],primary,secondary,text,'secondary');
+    $$('.variant-sample',card).forEach(x=>x.style.setProperty('--customer-bg',bg));
+  }
   function selected(code){return !!read()[code]}
   function setCard(card,on){
     card.classList.toggle('builder-selected',on);
     const b=$('.select-design',card);
     if(b){b.textContent=on?'✓ Selected':'+ Select'; b.setAttribute('aria-pressed',String(on));}
     renderColorControls(card,on);
+    if(on){const data=read(), info=getInfo(card); applyColorPreview(card,data[info.code]?.colors||defaultColorPrefs());}
+    else restoreOriginalStyle(card);
   }
   function defaultColorPrefs(){return {colorMode:'as-shown',primary:'#1697E6',secondary:'#0E2A47',text:'#FFFFFF',background:'#FFFFFF'};}
   function renderColorControls(card,on){
@@ -152,14 +214,14 @@
     if(!on){panel?.remove();return;}
     const info=getInfo(card), data=read(), item=data[info.code]||{}, prefs={...defaultColorPrefs(),...(item.colors||{})};
     if(!panel){panel=document.createElement('div');panel.className='item-color-controls';card.appendChild(panel);}
-    panel.innerHTML=`<div class="color-control-title">Color preference</div>
+    panel.innerHTML=`<div class="color-control-title">Primary + Secondary appearance</div>
       <div class="color-mode-row">
         <label><input type="radio" name="mode-${info.code}" value="as-shown" ${prefs.colorMode==='as-shown'?'checked':''}> As Shown</label>
         <label><input type="radio" name="mode-${info.code}" value="palette" ${prefs.colorMode==='palette'?'checked':''}> Use My Palette</label>
-        <label><input type="radio" name="mode-${info.code}" value="custom" ${prefs.colorMode==='custom'?'checked':''}> Choose Colors</label>
+        <label><input type="radio" name="mode-${info.code}" value="custom" ${prefs.colorMode==='custom'?'checked':''}> Customize Pair</label>
       </div>
       <div class="custom-color-grid" ${prefs.colorMode==='custom'?'':'hidden'}>
-        ${[['primary','Primary'],['secondary','Secondary'],['text','Text'],['background','Background']].map(([k,l])=>`<label>${l}<span><input type="color" data-color="${k}" value="${prefs[k]}"><input class="hex-color" data-hex="${k}" value="${prefs[k]}" maxlength="7" aria-label="${l} hex color"></span></label>`).join('')}
+        ${[['primary','Primary Button'],['secondary','Secondary Button'],['text','Text'],['background','Preview Background']].map(([k,l])=>`<label>${l}<span><input type="color" data-color="${k}" value="${prefs[k]}"><input class="hex-color" data-hex="${k}" value="${prefs[k]}" maxlength="7" aria-label="${l} hex color"></span></label>`).join('')}
       </div>`;
     const save=()=>{
       const d=read(), x=d[info.code]; if(!x)return;
@@ -168,12 +230,40 @@
       $$('[data-color]',panel).forEach(inp=>colors[inp.dataset.color]=inp.value.toUpperCase());
       d[info.code]={...x,colors};write(d);
       $('.custom-color-grid',panel).hidden=mode!=='custom';
+      applyColorPreview(card,colors);
     };
     $$(`input[name="mode-${info.code}"]`,panel).forEach(r=>r.addEventListener('change',save));
     $$('[data-color]',panel).forEach(inp=>inp.addEventListener('input',()=>{const hex=$(`[data-hex="${inp.dataset.color}"]`,panel);hex.value=inp.value.toUpperCase();save()}));
     $$('[data-hex]',panel).forEach(inp=>inp.addEventListener('change',()=>{let v=inp.value.trim();if(/^#[0-9a-fA-F]{6}$/.test(v)){const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);cp.value=v;save()}else{const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);inp.value=cp.value.toUpperCase();}}));
   }
   function toggle(card){const info=getInfo(card); if(!info.code)return; const data=read(); if(data[info.code]) delete data[info.code]; else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()}; write(data); setCard(card,!!data[info.code]);}
+  
+  // Show two practical variants for every catalog specimen.
+  function variantLabels(){
+    const title=(document.querySelector('.hero h1')?.textContent||'').toLowerCase();
+    if(title.includes('font')||title.includes('typograph')) return ['HEADING','BODY'];
+    if(title.includes('color')) return ['BRAND','ACCENT'];
+    if(title.includes('card')) return ['FEATURED','STANDARD'];
+    if(title.includes('frame')) return ['FEATURED','STANDARD'];
+    if(title.includes('header')) return ['PRIMARY','COMPACT'];
+    if(title.includes('gallery')) return ['FEATURED','THUMBNAIL'];
+    if(title.includes('table')) return ['HEADER','STANDARD'];
+    if(title.includes('alert')) return ['IMPORTANT','INFORMATIONAL'];
+    return ['PRIMARY','SECONDARY'];
+  }
+  function buildVariantPreview(card){
+    const sample=$('.sample',card); if(!sample || $('.variant-pair',card))return;
+    const labels=variantLabels(), pair=document.createElement('div');pair.className='variant-pair';
+    const original=sample.cloneNode(true), secondary=sample.cloneNode(true);
+    original.classList.add('variant-sample','variant-primary');secondary.classList.add('variant-sample','variant-secondary');
+    // IDs in clones must not duplicate live control IDs.
+    [original,secondary].forEach((node,ix)=>node.querySelectorAll('[id]').forEach(el=>{el.removeAttribute('id')}));
+    pair.innerHTML=`<div class="variant-col"><span class="variant-label">${labels[0]}</span></div><div class="variant-col"><span class="variant-label">${labels[1]}</span></div>`;
+    pair.children[0].appendChild(original);pair.children[1].appendChild(secondary);
+    sample.style.display='none';sample.after(pair);
+  }
+  $$('.specimen').forEach(buildVariantPreview);
+
   // Add explicit selection buttons to every coded specimen.
   $$('.specimen').forEach(card=>{const info=getInfo(card);if(!info.code)return;let b=$('.select-design',card);if(!b){b=document.createElement('button');b.type='button';b.className='select-design';b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle(card)});card.appendChild(b)}setCard(card,selected(info.code));card.addEventListener('dblclick',e=>{if(e.target.closest('button,input,textarea,select,a'))return;e.preventDefault();toggle(card)});});
   function updateFab(){if(location.pathname.endsWith('/builder.html')||location.pathname.endsWith('builder.html'))return;const count=Object.keys(read()).length;let fab=$('.selection-fab');if(!fab){fab=document.createElement('a');fab.href='builder.html';fab.className='selection-fab';fab.innerHTML='My Selections <b>0</b>';document.body.appendChild(fab)}$('b',fab).textContent=count;fab.title=`Review ${count} selected design${count===1?'':'s'}`;}
