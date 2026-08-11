@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Right Away Lending — Mortgages Made Simple</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
   :root{
     --navy:#0E2A47; --blue:#1697E6; --electric:#35B8FF; --red:#E53935; --slate:#475569; --charcoal:#1E293B;
@@ -114,115 +115,104 @@
 </style>
 </head>
 <body>
-
-<a href="../index.html" class="back">← Style Library</a>
-
+<a class="back" href="../index.html">← Style Library</a>
 <header>
 <div class="nav-overlay" id="nav-overlay"></div>
-  <div class="wrap nav-row">
-    <div class="logo"><span class="mark">RA</span>Right Away Lending</div>
-    <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">☰</button>
-    <nav><ul class="nav-links" id="nav-links">
-      <li><a href="#programs">Loan Programs</a></li>
-      <li><a href="#process">Process</a></li>
-      <li><a href="#" class="nav-btn">Get Pre-Qualified</a></li>
-    </ul></nav>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="rate-pill"><span class="dot"></span>30-yr fixed rates starting at 6.125% APR*</div>
-      <h1 class="hero-title">A mortgage that closes <em>right away</em> — not eventually.</h1>
-      <p class="hero-sub">Right Away Lending pairs modern digital pre-qualification with a real loan officer who picks up the phone. Most clients close in 21 days or less.</p>
-      <div class="hero-actions">
-        <a href="#" class="btn">Get Pre-Qualified in Minutes</a>
-        <a href="#programs" class="btn alt">See Loan Programs</a>
-      </div>
-    </div>
-    <div class="calc-card">
-      <h3>Estimate Your Monthly Payment</h3>
-      <div class="calc-row"><label>Home price <b id="priceVal">$420,000</b></label><input type="range" id="price" min="150000" max="1200000" step="10000" value="420000"></div>
-      <div class="calc-row"><label>Down payment <b id="downVal">20%</b></label><input type="range" id="down" min="3" max="50" step="1" value="20"></div>
-      <div class="calc-row"><label>Interest rate <b id="rateVal">6.125%</b></label><input type="range" id="rate" min="4" max="9" step="0.125" value="6.125"></div>
-      <div class="calc-result"><span>Est. monthly payment</span><strong id="paymentVal">$2,043</strong></div>
-    </div>
-  </div>
-</section>
-
-<div class="trust-strip">
-  <div class="wrap">
-    <span>NMLS #1928374</span>
-    <span>Equal Housing Lender</span>
-    <span>Licensed in 38 states</span>
-    <span>4.8/5 from 2,100+ clients</span>
-  </div>
+<div class="wrap nav-row">
+<div class="logo"><span class="mark">RA</span>Right Away Lending</div>
+<button aria-label="Open menu" class="menu-toggle" id="menu-toggle">☰</button>
+<nav><ul class="nav-links" id="nav-links">
+<li><a href="#programs">Loan Programs</a></li>
+<li><a href="#process">Process</a></li>
+<li><a class="nav-btn" href="#process">Get Pre-Qualified</a></li>
+</ul></nav>
 </div>
-
+</header>
+<section class="hero">
+<div class="wrap hero-grid">
+<div>
+<div class="rate-pill"><span class="dot"></span>30-yr fixed rates starting at 6.125% APR*</div>
+<h1 class="hero-title">A mortgage that closes <em>right away</em> — not eventually.</h1>
+<p class="hero-sub">Right Away Lending pairs modern digital pre-qualification with a real loan officer who picks up the phone. Most clients close in 21 days or less.</p>
+<div class="hero-actions">
+<a class="btn" href="#process">Get Pre-Qualified in Minutes</a>
+<a class="btn alt" href="#programs">See Loan Programs</a>
+</div>
+</div>
+<div class="calc-card">
+<h3>Estimate Your Monthly Payment</h3>
+<div class="calc-row"><label>Home price <b id="priceVal">$420,000</b></label><input id="price" max="1200000" min="150000" step="10000" type="range" value="420000"/></div>
+<div class="calc-row"><label>Down payment <b id="downVal">20%</b></label><input id="down" max="50" min="3" step="1" type="range" value="20"/></div>
+<div class="calc-row"><label>Interest rate <b id="rateVal">6.125%</b></label><input id="rate" max="9" min="4" step="0.125" type="range" value="6.125"/></div>
+<div class="calc-result"><span>Est. monthly payment</span><strong id="paymentVal">$2,043</strong></div>
+</div>
+</div>
+</section>
+<div class="trust-strip">
+<div class="wrap">
+<span>NMLS #1928374</span>
+<span>Equal Housing Lender</span>
+<span>Licensed in 38 states</span>
+<span>4.8/5 from 2,100+ clients</span>
+</div>
+</div>
 <section class="programs" id="programs">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">Loan programs</div>
-      <h2>Find the right fit for your situation.</h2>
-    </div>
-    <div class="program-grid">
-      <div class="program"><div class="rate">6.125%</div><h3>Conventional 30-Year</h3><p>Our most popular fixed-rate option for buyers with solid credit.</p></div>
-      <div class="program"><div class="rate">5.750%</div><h3>FHA Loan</h3><p>Lower down payment options for first-time buyers.</p></div>
-      <div class="program"><div class="rate">5.875%</div><h3>VA Loan</h3><p>Zero-down financing for eligible veterans and service members.</p></div>
-      <div class="program"><div class="rate">6.375%</div><h3>Cash-Out Refinance</h3><p>Tap your home's equity for renovations or debt consolidation.</p></div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">Loan programs</div>
+<h2>Find the right fit for your situation.</h2>
+</div>
+<div class="program-grid">
+<div class="program"><div class="rate">6.125%</div><h3>Conventional 30-Year</h3><p>Our most popular fixed-rate option for buyers with solid credit.</p></div>
+<div class="program"><div class="rate">5.750%</div><h3>FHA Loan</h3><p>Lower down payment options for first-time buyers.</p></div>
+<div class="program"><div class="rate">5.875%</div><h3>VA Loan</h3><p>Zero-down financing for eligible veterans and service members.</p></div>
+<div class="program"><div class="rate">6.375%</div><h3>Cash-Out Refinance</h3><p>Tap your home's equity for renovations or debt consolidation.</p></div>
+</div>
+</div>
 </section>
-
 <section class="process" id="process">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="eyebrow">How it works</div>
-      <h2>From application to keys, in four steps.</h2>
-    </div>
-    <div class="timeline">
-      <article><div class="n">01</div><h3>Pre-qualify online</h3><p>A 5-minute form gives you a real rate estimate, not a guess.</p></article>
-      <article><div class="n">02</div><h3>Talk to your officer</h3><p>A dedicated loan officer reviews your file within one business day.</p></article>
-      <article><div class="n">03</div><h3>Lock your rate</h3><p>Lock in your rate once you're under contract on a home.</p></article>
-      <article><div class="n">04</div><h3>Close on schedule</h3><p>Most clients close in 21 days — we track every deadline for you.</p></article>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">How it works</div>
+<h2>From application to keys, in four steps.</h2>
+</div>
+<div class="timeline">
+<article><div class="n">01</div><h3>Pre-qualify online</h3><p>A 5-minute form gives you a real rate estimate, not a guess.</p></article>
+<article><div class="n">02</div><h3>Talk to your officer</h3><p>A dedicated loan officer reviews your file within one business day.</p></article>
+<article><div class="n">03</div><h3>Lock your rate</h3><p>Lock in your rate once you're under contract on a home.</p></article>
+<article><div class="n">04</div><h3>Close on schedule</h3><p>Most clients close in 21 days — we track every deadline for you.</p></article>
+</div>
+</div>
 </section>
-
 <section class="officer">
-  <div class="wrap officer-inner">
-    <div class="officer-photo"><img src="https://loremflickr.com/500/500/professional,portrait,office/all?lock=421" alt="Loan officer portrait" onerror="this.style.display='none'"></div>
-    <div class="officer-copy">
-      <blockquote>"Most of our clients have already been frustrated by another lender by the time they call us. Our whole process is built around answering the phone and hitting the dates we promise."</blockquote>
-      <div class="name">Maria Contreras</div>
-      <div class="role">Senior Loan Officer, NMLS #556213</div>
-    </div>
-  </div>
+<div class="wrap officer-inner">
+<div class="officer-photo"><img alt="Loan officer portrait" onerror="this.style.display='none'" src="https://loremflickr.com/500/500/professional,portrait,office/all?lock=421"/></div>
+<div class="officer-copy">
+<blockquote>"Most of our clients have already been frustrated by another lender by the time they call us. Our whole process is built around answering the phone and hitting the dates we promise."</blockquote>
+<div class="name">Maria Contreras</div>
+<div class="role">Senior Loan Officer, NMLS #556213</div>
+</div>
+</div>
 </section>
-
 <section class="cta">
-  <div class="wrap">
-    <h2>Ready to see what you qualify for?</h2>
-    <a href="#" class="btn">Get Pre-Qualified — No Credit Impact</a>
-  </div>
+<div class="wrap">
+<h2>Ready to see what you qualify for?</h2>
+<a class="btn" href="#process">Get Pre-Qualified — No Credit Impact</a>
+</div>
 </section>
-
 <section class="disclosure">
-  <div class="wrap">
-    <div class="disclosure-box">
+<div class="wrap">
+<div class="disclosure-box">
       *Rates shown are for illustrative purposes only and are not a commitment to lend. Actual rate depends on credit score, loan amount, down payment, property type, and other factors. Right Away Lending, NMLS #1928374. Equal Housing Lender. This is a design demonstration only — not a real financial institution.
     </div>
-  </div>
+</div>
 </section>
-
 <footer>
-  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
-    <span>Right Away Lending · NMLS #1928374</span>
-    <span>Design demo by Fleming Solutions</span>
-  </div>
+<div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+<span>Right Away Lending · NMLS #1928374</span>
+<span>Design demo by Fleming Solutions</span>
+</div>
 </footer>
-
 <script>
   const price = document.getElementById('price');
   const down = document.getElementById('down');
@@ -248,8 +238,6 @@
   [price, down, rate].forEach(el => el.addEventListener('input', calc));
   calc();
 </script>
-
-
 <script>
   (function(){
     const toggle = document.getElementById('menu-toggle');

@@ -21,11 +21,55 @@
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{margin:0; font-family:'Inter', ui-sans-serif, system-ui, sans-serif; color:var(--navy); background:var(--white); line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
-  body.dark{--white:#0b1724; --soft:#101f2f; --border:#21364b; --navy:#f5f8fc; --charcoal:#e8eef5; --text:#a9bbcc; --shadow:0 24px 70px rgba(0,0,0,.35); --shadow-sm:0 12px 35px rgba(0,0,0,.25);}
+  body.dark{--white:#0b1724; --soft:#101f2f; --border:#3a5269; --navy:#f5f8fc; --charcoal:#e8eef5; --text:#c7d4e0; --shadow:0 24px 70px rgba(0,0,0,.35); --shadow-sm:0 12px 35px rgba(0,0,0,.25);}
   body.dark .site-header, body.dark .nav-links{background:rgba(11,23,36,.92);}
   body.dark .style-card, body.dark .price-card, body.dark .portrait-card, body.dark .accordion details, body.dark .browser-card{background:#102131;}
   body.dark .contact-form{background:#102131;}
-  body.dark input, body.dark select, body.dark textarea{background:#0b1724; color:#fff;}
+
+  body.dark input, body.dark select, body.dark textarea{background:#0b1724; color:#f8fafc; border-color:#526b82;}
+  body.dark input::placeholder, body.dark textarea::placeholder{color:#9fb2c4; opacity:1;}
+  body.dark .announcement{background:#071321;color:#f8fafc;}
+  body.dark .announcement a{color:#62c9ff;}
+  body.dark .contact-shell{background:#071321;color:#f8fafc;}
+  body.dark .contact-shell h2, body.dark .contact-shell h3, body.dark .contact-methods a{color:#fff;}
+  body.dark .contact-form label{color:#dbe7f1;}
+  body.dark .footer{background:#071321;color:#cbd5e1;}
+  body.dark .footer a{color:#d6e1eb;}
+  body.dark .back-top{background:#1697e6;color:#fff;}
+  body.dark .browser-url{background:#0b1724;color:#d9e5ef;border-color:#526b82;}
+  body.dark .timeline span{color:#9fb2c4;}
+  body.dark .btn-secondary{color:#f5f8fc;border-color:#526b82;}
+  body.dark .eyebrow, body.dark .card-num, body.dark .plan-label, body.dark .code{color:#62c9ff;}
+
+  /* Dark-mode contrast fixes for premium/catalog cards */
+  body.dark .premium-cap-grid article{
+    background:#102131;
+    border-color:#3f5a72;
+    color:#f5f8fc;
+    box-shadow:0 16px 42px rgba(0,0,0,.18);
+  }
+  body.dark .premium-cap-grid h3{color:#f8fafc;}
+  body.dark .premium-cap-grid p{color:#d5e0ea;opacity:1;}
+  body.dark .premium-cap-grid .card-link{color:#62c9ff;}
+  body.dark .premium-icon{
+    background:#162b3e;
+    border-color:#49647c;
+    color:#eaf3fa;
+  }
+  body.dark .premium-tech-strip span{
+    color:#d9e5ef;
+    border-color:#3f5a72;
+    background:rgba(16,33,49,.48);
+    opacity:1;
+  }
+  body.dark .premium-work-card{
+    background:#102131;
+    border-color:#3f5a72;
+    color:#f5f8fc;
+  }
+  body.dark .premium-work-card p{color:#d5e0ea;opacity:1;}
+  body.dark .premium-proof span{color:#c9d6e2;opacity:1;}
+
   a{color:inherit; text-decoration:none;}
   ul{list-style:none; margin:0; padding:0;}
   .container{width:min(var(--max), calc(100% - 40px)); margin-inline:auto;}
@@ -233,6 +277,20 @@
 @media(max-width:850px){.premium-work-grid,.premium-cap-grid{grid-template-columns:1fr 1fr}.premium-work-card{min-height:320px}.premium-proof{grid-template-columns:1fr}}
 @media(max-width:600px){.premium-added-section{padding:72px 18px}.premium-work-grid,.premium-cap-grid{grid-template-columns:1fr}.premium-work-card{min-height:300px;padding:24px}.premium-chip{margin-bottom:46px}}
 
+
+/* Fully clickable Design Catalog cards and category links */
+.premium-cap-grid .premium-cap-card{display:block;padding:28px;border:1px solid color-mix(in srgb,currentColor 12%,transparent);border-radius:20px;background:color-mix(in srgb,var(--bg,#fff) 92%,transparent);color:inherit;text-decoration:none;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.premium-cap-grid .premium-cap-card:hover,.premium-cap-grid .premium-cap-card:focus-visible{transform:translateY(-5px);box-shadow:0 18px 44px rgba(0,0,0,.12);border-color:color-mix(in srgb,var(--blue) 55%,transparent);outline:none}
+.premium-cap-grid .premium-cap-card h3{margin:18px 0 10px;font-size:1.15rem}
+.premium-cap-grid .premium-cap-card p{line-height:1.65;opacity:.76;margin:0 0 12px}
+.premium-tech-strip a{display:inline-flex;padding:8px 11px;border:1px solid color-mix(in srgb,currentColor 12%,transparent);border-radius:999px;font-size:.72rem;font-weight:800;color:inherit;text-decoration:none;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.premium-tech-strip a:hover,.premium-tech-strip a:focus-visible{transform:translateY(-2px);border-color:var(--blue);background:rgba(22,151,230,.08);outline:none}
+body.dark .premium-cap-grid .premium-cap-card{background:#102638!important;border-color:#3f5e77!important;color:#f8fafc!important}
+body.dark .premium-cap-grid .premium-cap-card h3{color:#f8fafc!important}
+body.dark .premium-cap-grid .premium-cap-card p{color:#d5e0ea!important;opacity:1!important}
+body.dark .premium-cap-grid .premium-cap-card .card-link{color:#62c9ff!important}
+body.dark .premium-tech-strip a{background:#102638!important;border-color:#3f5e77!important;color:#dce8f2!important}
+
 </style>
 
 <style id="premium-upgrade">
@@ -375,6 +433,85 @@ body.dark .price-card.popular{background:linear-gradient(180deg,#13283b,#102131)
 @media(max-width:1100px){.hero-copy::before{display:none}.browser-wrap::before{left:-10px}.browser-wrap::after{right:-8px}.contact-shell{padding:50px}}
 @media(max-width:920px){.hero{padding-top:80px}.hero-grid{gap:65px}.browser-wrap{max-width:720px;width:100%;margin-inline:auto}.browser-card{transform:none}.timeline::before{display:none}.price-card.popular,.price-card.popular:hover{transform:none}.contact-shell{padding:40px 28px}}
 @media(max-width:620px){.container{width:min(100% - 28px,1240px)}.section-pad{padding:86px 0}.hero{padding:66px 0}.hero-copy h1{font-size:clamp(40px,12vw,56px)}.hero-lead{font-size:1rem}.hero-proof{gap:14px}.hero-proof>div{padding:15px 16px 0 0;margin-right:0;flex:1;min-width:92px}.hero-proof>div:not(:last-child)::after{right:7px}.browser-wrap::before,.browser-wrap::after{display:none}.browser-body{grid-template-columns:repeat(2,1fr)}.card-preview{height:210px}.contact-shell{border-radius:24px}.contact-form{padding:22px}.footer::before{width:calc(100% - 28px)}}
+
+/* =========================================================
+   FINAL GLOBAL DARK-MODE CARD CONTRAST LOCK
+   Keep every card/tile/panel readable even when a light-mode
+   component has its own hard-coded white/gray background.
+========================================================= */
+body.dark .style-card,
+body.dark .price-card,
+body.dark .price-card.popular,
+body.dark .browser-card,
+body.dark .premium-cap-grid article,
+body.dark .premium-work-card,
+body.dark .accordion details,
+body.dark .contact-form{
+  background:#102131 !important;
+  color:#f5f8fc !important;
+  border-color:#3f5a72 !important;
+  box-shadow:0 18px 50px rgba(0,0,0,.24) !important;
+}
+body.dark .price-card.popular{
+  background:linear-gradient(180deg,#14283a 0%,#102131 100%) !important;
+  border-color:#1697e6 !important;
+}
+body.dark .style-card .card-body,
+body.dark .premium-cap-grid article > *,
+body.dark .premium-work-card > *,
+body.dark .price-card > *{
+  color:inherit;
+}
+body.dark .style-card .card-body h3,
+body.dark .price-card h3,
+body.dark .premium-cap-grid h3,
+body.dark .premium-work-card h3,
+body.dark .accordion summary{
+  color:#f8fafc !important;
+}
+body.dark .style-card .card-body p,
+body.dark .price-card > p,
+body.dark .price-card li,
+body.dark .premium-cap-grid p,
+body.dark .premium-work-card p,
+body.dark .accordion details p{
+  color:#d5e0ea !important;
+  opacity:1 !important;
+}
+body.dark .style-card .card-link,
+body.dark .premium-cap-grid .card-link,
+body.dark .premium-work-card .card-link{
+  color:#62c9ff !important;
+}
+body.dark .style-card::before{
+  background:linear-gradient(135deg,rgba(98,201,255,.38),rgba(22,151,230,.15),transparent 58%) !important;
+}
+body.dark .card-num,
+body.dark .plan-label{
+  color:#62c9ff !important;
+}
+body.dark .premium-icon{
+  background:#162b3e !important;
+  color:#f1f7fb !important;
+  border-color:#49647c !important;
+}
+body.dark .premium-tech-strip span{
+  background:#102131 !important;
+  color:#dce7f0 !important;
+  border-color:#3f5a72 !important;
+  opacity:1 !important;
+}
+body.dark .portrait-card{
+  background:linear-gradient(160deg,#102b46,#091827) !important;
+  border-color:#3f5a72 !important;
+}
+body.dark .browser-card{
+  box-shadow:0 35px 85px rgba(0,0,0,.34),0 0 0 1px rgba(98,201,255,.12) inset !important;
+}
+body.dark .card-preview{
+  border-bottom:1px solid #2f4960;
+}
+
 @media(prefers-reduced-motion:reduce){.announcement::after,.browser-wrap::before,.browser-wrap::after{animation:none}.browser-card,.style-card,.price-card,.timeline article,.btn{transition:none!important}}
 </style>
 
@@ -626,11 +763,11 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <h2 id="design-catalog-title">Choose the exact pieces you want in your website.</h2>
       <p class="premium-lead">Browse a visual catalog of professional buttons, frames, form inputs, tables, labels, typography, navigation, cards, alerts, and effects. Every example has a simple catalog code so you can tell me exactly what you like.</p>
       <div class="premium-cap-grid">
-        <article><div class="premium-icon">BTN</div><h3>Buttons</h3><p>60+ styles including liquid glass, glassmorphism, neon, gradients, metallic, luxury, 3D, soft UI and action buttons.</p><p><a class="card-link" href="catalog/buttons.html">Browse buttons →</a></p></article>
-        <article><div class="premium-icon">UI</div><h3>Components</h3><p>Frames, inputs, forms, tables, labels, badges, cards, panels, navigation and feedback patterns.</p><p><a class="card-link" href="catalog/index.html">Open component catalog →</a></p></article>
-        <article><div class="premium-icon">FX</div><h3>Typography & Effects</h3><p>Font treatments, glass, glow, gradients, metallic finishes, shadows, textures and premium visual details.</p><p><a class="card-link" href="catalog/fonts.html">Explore design details →</a></p></article>
+        <a class="premium-cap-card" href="catalog/buttons.html" aria-label="Browse button designs"><div class="premium-icon">BTN</div><h3>Buttons</h3><p>60+ styles including liquid glass, glassmorphism, neon, gradients, metallic, luxury, 3D, soft UI and action buttons.</p><span class="card-link">Browse buttons →</span></a>
+        <a class="premium-cap-card" href="catalog/index.html" aria-label="Open component catalog"><div class="premium-icon">UI</div><h3>Components</h3><p>Frames, inputs, forms, tables, labels, badges, cards, panels, navigation and feedback patterns.</p><span class="card-link">Open component catalog →</span></a>
+        <a class="premium-cap-card" href="catalog/fonts.html" aria-label="Explore typography and effects"><div class="premium-icon">FX</div><h3>Typography & Effects</h3><p>Font treatments, glass, glow, gradients, metallic finishes, shadows, textures and premium visual details.</p><span class="card-link">Explore design details →</span></a>
       </div>
-      <div class="premium-tech-strip" aria-label="Design catalog categories"><span>Buttons</span><span>Frames</span><span>Inputs</span><span>Tables</span><span>Labels</span><span>Fonts</span><span>Navigation</span><span>Cards</span><span>Alerts</span><span>Effects</span></div>
+      <div class="premium-tech-strip" aria-label="Design catalog categories"><a href="catalog/buttons.html">Buttons</a><a href="catalog/frames.html">Frames</a><a href="catalog/inputs.html">Inputs</a><a href="catalog/tables.html">Tables</a><a href="catalog/labels.html">Labels</a><a href="catalog/fonts.html">Fonts</a><a href="catalog/navigation.html">Navigation</a><a href="catalog/cards.html">Cards</a><a href="catalog/alerts.html">Alerts</a><a href="catalog/effects.html">Effects</a></div>
     </div>
   </section>
 
@@ -870,7 +1007,20 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
   // Dark mode
   const themeToggle = document.getElementById('theme-toggle');
-  themeToggle.addEventListener('click', () => document.body.classList.toggle('dark'));
+  const savedTheme = localStorage.getItem('fs-theme');
+  if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.body.classList.add('dark');
+  const syncThemeToggle = () => {
+    const dark = document.body.classList.contains('dark');
+    themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeToggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    themeToggle.textContent = dark ? '☀' : '◐';
+  };
+  syncThemeToggle();
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('fs-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    syncThemeToggle();
+  });
 
   // Back to top
   const backTop = document.getElementById('back-top');

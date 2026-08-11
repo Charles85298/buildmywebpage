@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Fluxline — Ship background jobs without the ops</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <style>
   :root{
     --bg:#0B1220; --bg2:#111A2E; --ink:#E7ECFC; --dim:#8C97B8; --blue:#7C9CFF; --violet:#C792EA; --line:rgba(231,236,252,0.1);
@@ -132,121 +133,110 @@
 </style>
 </head>
 <body>
-
-<a href="../index.html" class="back">← style library</a>
-
+<a class="back" href="../index.html">← style library</a>
 <header>
 <div class="nav-overlay" id="nav-overlay"></div>
-  <div class="wrap nav-row">
-    <div class="logo"><span class="dot"></span>Fluxline</div>
-    <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">☰</button>
-    <nav><ul class="nav-links" id="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-      <li><a href="#" class="nav-btn">Get API key</a></li>
-    </ul></nav>
-  </div>
-</header>
-
-<section class="hero">
-  <img class="hero-bg-photo" src="https://loremflickr.com/1400/700/server,datacenter/all?lock=71" alt="" onerror="this.style.display='none'">
-  <div class="wrap">
-    <div class="badge">🚀 <b>v2.4</b> — retries, delayed jobs, and cron are live</div>
-    <h1 class="hero-title">Background jobs that <span class="grad-text">just run.</span></h1>
-    <p class="hero-sub">Fluxline is a queue and job runner you drop into any stack in five minutes. No servers to babysit, no dashboards you have to learn — just jobs that run, retry, and report back.</p>
-    <div class="hero-actions">
-      <a href="#" class="btn">Start for free</a>
-      <a href="#features" class="btn ghost">See how it works</a>
-    </div>
-
-    <div class="terminal">
-      <div class="term-bar"><i></i><i></i><i></i></div>
-      <div class="term-body">
-        <div><span class="c1">$</span> <span class="c2">npm install fluxline</span></div>
-        <div><span class="c1">$</span> <span class="c2">flux jobs:create send-welcome-email</span></div>
-        <div><span class="c3">✓ job queued · id: fx_8a91c2</span></div>
-        <div><span class="c1">$</span> <span class="c2">flux watch</span></div>
-        <div><span class="c4">→ send-welcome-email</span> <span class="c1">completed in 312ms</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="logos">
-  <div class="wrap">
-    <span class="lbl">TRUSTED BY TEAMS AT</span>
-    <div class="brands"><span>Northlane</span><span>Ferrycode</span><span>Basewell</span><span>Ordinal</span><span>Rivet</span></div>
-  </div>
+<div class="wrap nav-row">
+<div class="logo"><span class="dot"></span>Fluxline</div>
+<button aria-label="Open menu" class="menu-toggle" id="menu-toggle">☰</button>
+<nav><ul class="nav-links" id="nav-links">
+<li><a href="#features">Features</a></li>
+<li><a href="#pricing">Pricing</a></li>
+<li><a class="nav-btn" href="#features">Get API key</a></li>
+</ul></nav>
 </div>
-
+</header>
+<section class="hero">
+<img alt="" class="hero-bg-photo" onerror="this.style.display='none'" src="https://loremflickr.com/1400/700/server,datacenter/all?lock=71"/>
+<div class="wrap">
+<div class="badge">🚀 <b>v2.4</b> — retries, delayed jobs, and cron are live</div>
+<h1 class="hero-title">Background jobs that <span class="grad-text">just run.</span></h1>
+<p class="hero-sub">Fluxline is a queue and job runner you drop into any stack in five minutes. No servers to babysit, no dashboards you have to learn — just jobs that run, retry, and report back.</p>
+<div class="hero-actions">
+<a class="btn" href="#pricing">Start for free</a>
+<a class="btn ghost" href="#features">See how it works</a>
+</div>
+<div class="terminal">
+<div class="term-bar"><i></i><i></i><i></i></div>
+<div class="term-body">
+<div><span class="c1">$</span> <span class="c2">npm install fluxline</span></div>
+<div><span class="c1">$</span> <span class="c2">flux jobs:create send-welcome-email</span></div>
+<div><span class="c3">✓ job queued · id: fx_8a91c2</span></div>
+<div><span class="c1">$</span> <span class="c2">flux watch</span></div>
+<div><span class="c4">→ send-welcome-email</span> <span class="c1">completed in 312ms</span></div>
+</div>
+</div>
+</div>
+</section>
+<div class="logos">
+<div class="wrap">
+<span class="lbl">TRUSTED BY TEAMS AT</span>
+<div class="brands"><span>Northlane</span><span>Ferrycode</span><span>Basewell</span><span>Ordinal</span><span>Rivet</span></div>
+</div>
+</div>
 <section class="features" id="features">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="tag">// why teams switch</div>
-      <h2>Built for the 2am page you never want to get.</h2>
-      <p>Fluxline handles the boring, breakable parts of background work so your team stops writing retry logic from scratch.</p>
-    </div>
-    <div class="feature-grid">
-      <div class="feature"><div class="icon"></div><h3>Automatic retries</h3><p>Exponential backoff out of the box, with dead-letter queues for jobs that keep failing.</p></div>
-      <div class="feature"><div class="icon"></div><h3>Delayed &amp; scheduled jobs</h3><p>Run something in 10 minutes or every night at 2am — same simple API either way.</p></div>
-      <div class="feature"><div class="icon"></div><h3>Live observability</h3><p>Watch every job execute in real time, with full logs and stack traces on failure.</p></div>
-      <div class="feature"><div class="icon"></div><h3>Any language</h3><p>SDKs for Node, Python, Go, and Ruby — or hit the plain HTTP API from anything.</p></div>
-      <div class="feature"><div class="icon"></div><h3>Rate limiting</h3><p>Cap concurrency per queue so you never overwhelm a downstream API again.</p></div>
-      <div class="feature"><div class="icon"></div><h3>Zero infrastructure</h3><p>No Redis to manage, no workers to scale. Fluxline runs the queue, you write the job.</p></div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<div class="tag">// why teams switch</div>
+<h2>Built for the 2am page you never want to get.</h2>
+<p>Fluxline handles the boring, breakable parts of background work so your team stops writing retry logic from scratch.</p>
+</div>
+<div class="feature-grid">
+<div class="feature"><div class="icon"></div><h3>Automatic retries</h3><p>Exponential backoff out of the box, with dead-letter queues for jobs that keep failing.</p></div>
+<div class="feature"><div class="icon"></div><h3>Delayed &amp; scheduled jobs</h3><p>Run something in 10 minutes or every night at 2am — same simple API either way.</p></div>
+<div class="feature"><div class="icon"></div><h3>Live observability</h3><p>Watch every job execute in real time, with full logs and stack traces on failure.</p></div>
+<div class="feature"><div class="icon"></div><h3>Any language</h3><p>SDKs for Node, Python, Go, and Ruby — or hit the plain HTTP API from anything.</p></div>
+<div class="feature"><div class="icon"></div><h3>Rate limiting</h3><p>Cap concurrency per queue so you never overwhelm a downstream API again.</p></div>
+<div class="feature"><div class="icon"></div><h3>Zero infrastructure</h3><p>No Redis to manage, no workers to scale. Fluxline runs the queue, you write the job.</p></div>
+</div>
+</div>
 </section>
-
 <section class="team-band">
-  <div class="wrap">
-    <div class="inner">
-      <img src="https://loremflickr.com/1200/500/developer,coding,night/all?lock=72" alt="Developer working at night" onerror="this.style.display='none'">
-      <div class="overlay">
-        <div class="tag">// built by people who page themselves</div>
-        <h3>We run Fluxline on Fluxline.</h3>
-        <p>Every job on this page — including the emails we just sent you — ran through the same queue you'd be signing up for. If it breaks, we see it before you do.</p>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="inner">
+<img alt="Developer working at night" onerror="this.style.display='none'" src="https://loremflickr.com/1200/500/developer,coding,night/all?lock=72"/>
+<div class="overlay">
+<div class="tag">// built by people who page themselves</div>
+<h3>We run Fluxline on Fluxline.</h3>
+<p>Every job on this page — including the emails we just sent you — ran through the same queue you'd be signing up for. If it breaks, we see it before you do.</p>
+</div>
+</div>
+</div>
 </section>
-
 <section class="pricing" id="pricing">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="tag">// pricing</div>
-      <h2>Start free. Pay for what runs.</h2>
-    </div>
-    <div class="price-grid">
-      <div class="price-card">
-        <h3>HOBBY</h3>
-        <div class="amt">$0<span>/mo</span></div>
-        <ul><li>10,000 job runs / mo</li><li>1 queue</li><li>Community support</li></ul>
-        <a href="#" class="btn ghost">Start free</a>
-      </div>
-      <div class="price-card hi">
-        <h3>TEAM</h3>
-        <div class="amt">$49<span>/mo</span></div>
-        <ul><li>1M job runs / mo</li><li>Unlimited queues</li><li>Live observability</li><li>Priority support</li></ul>
-        <a href="#" class="btn">Start free trial</a>
-      </div>
-      <div class="price-card">
-        <h3>SCALE</h3>
-        <div class="amt">Custom</div>
-        <ul><li>Unlimited runs</li><li>Dedicated infra</li><li>SLA + on-call support</li></ul>
-        <a href="#" class="btn ghost">Talk to sales</a>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<div class="section-head">
+<div class="tag">// pricing</div>
+<h2>Start free. Pay for what runs.</h2>
+</div>
+<div class="price-grid">
+<div class="price-card">
+<h3>HOBBY</h3>
+<div class="amt">$0<span>/mo</span></div>
+<ul><li>10,000 job runs / mo</li><li>1 queue</li><li>Community support</li></ul>
+<a class="btn ghost" href="#pricing">Start free</a>
+</div>
+<div class="price-card hi">
+<h3>TEAM</h3>
+<div class="amt">$49<span>/mo</span></div>
+<ul><li>1M job runs / mo</li><li>Unlimited queues</li><li>Live observability</li><li>Priority support</li></ul>
+<a class="btn" href="#pricing">Start free trial</a>
+</div>
+<div class="price-card">
+<h3>SCALE</h3>
+<div class="amt">Custom</div>
+<ul><li>Unlimited runs</li><li>Dedicated infra</li><li>SLA + on-call support</li></ul>
+<a class="btn ghost" href="../index.html#contact">Talk to sales</a>
+</div>
+</div>
+</div>
 </section>
-
 <footer>
-  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
-    <span>© Fluxline Inc.</span>
-    <span>Design demo by Fleming Solutions</span>
-  </div>
+<div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+<span>© Fluxline Inc.</span>
+<span>Design demo by Fleming Solutions</span>
+</div>
 </footer>
-
-
 <script>
   (function(){
     const toggle = document.getElementById('menu-toggle');
