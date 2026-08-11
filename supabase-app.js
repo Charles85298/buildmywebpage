@@ -135,7 +135,7 @@
         secondary_hover: c.secondaryHover || null,
         secondary_pressed: c.secondaryPressed || null,
         preview_background: c.previewBg || null,
-        style_settings: c,
+        style_settings: {...c, editorSettings: x.editorSettings || null},
         sort_order: index,
         is_preferred: true
       };
@@ -318,6 +318,7 @@
         category: row.category,
         page: row.source_page,
         selectedAt: Date.parse(row.created_at) || Date.now(),
+        editorSettings: row.style_settings?.editorSettings || null,
         colors: {
           ...(row.style_settings || {}),
           colorMode: row.appearance_mode || 'global',
