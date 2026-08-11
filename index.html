@@ -1121,6 +1121,11 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         if (x.category !== last) { lines.push('', String(x.category).toUpperCase()); last = x.category; }
         let cs='Using Website Colors'; const c=x.colors||{}; if(c.colorMode==='as-shown') cs='As Shown'; else if(c.colorMode==='custom') cs=`Primary ${c.primaryBg}/${c.primaryText}; Secondary ${c.secondaryBg}/${c.secondaryText}`; lines.push(`- ${x.code} — ${x.name} | Appearance: ${cs}`);
       });
+      let guided={};try{guided=JSON.parse(localStorage.getItem('fs-guided-builder-v1')||'{}')}catch(e){}
+      const features=Array.isArray(guided.features)?guided.features:[];
+      if(features.length){lines.push('','WEBSITE FEATURES');features.forEach(f=>lines.push(`- ${f}`));}
+      if(guided.kit) lines.push('','Starter Kit: '+guided.kit);
+      if(guided.flemingRecommended) lines.push('Fleming Recommended: Yes');
       if (details['client-notes']) lines.push('', 'Builder notes:', details['client-notes']);
       return lines.join('\n');
     };

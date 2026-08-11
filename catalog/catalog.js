@@ -215,6 +215,22 @@
     styleVariant(targets[1],c.secondaryBg,c.secondaryText,c.secondaryBorder,c.secondaryHover,c.secondaryPressed,'secondary');
     $$('.variant-sample',card).forEach(x=>x.style.setProperty('--customer-bg',c.previewBg||'#fff'));
   }
+  function migrateLegacySelections(){
+    const data=read();let changed=false;
+    Object.values(data).forEach(x=>{
+      const c=x.colors;if(!c)return;
+      if(c.primary && !c.primaryBg){
+        x.colors={...defaultColorPrefs(),...c,
+          colorMode:c.colorMode==='palette'?'global':(c.colorMode||'custom'),
+          primaryBg:c.primary,primaryText:c.text||'#FFFFFF',primaryBorder:c.primary,
+          secondaryBg:c.secondary||'#0E2A47',secondaryText:c.text||'#FFFFFF',secondaryBorder:c.secondary||'#0E2A47',
+          previewBg:c.background||'#FFFFFF'};
+        changed=true;
+      }
+    });
+    if(changed)write(data);
+  }
+  migrateLegacySelections();
   function selected(code){return !!read()[code]}
   function setCard(card,on){
     card.classList.toggle('builder-selected',on);
@@ -298,13 +314,20 @@
   function buildVariantPreview(card){
     const sample=$('.sample',card); if(!sample || $('.variant-pair',card))return;
     const labels=variantLabels(), pair=document.createElement('div');pair.className='variant-pair';
-    const original=sample.cloneNode(true), secondary=sample.cloneNode(true);
-    original.classList.add('variant-sample','variant-primary');secondary.classList.add('variant-sample','variant-secondary');
-    // IDs in clones must not duplicate live control IDs.
-    [original,secondary].forEach((node,ix)=>node.querySelectorAll('[id]').forEach(el=>{el.removeAttribute('id')}));
+    const secondary=sample.cloneNode(true);
+    sample.classList.add('variant-sample','variant-primary');
+    secondary.classList.add('variant-sample','variant-secondary');
+    // Only the clone needs IDs removed; the original retains its wired controls/listeners.
+    secondary.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+    const marker=document.createComment('variant-pair');
+    sample.parentNode.insertBefore(marker,sample);
     pair.innerHTML=`<div class="variant-col"><span class="variant-label">${labels[0]}</span></div><div class="variant-col"><span class="variant-label">${labels[1]}</span></div>`;
-    pair.children[0].appendChild(original);pair.children[1].appendChild(secondary);
-    sample.style.display='none';sample.after(pair);
+    pair.children[0].appendChild(sample);pair.children[1].appendChild(secondary);
+    marker.parentNode.replaceChild(pair,marker);
+    // Secondary controls remain natively interactive; add tactile feedback to cloned buttons.
+    secondary.querySelectorAll('button,a,[role="button"]').forEach(el=>{
+      el.addEventListener('click',()=>{el.classList.add('demo-pressed');setTimeout(()=>el.classList.remove('demo-pressed'),180)});
+    });
   }
   $$('.specimen').forEach(buildVariantPreview);
 
@@ -321,7 +344,10 @@
     function colorSummary(x){const c=x.colors||{};const mode=c.colorMode||'as-shown';if(mode==='as-shown')return '<small class="selection-color-note">Appearance: As Shown</small>';if(mode==='global')return '<small class="selection-color-note">Appearance: Using Website Colors</small>';return `<small class="selection-color-note">Primary ${esc(c.primaryBg||'')} / ${esc(c.primaryText||'')} · Secondary ${esc(c.secondaryBg||'')} / ${esc(c.secondaryText||'')}</small>`;}
     function render(){const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));num.textContent=data.length;groups.innerHTML='';empty.style.display=data.length?'none':'';const by={};data.forEach(x=>(by[x.category]??=[]).push(x));Object.entries(by).forEach(([cat,items])=>{const sec=document.createElement('section');sec.className='selection-group';sec.innerHTML=`<h2>${esc(cat)} <span class="code">${items.length}</span></h2>`+items.map(x=>`<div class="selection-item"><div class="selection-thumb">${esc(x.code)}</div><div><h3>${esc(x.name)}</h3><p>${esc(x.code)} · ${esc(x.page)}</p>${colorSummary(x)}</div><button type="button" class="remove-selection" data-code="${esc(x.code)}">Remove</button></div>`).join('');groups.appendChild(sec)});$$('.remove-selection',groups).forEach(b=>b.onclick=()=>{const d=read();delete d[b.dataset.code];write(d);render()});applyPreview(data);}
     const detailIds=['client-name','client-business','client-email','client-notes'];let details={};try{details=JSON.parse(localStorage.getItem(DETAILS)||'{}')}catch(e){}detailIds.forEach(id=>{const el=$('#'+id);if(!el)return;el.value=details[id]||'';el.addEventListener('input',()=>{details[id]=el.value;localStorage.setItem(DETAILS,JSON.stringify(details))})});
-    const summary=()=>{const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));const lines=['FLEMING SOLUTIONS — WEBSITE DESIGN SELECTIONS',''];if($('#client-name')?.value)lines.push(`Name: ${$('#client-name').value}`);if($('#client-business')?.value)lines.push(`Business: ${$('#client-business').value}`);if($('#client-email')?.value)lines.push(`Email: ${$('#client-email').value}`);if(lines.length>2)lines.push('');let last='';data.forEach(x=>{if(x.category!==last){lines.push(x.category.toUpperCase());last=x.category}{let cs='Using Website Colors';const c=x.colors||{};if(c.colorMode==='as-shown')cs='As Shown';else if(c.colorMode==='custom')cs=`Primary ${c.primaryBg}/${c.primaryText}; Secondary ${c.secondaryBg}/${c.secondaryText}`;lines.push(`- ${x.code} — ${x.name} | Appearance: ${cs}`)}});if($('#client-notes')?.value)lines.push('','Notes:', $('#client-notes').value);return lines.join('\n')};
+    const guidedProject=()=>{try{return JSON.parse(localStorage.getItem('fs-guided-builder-v1')||'{}')}catch(e){return {}}};
+    const renderGuidedProject=()=>{const g=guidedProject(),features=Array.isArray(g.features)?g.features:[];const box=$('#guided-project-summary');if(!box)return;box.hidden=!features.length&&!g.kit&&!g.flemingRecommended;$('#guided-feature-count').textContent=features.length;$('#guided-feature-list').innerHTML=features.length?features.map(x=>`<span>${esc(x)}</span>`).join(''):'<span>No optional features selected</span>';const advanced=features.filter(x=>/E-commerce|Portal|Booking|Payments/.test(x)).length;const rec=(Object.keys(read()).length>10||features.length>5||advanced)?'Elevate — Starting at $750':'Launch — Starting at $350';$('#guided-package-review').textContent=rec+(g.kit?` · Starter: ${g.kit}`:'')+(g.flemingRecommended?' · Fleming Recommended ✦':'');};
+    renderGuidedProject();
+    const summary=()=>{const data=Object.values(read()).sort((a,b)=>(a.category+a.code).localeCompare(b.category+b.code));const lines=['FLEMING SOLUTIONS — WEBSITE DESIGN SELECTIONS',''];if($('#client-name')?.value)lines.push(`Name: ${$('#client-name').value}`);if($('#client-business')?.value)lines.push(`Business: ${$('#client-business').value}`);if($('#client-email')?.value)lines.push(`Email: ${$('#client-email').value}`);if(lines.length>2)lines.push('');let last='';data.forEach(x=>{if(x.category!==last){lines.push(x.category.toUpperCase());last=x.category}{let cs='Using Website Colors';const c=x.colors||{};if(c.colorMode==='as-shown')cs='As Shown';else if(c.colorMode==='custom')cs=`Primary ${c.primaryBg}/${c.primaryText}; Secondary ${c.secondaryBg}/${c.secondaryText}`;lines.push(`- ${x.code} — ${x.name} | Appearance: ${cs}`)}});const g=guidedProject(),features=Array.isArray(g.features)?g.features:[];if(features.length){lines.push('','WEBSITE FEATURES');features.forEach(f=>lines.push(`- ${f}`));}if(g.kit)lines.push('','Starter Kit: '+g.kit);if(g.flemingRecommended)lines.push('Fleming Recommended: Yes');if($('#client-notes')?.value)lines.push('','Notes:', $('#client-notes').value);return lines.join('\n')};
     $('#copy-summary').onclick=async()=>{try{await navigator.clipboard.writeText(summary());alert('Selection summary copied to your clipboard.')}catch(e){prompt('Copy your selections:',summary())}};$('#print-summary').onclick=()=>window.print();$('#attach-contact')?.addEventListener('click',()=>{location.href='../index.html?attachSelections=1#contact'});$('#clear-selections').onclick=()=>{if(confirm('Clear all saved website selections?')){localStorage.removeItem(STORE);render()}};$('#email-selections').onclick=()=>{const subject=encodeURIComponent(`Website selections${$('#client-business')?.value?' — '+$('#client-business').value:''}`);const body=encodeURIComponent(summary());location.href=`mailto:charles.flemingiii@outlook.com?subject=${subject}&body=${body}`};
     function applyPreview(data){const p=$('#website-preview');if(!p)return;const palette=data.find(x=>x.code?.startsWith('CP-'));let colors=['#0E2A47','#1697E6','#EAF6FF','#FFFFFF'];if(palette){const source=document.querySelector(`[data-palette]`); // builder page has no source; use known map from code
       const map={"CP-01":["#0E2A47","#1697E6","#F6F9FC","#FFFFFF"],"CP-02":["#081A2B","#35B8FF","#7C3AED","#F8FAFC"],"CP-03":["#111111","#C9A227","#F5E7B2","#FFFFFF"],"CP-04":["#061A2D","#0066FF","#35B8FF","#EAF6FF"],"CP-05":["#0F2D28","#16A34A","#86EFAC","#F0FDF4"],"CP-06":["#342A24","#C26D3A","#F3E9DC","#FFFDF8"],"CP-07":["#3B2F2F","#D97745","#EAB676","#F7E8D0"],"CP-08":["#0B3B60","#0EA5A8","#DDF8F6","#FFFFFF"],"CP-09":["#102A43","#2F80ED","#B8D8FF","#F7FAFC"],"CP-10":["#2C1810","#A9442B","#D4A373","#FFF8EC"],"CP-11":["#18212B","#F59E0B","#FFD166","#F7F7F7"],"CP-12":["#172554","#6366F1","#C7D2FE","#F8FAFC"],"CP-13":["#4A2337","#E11D74","#FBCFE8","#FFF7FB"],"CP-14":["#243B2F","#53734B","#B7C9A8","#F5F7EF"],"CP-15":["#0F172A","#475569","#CBD5E1","#FFFFFF"],"CP-16":["#231942","#7C3AED","#C4B5FD","#FAF5FF"],"CP-17":["#082F49","#0284C7","#67E8F9","#ECFEFF"],"CP-18":["#431407","#EA580C","#FDBA74","#FFF7ED"],"CP-19":["#111827","#374151","#D1D5DB","#F9FAFB"],"CP-20":["#050816","#00E5FF","#B026FF","#E6FBFF"],"CP-21":["#29251F","#8B6F47","#D6C4A1","#F7F2E8"],"CP-22":["#3F1D2E","#FB7185","#FBCFE8","#FFF1F2"],"CP-23":["#0F3437","#0F766E","#B87333","#F0FDFA"],"CP-24":["#14213D","#2563EB","#F97316","#F8FAFC"]};colors=map[palette.code]||colors;}

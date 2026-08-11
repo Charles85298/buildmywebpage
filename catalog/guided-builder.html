@@ -40,17 +40,35 @@ const content=document.getElementById('guided-content'), stepsEl=document.getEle
 function drawSteps(){stepsEl.innerHTML=steps.map((s,i)=>`<button class="${i===state.step?'active':''} ${i<state.step?'done':''}" data-i="${i}"><i>${i<state.step?'✓':i+1}</i><span>${s.n}</span></button>`).join('');stepsEl.querySelectorAll('button').forEach(b=>b.onclick=()=>{state.step=+b.dataset.i;save();render()})}
 
 function applyStarterKit(name){
-  const design={
-    'Local Business':{primary:'#1697E6',secondary:'#0E2A47',accent:'#69BE28',background:'#FFFFFF',surface:'#F6F9FC',heading:'#0E2A47',body:'#334155'},
-    'Contractor':{primary:'#F59E0B',secondary:'#18212B',accent:'#FFD166',background:'#FFFFFF',surface:'#F7F7F7',heading:'#18212B',body:'#374151'},
-    'Restaurant':{primary:'#A9442B',secondary:'#2C1810',accent:'#D4A373',background:'#FFF8EC',surface:'#FFFFFF',heading:'#2C1810',body:'#5C4033'},
-    'Professional':{primary:'#2F80ED',secondary:'#102A43',accent:'#B8D8FF',background:'#FFFFFF',surface:'#F7FAFC',heading:'#102A43',body:'#334E68'},
-    'Finance':{primary:'#6366F1',secondary:'#172554',accent:'#C7D2FE',background:'#FFFFFF',surface:'#F8FAFC',heading:'#172554',body:'#334155'},
-    'E-commerce':{primary:'#7C3AED',secondary:'#231942',accent:'#C4B5FD',background:'#FFFFFF',surface:'#FAF5FF',heading:'#231942',body:'#4C3F63'},
-    'Technology':{primary:'#00E5FF',secondary:'#050816',accent:'#B026FF',background:'#050816',surface:'#0B1220',heading:'#E6FBFF',body:'#C9E9F0'},
-    'Luxury':{primary:'#C9A227',secondary:'#111111',accent:'#F5E7B2',background:'#FFFFFF',surface:'#FBF8EF',heading:'#111111',body:'#3F3F3F'}
-  }[name];
-  if(design){design.primaryText='#FFFFFF';design.secondaryText='#FFFFFF';localStorage.setItem('fs-design-system-v1',JSON.stringify(design));state.kit=name;save();alert(`${name} starter kit applied. You can customize every choice.`);updatePreview();}
+  const systems={
+    'Local Business':{primary:'#1697E6',secondary:'#0E2A47',accent:'#69BE28',background:'#FFFFFF',surface:'#F6F9FC',heading:'#0E2A47',body:'#334155',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'},
+    'Contractor':{primary:'#F59E0B',secondary:'#18212B',accent:'#FFD166',background:'#FFFFFF',surface:'#F7F7F7',heading:'#18212B',body:'#374151',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'},
+    'Restaurant':{primary:'#A9442B',secondary:'#2C1810',accent:'#D4A373',background:'#FFF8EC',surface:'#FFFFFF',heading:'#2C1810',body:'#5C4033',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'},
+    'Professional':{primary:'#2F80ED',secondary:'#102A43',accent:'#B8D8FF',background:'#FFFFFF',surface:'#F7FAFC',heading:'#102A43',body:'#334E68',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'},
+    'Finance':{primary:'#6366F1',secondary:'#172554',accent:'#C7D2FE',background:'#FFFFFF',surface:'#F8FAFC',heading:'#172554',body:'#334155',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'},
+    'E-commerce':{primary:'#7C3AED',secondary:'#231942',accent:'#C4B5FD',background:'#FFFFFF',surface:'#FAF5FF',heading:'#231942',body:'#4C3F63',primaryText:'#FFFFFF',secondaryText:'#FFFFFF'},
+    'Technology':{primary:'#00E5FF',secondary:'#050816',accent:'#B026FF',background:'#050816',surface:'#0B1220',heading:'#E6FBFF',body:'#C9E9F0',primaryText:'#050816',secondaryText:'#FFFFFF'},
+    'Luxury':{primary:'#C9A227',secondary:'#111111',accent:'#F5E7B2',background:'#FFFFFF',surface:'#FBF8EF',heading:'#111111',body:'#3F3F3F',primaryText:'#111111',secondaryText:'#FFFFFF'}
+  };
+  const kits={
+    'Local Business':[['CP-01','Executive Navy','Colors','colors.html'],['HD-04','Utility + Main','Headers & Heroes','headers.html'],['FT-05','Light Minimal','Typography','fonts.html'],['BT-02','Pill','Buttons','buttons.html'],['CD-02','Icon Card','Cards','cards.html'],['SC-05','Testimonials','Sections','sections.html'],['FO-04','Contact Heavy','Footers','footers.html']],
+    'Contractor':[['CP-11','Industrial Amber','Colors','colors.html'],['HD-04','Utility + Main','Headers & Heroes','headers.html'],['FT-03','Condensed','Typography','fonts.html'],['BT-01','Outline','Buttons','buttons.html'],['CD-01','Feature Card','Cards','cards.html'],['GA-04','Before & After','Galleries','galleries.html'],['FO-04','Contact Heavy','Footers','footers.html']],
+    'Restaurant':[['CP-10','Terracotta','Colors','colors.html'],['HD-01','Centered Brand','Headers & Heroes','headers.html'],['FT-01','Editorial Serif','Typography','fonts.html'],['BT-02','Pill','Buttons','buttons.html'],['CD-03','Image Card','Cards','cards.html'],['GA-01','Masonry','Galleries','galleries.html'],['FO-02','CTA Footer','Footers','footers.html']],
+    'Professional':[['CP-09','Professional Blue','Colors','colors.html'],['HD-02','Minimal Floating','Headers & Heroes','headers.html'],['FT-05','Light Minimal','Typography','fonts.html'],['BT-01','Outline','Buttons','buttons.html'],['CD-01','Feature Card','Cards','cards.html'],['SC-01','Alternating Features','Sections','sections.html'],['FO-01','Four Column','Footers','footers.html']],
+    'Finance':[['CP-12','Indigo Trust','Colors','colors.html'],['HD-04','Utility + Main','Headers & Heroes','headers.html'],['FT-02','Luxury Serif','Typography','fonts.html'],['BT-02','Pill','Buttons','buttons.html'],['CD-04','Pricing Card','Cards','cards.html'],['SC-03','Stats Strip','Sections','sections.html'],['FO-01','Four Column','Footers','footers.html']],
+    'E-commerce':[['CP-16','Violet Commerce','Colors','colors.html'],['HD-05','Mega Menu Ready','Headers & Heroes','headers.html'],['FT-05','Light Minimal','Typography','fonts.html'],['BT-02','Pill','Buttons','buttons.html'],['CD-03','Image Card','Cards','cards.html'],['GA-03','Lightbox Grid','Galleries','galleries.html'],['FO-03','Newsletter Footer','Footers','footers.html']],
+    'Technology':[['CP-20','Cyber Neon','Colors','colors.html'],['HD-03','Glass Navigation','Headers & Heroes','headers.html'],['FT-04','Monospace','Typography','fonts.html'],['BT-05','Neon Glow','Buttons','buttons.html'],['CD-01','Feature Card','Cards','cards.html'],['SC-02','Bento Grid','Sections','sections.html'],['FO-05','Social Footer','Footers','footers.html']],
+    'Luxury':[['CP-03','Luxury Black & Gold','Colors','colors.html'],['HD-02','Minimal Floating','Headers & Heroes','headers.html'],['FT-02','Luxury Serif','Typography','fonts.html'],['BT-04','Liquid Glass','Buttons','buttons.html'],['CD-03','Image Card','Cards','cards.html'],['GA-05','Horizontal Scroll','Galleries','galleries.html'],['FO-02','CTA Footer','Footers','footers.html']]
+  };
+  const design=systems[name]; if(!design)return;
+  localStorage.setItem('fs-design-system-v1',JSON.stringify(design));
+  let saved={};try{saved=JSON.parse(localStorage.getItem('fs-builder-selections')||'{}')}catch(e){}
+  const existingCats=new Set(Object.values(saved).map(x=>x.category));
+  (kits[name]||[]).forEach(([code,itemName,category,page])=>{
+    if(!existingCats.has(category) && !saved[code]) saved[code]={code,name:itemName,category,page,selectedAt:Date.now(),colors:{colorMode:'global'}};
+  });
+  localStorage.setItem('fs-builder-selections',JSON.stringify(saved));
+  state.kit=name;save();alert(`${name} starter kit applied. Your existing choices were preserved and coordinated defaults filled the open categories.`);updatePreview();
 }
 function render(){drawSteps();const s=steps[state.step];document.getElementById('guided-step-label').textContent=`Step ${state.step+1} of ${steps.length} — ${s.n}`;const pct=Math.round((state.step+1)/steps.length*100);document.getElementById('guided-percent').textContent=`${pct}% Complete`;document.getElementById('guided-progress-bar').style.width=pct+'%';
 if(s.features){content.innerHTML=`<span class="code">STEP 7</span><h2>What should your website do?</h2><p>${s.d}</p><div class="feature-menu">${features.map(f=>`<label class="${state.features.includes(f)?'chosen':''}"><input type="checkbox" value="${f}" ${state.features.includes(f)?'checked':''}><b>${f}</b><span>${/E-commerce|Portal|Booking|Payments/.test(f)?'Advanced':'Available'}</span></label>`).join('')}</div>`;content.querySelectorAll('input').forEach(x=>x.onchange=()=>{state.features=[...content.querySelectorAll('input:checked')].map(y=>y.value);save();render();});}
