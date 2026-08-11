@@ -24,6 +24,7 @@
 (()=>{const STORE='fs-builder-selections', GUIDE='fs-guided-builder-v1';
 const steps=[
 {n:'Style',d:'Choose the overall visual direction.',href:'index.html'},
+{n:'Theme',d:'Set the global header, page, section, body, surface, spacing and footer theme.',href:'theme.html'},
 {n:'Colors',d:'Choose a palette or customize individual colors.',href:'colors.html'},
 {n:'Header & Hero',d:'Choose the first impression visitors will see.',href:'headers.html'},
 {n:'Typography',d:'Choose the font direction for your website.',href:'fonts.html'},
@@ -85,10 +86,10 @@ content.querySelectorAll('[data-kit]').forEach(b=>b.onclick=()=>{applyStarterKit
 content.innerHTML=`<span class="code">STEP ${state.step+1}</span><h2>${s.n}</h2><p>${s.d}</p><div class="guided-callout"><h3>Browse ${s.n}</h3><p>Open the full visual catalog, select the examples you like, then return here to continue.</p><a class="demo-btn" href="${s.href}">Choose ${s.n} →</a></div>`;
 }}
 document.getElementById('fleming-recommended')?.addEventListener('click',()=>{if(!state.kit)applyStarterKit('Professional');state.flemingRecommended=true;save();alert('Fleming Recommended is on. Your existing selections will be preserved and the remaining design direction can follow a coordinated professional system.');});
-document.getElementById('guided-back').disabled=state.step===0;document.getElementById('guided-next').textContent=state.step===7?'Review Selections →':'Next →';updatePreview();}
+document.getElementById('guided-back').disabled=state.step===0;document.getElementById('guided-next').textContent=state.step===8?'Review Selections →':'Next →';updatePreview();}
 function updatePreview(){const data=Object.values(sels()),count=data.length;document.getElementById('guided-count').textContent=`${count} design selection${count===1?'':'s'} · ${state.features.length} features`;const advanced=state.features.filter(x=>/E-commerce|Portal|Booking|Payments/.test(x)).length;document.getElementById('guided-package').textContent=(count>10||state.features.length>5||advanced)?'Recommended: Elevate — Starting at $750':'Recommended: Launch — Starting at $350';
 const palette=data.find(x=>String(x.code||'').startsWith('CP-'));const map={"CP-01":["#0E2A47","#1697E6","#F6F9FC"],"CP-03":["#111111","#C9A227","#F5E7B2"],"CP-05":["#0F2D28","#16A34A","#F0FDF4"],"CP-12":["#172554","#6366F1","#F8FAFC"],"CP-20":["#050816","#00E5FF","#E6FBFF"]};const c=map[palette?.code]||["#0E2A47","#1697E6","#F6F9FC"];const site=document.getElementById('guided-site');site.style.setProperty('--gp-dark',c[0]);site.style.setProperty('--gp-accent',c[1]);site.style.setProperty('--gp-light',c[2]);}
-document.getElementById('guided-back').onclick=()=>{if(state.step){state.step--;save();render()}};document.getElementById('guided-next').onclick=()=>{if(state.step<7){state.step++;save();render()}else location.href='builder.html'};
+document.getElementById('guided-back').onclick=()=>{if(state.step){state.step--;save();render()}};document.getElementById('guided-next').onclick=()=>{if(state.step<8){state.step++;save();render()}else location.href='builder.html'};
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-view]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('guided-device').className='guided-device '+b.dataset.view});
 render();})();
 </script></body></html>

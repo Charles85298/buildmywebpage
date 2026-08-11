@@ -27,6 +27,7 @@
   const DETAILS = 'fs-builder-details';
   const GUIDE = 'fs-guided-builder-v1';
   const DESIGN = 'fs-design-system-v1';
+  const THEME = 'fs-project-theme-v1';
   const ACTIVE_PROJECT = 'fs-active-project-id';
 
   const $ = (s, r=document) => r.querySelector(s);
@@ -64,7 +65,8 @@
       design_system: readJSON(DESIGN, {}),
       selections: Object.values(readJSON(STORE, {})),
       guided_builder: readJSON(GUIDE, {}),
-      project_details: readJSON(DETAILS, {})
+      project_details: readJSON(DETAILS, {}),
+      project_theme: readJSON(THEME, {})
     };
   }
 
@@ -159,6 +161,85 @@
     }));
   }
 
+
+  function themePayload(projectId, themeOverride=null) {
+    const t = themeOverride || readJSON(THEME, {});
+    return {
+      project_id: projectId,
+      header_style: t.header_style || 'standard',
+      header_background: t.header_background || '#FFFFFF',
+      header_text_color: t.header_text_color || '#0E2A47',
+      header_link_color: t.header_link_color || '#0E2A47',
+      header_cta_color: t.header_cta_color || '#1697E6',
+      header_transparent: !!t.header_transparent,
+      header_sticky: t.header_sticky !== false,
+      header_shadow: !!t.header_shadow,
+
+      section_style: t.section_style || 'clean',
+      section_background_primary: t.section_background_primary || '#FFFFFF',
+      section_background_secondary: t.section_background_secondary || '#F6F9FC',
+      section_text_color: t.section_text_color || '#334155',
+      section_heading_color: t.section_heading_color || '#0E2A47',
+      section_alternating: t.section_alternating !== false,
+      section_divider_style: t.section_divider_style || 'none',
+
+      body_background: t.body_background || '#FFFFFF',
+      body_text_color: t.body_text_color || '#334155',
+      body_heading_color: t.body_heading_color || '#0E2A47',
+      body_link_color: t.body_link_color || '#1697E6',
+      body_line_height: Number(t.body_line_height || 1.6),
+      body_content_width: Number(t.body_content_width || 1200),
+
+      page_style: t.page_style || 'full-width',
+      page_background: t.page_background || '#FFFFFF',
+      page_max_width: Number(t.page_max_width || 1440),
+      page_padding: Number(t.page_padding || 24),
+      page_texture: t.page_texture || 'none',
+      page_gradient: t.page_gradient || null,
+
+      footer_style: t.footer_style || 'multi-column',
+      footer_background: t.footer_background || '#0E2A47',
+      footer_text_color: t.footer_text_color || '#FFFFFF',
+      footer_link_color: t.footer_link_color || '#FFFFFF',
+      footer_accent_color: t.footer_accent_color || '#1697E6',
+      footer_columns: Number(t.footer_columns || 4),
+      footer_show_social: t.footer_show_social !== false,
+      footer_show_cta: t.footer_show_cta !== false,
+
+      surface_style: t.surface_style || 'standard',
+      surface_background: t.surface_background || '#FFFFFF',
+      surface_border_color: t.surface_border_color || '#DFE8F1',
+      surface_border_radius: Number(t.surface_border_radius || 16),
+      surface_shadow: t.surface_shadow || 'soft',
+
+      spacing_style: t.spacing_style || 'standard',
+      section_spacing: Number(t.section_spacing || 80),
+      component_spacing: Number(t.component_spacing || 24),
+
+      header_settings: {},
+      section_settings: {},
+      body_settings: {},
+      page_settings: {},
+      footer_settings: {},
+      surface_settings: {}
+    };
+  }
+
+  async function saveTheme(themeOverride=null) {
+    if (!state.user) throw new Error('Please sign in first.');
+    if (!state.activeProjectId) {
+      const project = await saveProject();
+      state.activeProjectId = project.id;
+    }
+    const payload = themePayload(state.activeProjectId, themeOverride);
+    const {error} = await client
+      .from('project_theme')
+      .upsert(payload, {onConflict:'project_id'});
+    if (error) throw error;
+    if (themeOverride) writeJSON(THEME, themeOverride);
+    return true;
+  }
+
   async function saveProject(overrides={}) {
     if (!state.user) throw new Error('Please sign in before saving your project.');
 
@@ -203,6 +284,8 @@
       if (result.error) throw result.error;
     }
 
+    await saveTheme();
+
     setStatus('✓ Project saved to Supabase.', 'success');
     await loadProjectList();
     updateCloudUI();
@@ -214,15 +297,17 @@
 
     setStatus('Loading project…');
 
-    const [projectResult, selectionResult, featureResult] = await Promise.all([
+    const [projectResult, selectionResult, featureResult, themeResult] = await Promise.all([
       client.from('projects').select('*').eq('id', projectId).single(),
       client.from('project_selections').select('*').eq('project_id', projectId).order('sort_order'),
-      client.from('project_features').select('*').eq('project_id', projectId).eq('is_selected', true).order('sort_order')
+      client.from('project_features').select('*').eq('project_id', projectId).eq('is_selected', true).order('sort_order'),
+      client.from('project_theme').select('*').eq('project_id', projectId).maybeSingle()
     ]);
 
     if (projectResult.error) throw projectResult.error;
     if (selectionResult.error) throw selectionResult.error;
     if (featureResult.error) throw featureResult.error;
+    if (themeResult.error) throw themeResult.error;
 
     const p = projectResult.data;
     const selections = {};
@@ -284,6 +369,14 @@
     writeJSON(DESIGN, design);
     writeJSON(GUIDE, guide);
     writeJSON(DETAILS, details);
+
+    if (themeResult.data) {
+      const tr = {...themeResult.data};
+      delete tr.id; delete tr.project_id; delete tr.created_at; delete tr.updated_at;
+      delete tr.header_settings; delete tr.section_settings; delete tr.body_settings;
+      delete tr.page_settings; delete tr.footer_settings; delete tr.surface_settings;
+      writeJSON(THEME, tr);
+    }
 
     state.activeProjectId = p.id;
     localStorage.setItem(ACTIVE_PROJECT, p.id);
@@ -565,6 +658,7 @@
   window.fsCloud = {
     client,
     saveProject,
+    saveTheme,
     loadProject,
     refreshSession,
     buildSnapshot

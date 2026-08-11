@@ -374,3 +374,19 @@
     grid.querySelectorAll('[data-hex]').forEach(x=>x.onchange=()=>{if(/^#[0-9a-fA-F]{6}$/.test(x.value)){const q=read();q[x.dataset.hex]=x.value.toUpperCase();localStorage.setItem(KEY,JSON.stringify(q));render()}else render()});
   }render();
 })();
+
+
+// ===== Theme Summary on Design Brief =====
+(()=>{
+  const box=document.getElementById('theme-summary-list'); if(!box)return;
+  let t={};try{t=JSON.parse(localStorage.getItem('fs-project-theme-v1')||'{}')}catch(e){}
+  const items=[
+    ['Header',t.header_style||'standard'],
+    ['Sections',t.section_style||'clean'],
+    ['Page',t.page_style||'full-width'],
+    ['Footer',t.footer_style||'multi-column'],
+    ['Surfaces',t.surface_style||'standard'],
+    ['Spacing',t.spacing_style||'standard']
+  ];
+  box.innerHTML=items.map(([a,b])=>`<span>${a}: ${b}</span>`).join('');
+})();
