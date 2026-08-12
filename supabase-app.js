@@ -67,7 +67,7 @@
       guided_builder: readJSON(GUIDE, {}),
       project_details: readJSON(DETAILS, {}),
       project_theme: readJSON(THEME, {}),
-      skipped_steps: ['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].filter(p => localStorage.getItem('fs-skip-'+p)==='1')
+      skipped_steps: ['HD','NV','FR','FT','IN','BT','CD','TB','GA','EF','FO'].filter(p => localStorage.getItem('fs-skip-'+p)==='1')
     };
   }
 
@@ -111,7 +111,7 @@
         guide,
         design_system: design,
         local_snapshot_version: 1,
-        skipped_steps: ['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].filter(p => localStorage.getItem('fs-skip-'+p)==='1')
+        skipped_steps: ['HD','NV','FR','FT','IN','BT','CD','TB','GA','EF','FO'].filter(p => localStorage.getItem('fs-skip-'+p)==='1')
       }
     };
   }
@@ -240,6 +240,57 @@
     if (error) throw error;
     if (themeOverride) writeJSON(THEME, themeOverride);
     return true;
+  }
+
+  let autosaveTimer = null;
+  let autosaveRunning = false;
+  let autosaveQueued = false;
+
+  function scheduleAutosave(delay=1200) {
+    if (!state.user) return;
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(runAutosave, delay);
+  }
+
+  async function runAutosave() {
+    if (!state.user) return;
+    if (autosaveRunning) {
+      autosaveQueued = true;
+      return;
+    }
+    autosaveRunning = true;
+    autosaveQueued = false;
+    try {
+      setStatus('Autosaving…');
+      await saveProject();
+      setStatus('✓ Saved to Supabase.', 'success');
+    } catch (err) {
+      console.error('Supabase autosave failed:', err);
+      setStatus('Cloud autosave paused — use Save Project to retry.', 'error');
+    } finally {
+      autosaveRunning = false;
+      if (autosaveQueued) scheduleAutosave(700);
+    }
+  }
+
+  function initAutosave() {
+    // Component select/unselect events emitted by catalog.js.
+    window.addEventListener('fs-selection-change', () => scheduleAutosave(500));
+
+    // Color controls, builder details, guided-builder fields, and theme controls.
+    document.addEventListener('input', e => {
+      if (e.target.matches('input, textarea, select')) scheduleAutosave(1200);
+    }, true);
+    document.addEventListener('change', e => {
+      if (e.target.matches('input, textarea, select')) scheduleAutosave(700);
+    }, true);
+
+    // Buttons can change local draft state (swap colors, skip steps, starter kits, etc.).
+    document.addEventListener('click', e => {
+      if (e.target.closest('.swap-pair, .skip-step, [data-kit], [data-feature], [data-theme-view]')) {
+        scheduleAutosave(700);
+      }
+    }, true);
   }
 
   async function saveProject(overrides={}) {
@@ -371,7 +422,7 @@
     writeJSON(STORE, selections);
     writeJSON(DESIGN, design);
     writeJSON(GUIDE, guide);
-    ['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].forEach(k=>localStorage.removeItem('fs-skip-'+k));
+    ['HD','NV','FR','FT','IN','BT','CD','TB','GA','EF','FO'].forEach(k=>localStorage.removeItem('fs-skip-'+k));
     (p.metadata?.skipped_steps || []).forEach(k=>localStorage.setItem('fs-skip-'+k,'1'));
 
     writeJSON(DETAILS, details);
@@ -736,6 +787,7 @@
     initSharedAccountUI();
     initBuilderCloudUI();
     initContactForm();
+    initAutosave();
     refreshSession().then(updateSharedAccountUI);
   });
 })();

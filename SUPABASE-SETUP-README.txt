@@ -31,3 +31,10 @@ TEST
 
 NOTE
 Database submission is now connected. Automatic notification email to Fleming Solutions is not yet configured; that is best handled next with a Supabase Edge Function / email provider.
+
+AUTOSAVE
+- localStorage remains the instant local draft/cache.
+- After sign-in, catalog selections and edits are debounced and saved to Supabase automatically.
+- The first autosave creates the user's active project if one does not exist.
+- Manual Save Project remains available as a retry/explicit save.
+- Effects use the EF-xx prefix consistently in cloud snapshots and restore logic.
