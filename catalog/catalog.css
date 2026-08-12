@@ -395,3 +395,216 @@ body.dark .visual-catalog-card{background:#0d2238;border-color:#35516e}
 
 /* Legacy floating selections button retired; .design-cart is the only floating project control. */
 .selection-fab{display:none!important}
+
+/* =========================================================
+   Catalog visual stability fixes — Aug 2026
+   ========================================================= */
+
+/* Keep the floating My Website control clear of the fixed editor
+   stepper on live editor pages. The stepper is fixed at the bottom
+   on desktop, so the cart needs its own lane above it. */
+.editor-stepper ~ .design-cart,
+.ordered-editor-stepper ~ .design-cart{
+  bottom:82px;
+}
+
+/* Reserve breathing room at the end of catalog pages so the fixed
+   cart never hides the last row of controls when the page is fully
+   scrolled. */
+body{
+  padding-bottom:76px;
+}
+
+/* Keep the floating cart contained on smaller screens. */
+.design-cart{
+  max-width:calc(100vw - 28px);
+  white-space:nowrap;
+}
+
+/* Header/Hero thumbnail sizing. Base previews are exactly 230px tall.
+   Special headers that add utility bars or floating margins must use
+   a shorter hero so their content does not get clipped. */
+.thumb-glass .mini-hero{
+  height:172px;
+}
+.thumb-utility .mini-hero{
+  height:168px;
+}
+
+/* HD-04 uses an overlay menu. Anchor it to its own thumbnail rather
+   than the page/card so it cannot span outside the preview frame. */
+.thumb-overlay{
+  position:relative;
+  overflow:hidden;
+}
+.thumb-overlay .mini-nav{
+  position:absolute;
+  top:8px;
+  left:14px;
+  right:14px;
+  width:auto;
+  margin:0;
+  box-sizing:border-box;
+  z-index:2;
+}
+.thumb-overlay .mini-hero{
+  height:100%;
+  min-height:100%;
+}
+
+/* Action rows should wrap instead of forcing controls off-screen. */
+.design-flow-actions,
+.visual-card-actions,
+.preview-actions,
+.editor-actions{
+  flex-wrap:wrap;
+}
+.flow-prev,
+.flow-next,
+.flow-preview{
+  max-width:100%;
+}
+
+/* Prevent long page/action text from creating horizontal overflow. */
+.flow-prev,.flow-next,.flow-preview,.preview-project-link,
+.visual-customize,.quick-select{
+  overflow-wrap:anywhere;
+}
+
+@media(max-width:760px){
+  body{padding-bottom:66px}
+  .design-cart{
+    right:10px;
+    bottom:10px;
+    padding:10px 13px;
+    font-size:.78rem;
+  }
+  /* The editor stepper becomes part of normal document flow on mobile,
+     so the cart can return to the standard bottom position. */
+  .editor-stepper ~ .design-cart,
+  .ordered-editor-stepper ~ .design-cart{
+    bottom:10px;
+  }
+  .thumb-overlay .mini-nav{
+    left:8px;
+    right:8px;
+    padding-left:8px;
+    padding-right:8px;
+    gap:7px;
+  }
+  .thumb-overlay .mini-nav span{font-size:.5rem}
+  .thumb-overlay .mini-nav i{padding:4px 6px}
+}
+
+@media(max-width:420px){
+  .design-cart-label{display:none}
+  .design-cart b{margin-left:0}
+  .design-flow-actions{gap:7px}
+  .flow-prev,.flow-next,.flow-preview{font-size:.68rem;padding:7px 8px}
+}
+
+
+/* =========================================================
+   My Website drawer readability + click-outside behavior
+   Shared by every catalog page through catalog.css/catalog.js
+   ========================================================= */
+.design-cart-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:998;
+  background:rgba(4,15,28,.58);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .22s ease,visibility .22s ease;
+}
+.design-cart-backdrop.open{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+.design-cart-drawer{
+  z-index:999 !important;
+  background:#ffffff !important;
+  color:#14283d !important;
+  border-left:1px solid #d8e3ed !important;
+  box-shadow:-24px 0 70px rgba(0,0,0,.28) !important;
+  isolation:isolate;
+}
+.design-cart-drawer.open{
+  transform:translateX(0);
+}
+.design-cart-drawer .cart-head{
+  background:#ffffff;
+}
+.design-cart-drawer .cart-head strong{
+  color:#0e2a47;
+}
+.design-cart-drawer .cart-head button{
+  color:#0e2a47;
+  cursor:pointer;
+}
+.design-cart-drawer .cart-row{
+  color:#51677b;
+}
+.design-cart-drawer .cart-row span{
+  color:#51677b;
+}
+.design-cart-drawer .cart-row a{
+  color:#078de0;
+}
+.design-cart-drawer .cart-foot{
+  background:#ffffff;
+}
+.design-cart-drawer .cart-foot a{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+}
+
+body.dark .design-cart-drawer,
+body.dark .design-cart-drawer .cart-head,
+body.dark .design-cart-drawer .cart-foot{
+  background:#0d2238 !important;
+  color:#f4f8fb !important;
+  border-color:#35516e !important;
+}
+body.dark .design-cart-drawer .cart-head strong,
+body.dark .design-cart-drawer .cart-head button{
+  color:#f4f8fb !important;
+}
+body.dark .design-cart-drawer .cart-row,
+body.dark .design-cart-drawer .cart-row span{
+  color:#c9d6e2 !important;
+}
+body.dark .design-cart-drawer .cart-row a{
+  color:#62c9ff !important;
+}
+
+/* Keep the floating trigger underneath the modal layer while open. */
+body.design-cart-open .design-cart{
+  z-index:90 !important;
+}
+body.design-cart-open{
+  overflow:hidden;
+}
+
+@media(max-width:600px){
+  .design-cart-drawer{
+    width:min(360px,94vw);
+    padding:16px;
+  }
+  .cart-foot{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* Catalog selection cleanup:
+   The real Select/Selected pill is the single selection indicator.
+   Suppress the retired double-click demo badge everywhere. */
+.specimen.demo-selected::after{display:none!important;content:none!important}

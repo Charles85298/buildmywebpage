@@ -29,4 +29,149 @@
 <article class="specimen"><div class="sample"><div class="frame" style="border:5px ridge #b6c3cc">FRAME</div></div><h3>Chrome</h3><small><span class="code">FR-21</span></small></article>
 <article class="specimen"><div class="sample"><div class="frame" style="border:2px dashed #64748b;border-radius:14px">FRAME</div></div><h3>Ticket</h3><small><span class="code">FR-22</span></small></article>
 <article class="specimen"><div class="sample"><div class="frame" style="border-left:12px solid #ec4899">FRAME</div></div><h3>Ribbon Edge</h3><small><span class="code">FR-23</span></small></article>
-<article class="specimen"><div class="sample"><div class="frame" style="border:1px solid #7c3aed;box-shadow:0 0 26px #7c3aed55">FRAME</div></div><h3>Glow Card</h3><small><span class="code">FR-24</span></small></article></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js"></script><script src="../supabase-app.js"></script></body></html>
+<article class="specimen"><div class="sample"><div class="frame" style="border:1px solid #7c3aed;box-shadow:0 0 26px #7c3aed55">FRAME</div></div><h3>Glow Card</h3><small><span class="code">FR-24</span></small></article></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js"></script><script src="../supabase-app.js"></script>
+<script>
+/* Frames color-preview bridge
+   catalog.js applies shared color controls to generic sample wrappers.
+   Frames need those colors applied to the actual .frame element. */
+(()=>{
+  const DESIGN_STORE='fs-design-system-v1';
+
+  const defaultDesign=()=>({
+    primary:'#1697E6',
+    secondary:'#0E2A47',
+    accent:'#69BE28',
+    background:'#FFFFFF',
+    surface:'#F6F9FC',
+    heading:'#0E2A47',
+    body:'#334155',
+    primaryText:'#FFFFFF',
+    secondaryText:'#FFFFFF'
+  });
+
+  const readDesign=()=>{
+    try{
+      return {...defaultDesign(),...JSON.parse(localStorage.getItem(DESIGN_STORE)||'{}')};
+    }catch(e){
+      return defaultDesign();
+    }
+  };
+
+  function rememberOriginal(frame){
+    if(frame.dataset.fsFrameOriginalCaptured==='1') return;
+    frame.dataset.fsFrameOriginalCaptured='1';
+    frame.dataset.fsFrameOriginalStyle=frame.getAttribute('style')||'';
+  }
+
+  function restore(frame){
+    const original=frame.dataset.fsFrameOriginalStyle||'';
+    if(original) frame.setAttribute('style',original);
+    else frame.removeAttribute('style');
+  }
+
+  function valuesFromPanel(card){
+    const panel=card.querySelector('.item-color-controls');
+    if(!panel) return null;
+
+    const mode=panel.querySelector('input[type="radio"]:checked')?.value || 'global';
+    if(mode==='as-shown') return {mode};
+
+    if(mode==='global'){
+      const d=readDesign();
+      return {
+        mode,
+        primary:{
+          bg:d.primary,
+          text:d.primaryText,
+          border:d.primary
+        },
+        secondary:{
+          bg:d.secondary,
+          text:d.secondaryText,
+          border:d.secondary
+        }
+      };
+    }
+
+    const get=k=>panel.querySelector(`[data-color="${k}"]`)?.value || '';
+    return {
+      mode,
+      primary:{
+        bg:get('primaryBg'),
+        text:get('primaryText'),
+        border:get('primaryBorder')
+      },
+      secondary:{
+        bg:get('secondaryBg'),
+        text:get('secondaryText'),
+        border:get('secondaryBorder')
+      }
+    };
+  }
+
+  function applyFrame(frame,colors){
+    if(!frame || !colors) return;
+    rememberOriginal(frame);
+
+    frame.style.setProperty('background',colors.bg,'important');
+    frame.style.setProperty('background-color',colors.bg,'important');
+    frame.style.setProperty('color',colors.text,'important');
+    frame.style.setProperty('border-color',colors.border,'important');
+  }
+
+  function syncCard(card){
+    if(!card || !card.querySelector('.frame')) return;
+
+    const pair=card.querySelector('.variant-pair');
+    if(!pair) return;
+
+    const frames=[...pair.querySelectorAll('.variant-sample .frame')];
+    if(!frames.length) return;
+
+    frames.forEach(rememberOriginal);
+    const vals=valuesFromPanel(card);
+    if(!vals) return;
+
+    if(vals.mode==='as-shown'){
+      frames.forEach(restore);
+      return;
+    }
+
+    applyFrame(frames[0],vals.primary);
+    applyFrame(frames[1],vals.secondary);
+  }
+
+  function syncAll(){
+    document.querySelectorAll('.specimen').forEach(syncCard);
+  }
+
+  document.addEventListener('input',e=>{
+    if(e.target.closest('.item-color-controls')){
+      requestAnimationFrame(()=>syncCard(e.target.closest('.specimen')));
+    }
+  });
+
+  document.addEventListener('change',e=>{
+    if(e.target.closest('.item-color-controls')){
+      requestAnimationFrame(()=>syncCard(e.target.closest('.specimen')));
+    }
+  });
+
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.swap-pair') || e.target.closest('.select-design')){
+      requestAnimationFrame(()=>requestAnimationFrame(syncAll));
+    }
+  });
+
+  const observer=new MutationObserver(()=>{
+    requestAnimationFrame(syncAll);
+  });
+
+  observer.observe(document.body,{childList:true,subtree:true});
+  window.addEventListener('storage',syncAll);
+
+  requestAnimationFrame(()=>requestAnimationFrame(syncAll));
+})();
+</script>
+
+</body></html>

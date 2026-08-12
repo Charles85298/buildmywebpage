@@ -30,15 +30,6 @@
   const nameOf = el => $('h3', el.closest('.specimen'))?.textContent.trim() || 'component';
   const announce = el => toast(`${codeOf(el)} · ${nameOf(el)} demo`);
 
-  // Every specimen can be selected for easy customer reference.
-  $$('.specimen').forEach(card => {
-    card.addEventListener('dblclick', e => {
-      if (e.target.matches('input,textarea,select,option')) return;
-      card.classList.toggle('demo-selected');
-      toast(`${$('.code',card)?.textContent || ''} ${card.classList.contains('demo-selected') ? 'selected' : 'unselected'}`);
-    });
-  });
-
   // Real buttons: press feedback + special simulations.
   $$('.sample button').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -283,8 +274,38 @@
       refreshContrast(colors); applyColorPreview(card,colors);
     };
     $$(`input[name="mode-${info.code}"]`,panel).forEach(r=>r.addEventListener('change',save));
-    $$('[data-color]',panel).forEach(inp=>inp.addEventListener('input',()=>{const hex=$(`[data-hex="${inp.dataset.color}"]`,panel);hex.value=inp.value.toUpperCase();save()}));
-    $$('[data-hex]',panel).forEach(inp=>inp.addEventListener('change',()=>{const v=inp.value.trim();const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);if(/^#[0-9a-fA-F]{6}$/.test(v)){cp.value=v;save()}else inp.value=cp.value.toUpperCase()}));
+
+    const activateCustomMode=()=>{
+      const custom=$(`input[name="mode-${info.code}"][value="custom"]`,panel);
+      if(custom && !custom.checked) custom.checked=true;
+      const editor=$('.dual-style-editor',panel);
+      if(editor) editor.hidden=false;
+      const pill=$('.inheritance-pill',panel);
+      if(pill) pill.textContent='Custom Override';
+    };
+
+    $$('[data-color]',panel).forEach(inp=>inp.addEventListener('input',()=>{
+      activateCustomMode();
+      const hex=$(`[data-hex="${inp.dataset.color}"]`,panel);
+      if(hex) hex.value=inp.value.toUpperCase();
+      save();
+    }));
+
+    $$('[data-hex]',panel).forEach(inp=>{
+      const applyHex=()=>{
+        const v=inp.value.trim();
+        const cp=$(`[data-color="${inp.dataset.hex}"]`,panel);
+        if(/^#[0-9a-fA-F]{6}$/.test(v)){
+          activateCustomMode();
+          cp.value=v;
+          save();
+        }else{
+          inp.value=cp.value.toUpperCase();
+        }
+      };
+      inp.addEventListener('change',applyHex);
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applyHex();inp.blur();}});
+    });
     $('.swap-pair',panel)?.addEventListener('click',()=>{
       const d=read(),x=d[info.code];if(!x)return;const c={...defaultColorPrefs(),...(x.colors||{})};
       ['Bg','Text','Border','Hover','Pressed'].forEach(suf=>{const a='primary'+suf,b='secondary'+suf,tmp=c[a];c[a]=c[b];c[b]=tmp});
@@ -292,7 +313,16 @@
     });
     refreshContrast(prefs);
   }
-  function toggle(card){const info=getInfo(card); if(!info.code)return; const data=read(); if(data[info.code]) delete data[info.code]; else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()}; write(data); setCard(card,!!data[info.code]);}
+  function toggle(card){
+    const info=getInfo(card);
+    if(!info.code)return;
+    const data=read();
+    if(data[info.code]) delete data[info.code];
+    else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()};
+    write(data);
+    setCard(card,!!data[info.code]);
+    window.dispatchEvent(new Event('fs-selection-change'));
+  }
   
   // Show two practical variants for every catalog specimen.
   function variantLabels(){
@@ -394,7 +424,7 @@
 
 // ===== Ordered Flow Completion + Design Cart =====
 (()=>{
- const FLOW=[['HD','Header & Hero','headers.html'],['NV','Navigation / Menu','navigation.html'],['FR','Frames / Sections','frames.html'],['FT','Typography','fonts.html'],['IN','Inputs & Forms','inputs.html'],['BT','Buttons','buttons.html'],['CD','Cards & Labels','cards.html'],['TB','Tables','tables.html'],['GA','Galleries','galleries.html'],['FX','Effects','effects.html'],['FO','Footer','footers.html']];
+ const FLOW=[['HD','Header & Hero','headers.html'],['NV','Navigation / Menu','navigation.html'],['FR','Frames / Sections','frames.html'],['FT','Typography','fonts.html'],['IN','Inputs & Forms','inputs.html'],['BT','Buttons','buttons.html'],['CD','Cards & Labels','cards.html'],['TB','Tables','tables.html'],['GA','Galleries','galleries.html'],['EF','Effects','effects.html'],['FO','Footer','footers.html']];
  const STORE='fs-builder-selections';
  const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}};
  const vals=()=>Object.values(read());
@@ -420,7 +450,43 @@
    (cart.querySelector('.design-cart-count')||cart.querySelector('b')).textContent=vals().length;
    renderDrawer();
  }
- function toggleDrawer(){let d=document.querySelector('.design-cart-drawer');if(!d){d=document.createElement('aside');d.className='design-cart-drawer';d.innerHTML='<div class="cart-head"><strong>My Website</strong><button type="button">×</button></div><div class="cart-body"></div><div class="cart-foot"><a href="website-preview.html">Preview Website</a><a href="builder.html">Review Selections</a></div>';document.body.appendChild(d);d.querySelector('.cart-head button').onclick=()=>d.classList.remove('open')}renderDrawer();d.classList.toggle('open')}
+ function closeDrawer(){
+   const d=document.querySelector('.design-cart-drawer');
+   const backdrop=document.querySelector('.design-cart-backdrop');
+   d?.classList.remove('open');
+   backdrop?.classList.remove('open');
+   document.body.classList.remove('design-cart-open');
+ }
+ function toggleDrawer(){
+   let backdrop=document.querySelector('.design-cart-backdrop');
+   if(!backdrop){
+     backdrop=document.createElement('div');
+     backdrop.className='design-cart-backdrop';
+     backdrop.setAttribute('aria-hidden','true');
+     document.body.appendChild(backdrop);
+     backdrop.addEventListener('click',closeDrawer);
+   }
+   let d=document.querySelector('.design-cart-drawer');
+   if(!d){
+     d=document.createElement('aside');
+     d.className='design-cart-drawer';
+     d.setAttribute('aria-label','My Website selections');
+     d.innerHTML='<div class="cart-head"><strong>My Website</strong><button type="button" aria-label="Close My Website panel">×</button></div><div class="cart-body"></div><div class="cart-foot"><a href="website-preview.html">Preview Website</a><a href="builder.html">Review Selections</a></div>';
+     document.body.appendChild(d);
+     d.querySelector('.cart-head button').addEventListener('click',closeDrawer);
+     d.addEventListener('click',e=>e.stopPropagation());
+   }
+   renderDrawer();
+   const opening=!d.classList.contains('open');
+   if(opening){
+     d.classList.add('open');
+     backdrop.classList.add('open');
+     document.body.classList.add('design-cart-open');
+   }else{
+     closeDrawer();
+   }
+ }
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
  function renderDrawer(){const d=document.querySelector('.design-cart-drawer');if(!d)return;const data=vals();d.querySelector('.cart-body').innerHTML=FLOW.map(([p,n,page])=>{const x=data.find(v=>String(v.code||'').startsWith(p+'-')),skip=localStorage.getItem('fs-skip-'+p)==='1';return `<div class="cart-row"><span>${n}</span>${x?`<a href="${page}">✓ ${x.code}</a>`:skip?`<em>Skipped</em>`:`<a href="${page}">Choose</a>`}</div>`}).join('')}
  window.addEventListener('fs-selection-change',updateFlow);addSkip();updateFlow();
 })();
