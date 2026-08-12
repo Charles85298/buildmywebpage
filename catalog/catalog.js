@@ -123,10 +123,6 @@
   $$('.alert').forEach(el=>{el.style.cursor='pointer';el.title='Click to dismiss / restore';el.addEventListener('click',()=>{el.classList.toggle('demo-hidden');toast(el.classList.contains('demo-hidden')?'Alert dismissed':'Alert restored')})});
   $$('.effect-box').forEach(el=>{el.style.cursor='pointer';el.addEventListener('click',()=>{el.classList.remove('demo-pulse');void el.offsetWidth;el.classList.add('demo-pulse');announce(el)})});
   $$('.font-demo').forEach(el=>{el.title='Click to edit sample text';el.style.cursor='text';el.addEventListener('click',()=>{el.contentEditable='true';el.focus();toast('Type to preview this typography')});el.addEventListener('blur',()=>el.contentEditable='false')});
-
-  // A small instruction strip without changing the page architecture.
-  const heroP=$('.hero p');
-  if(heroP){const note=document.createElement('p');note.style.cssText='margin-top:10px;font-size:.8rem;font-weight:800;color:var(--blue)';note.textContent='Interactive demos enabled — click controls to test them, then press Select on any specimen you want to save to your Website Builder.';heroP.after(note)}
 })();
 
 
@@ -333,7 +329,11 @@
 
   // Add explicit selection buttons to every coded specimen.
   $$('.specimen').forEach(card=>{const info=getInfo(card);if(!info.code)return;let b=$('.select-design',card);if(!b){b=document.createElement('button');b.type='button';b.className='select-design';b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle(card)});card.appendChild(b)}setCard(card,selected(info.code));card.addEventListener('dblclick',e=>{if(e.target.closest('button,input,textarea,select,a'))return;e.preventDefault();toggle(card)});});
-  function updateFab(){if(location.pathname.endsWith('/builder.html')||location.pathname.endsWith('builder.html'))return;const count=Object.keys(read()).length;let fab=$('.selection-fab');if(!fab){fab=document.createElement('a');fab.href='builder.html';fab.className='selection-fab';fab.innerHTML='My Selections <b>0</b>';document.body.appendChild(fab)}$('b',fab).textContent=count;fab.title=`Review ${count} selected design${count===1?'':'s'}`;}
+  function updateFab(){
+    // The newer .design-cart replaces the old .selection-fab.
+    // Remove any legacy FAB so only one floating "My Website" control exists.
+    document.querySelectorAll('.selection-fab').forEach(el=>el.remove());
+  }
   updateFab();
   // Search/filter on catalog detail pages.
   const search=$('.catalog-search'); if(search){const cards=$$('.catalog-grid .specimen');const count=$('.catalog-result-count');const run=()=>{const q=search.value.trim().toLowerCase();let shown=0;cards.forEach(c=>{const ok=!q||c.textContent.toLowerCase().includes(q);c.style.display=ok?'':'none';if(ok)shown++});if(count)count.textContent=`${shown} shown`;};search.addEventListener('input',run);run();}
@@ -416,8 +416,8 @@
  }
  function updateCart(){
    if(location.pathname.endsWith('builder.html'))return;
-   let cart=document.querySelector('.design-cart');if(!cart){cart=document.createElement('button');cart.type='button';cart.className='design-cart';cart.innerHTML='<span>My Website</span><b>0</b>';document.body.appendChild(cart);cart.onclick=toggleDrawer}
-   cart.querySelector('b').textContent=vals().length;
+   let cart=document.querySelector('.design-cart');if(!cart){cart=document.createElement('button');cart.type='button';cart.className='design-cart';cart.innerHTML='<span class="design-cart-label">My Website</span><b class="design-cart-count">0</b>';document.body.appendChild(cart);cart.onclick=toggleDrawer}
+   (cart.querySelector('.design-cart-count')||cart.querySelector('b')).textContent=vals().length;
    renderDrawer();
  }
  function toggleDrawer(){let d=document.querySelector('.design-cart-drawer');if(!d){d=document.createElement('aside');d.className='design-cart-drawer';d.innerHTML='<div class="cart-head"><strong>My Website</strong><button type="button">×</button></div><div class="cart-body"></div><div class="cart-foot"><a href="website-preview.html">Preview Website</a><a href="builder.html">Review Selections</a></div>';document.body.appendChild(d);d.querySelector('.cart-head button').onclick=()=>d.classList.remove('open')}renderDrawer();d.classList.toggle('open')}
@@ -426,15 +426,3 @@
 })();
 
 
-// Normalize floating design-cart label so it never duplicates "My Website".
-document.addEventListener('DOMContentLoaded',()=>{
-  const normalizeCart=()=>{
-    document.querySelectorAll('.design-cart').forEach(cart=>{
-      let count=cart.querySelector('b')?.textContent || '0';
-      cart.innerHTML=`<span>My Website</span><b>${count}</b>`;
-      cart.setAttribute('aria-label',`My Website — ${count} selections`);
-    });
-  };
-  normalizeCart();
-  window.addEventListener('fs-selection-change',()=>setTimeout(normalizeCart,0));
-});

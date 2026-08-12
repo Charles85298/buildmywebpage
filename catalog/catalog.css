@@ -392,3 +392,6 @@ body.dark .visual-catalog-card{background:#0d2238;border-color:#35516e}
 .design-cart::before,.design-cart::after{content:none!important;display:none!important}
 .design-cart>span{display:inline!important;margin:0!important}
 .design-cart>b{margin:0!important;flex:0 0 auto!important}
+
+/* Legacy floating selections button retired; .design-cart is the only floating project control. */
+.selection-fab{display:none!important}
