@@ -29,6 +29,7 @@
   const DESIGN = 'fs-design-system-v1';
   const THEME = 'fs-project-theme-v1';
   const ACTIVE_PROJECT = 'fs-active-project-id';
+  const PENDING_SIGNUP = 'fs-pending-signup-v1';
 
   const $ = (s, r=document) => r.querySelector(s);
   const readJSON = (key, fallback={}) => {
@@ -92,6 +93,10 @@
       contact_name: overrides.contact_name ?? $('#client-name')?.value ?? details['client-name'] ?? null,
       email: overrides.email ?? $('#client-email')?.value ?? details['client-email'] ?? state.user?.email ?? null,
       phone: overrides.phone ?? $('#client-phone')?.value ?? details['client-phone'] ?? null,
+      project_type: overrides.project_type ?? details['project-type'] ?? null,
+      primary_goal: overrides.primary_goal ?? details['primary-goal'] ?? null,
+      target_launch_timeframe: overrides.target_launch_timeframe ?? details['target-launch-timeframe'] ?? null,
+      budget_range: overrides.budget_range ?? details['budget-range'] ?? null,
       starter_kit: guide.kit || null,
       fleming_recommended: !!guide.flemingRecommended,
       recommended_package: pkg.name,
@@ -490,19 +495,213 @@
     el.textContent=message||''; el.className='account-modal-status'+(type?' '+type:'');
   }
 
-  function openAccountModal(){
-    const modal=$('#account-modal');
-    if(modal){modal.hidden=false; document.body.style.overflow='hidden'; updateSharedAccountUI();}
-    else if(location.pathname.includes('/catalog/')){
-      location.href='builder.html';
-    } else {
-      location.href='catalog/builder.html';
+  function accountModalMarkup(){
+    return `
+    <div class="account-modal" id="account-modal" hidden>
+      <div class="account-modal-backdrop" data-close-account></div>
+      <section class="account-modal-card" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+        <button class="account-modal-close" type="button" aria-label="Close" data-close-account>×</button>
+        <span class="account-kicker">SAVE YOUR WEBSITE DESIGN</span>
+
+        <div id="account-modal-signed-out">
+          <div class="account-mode-tabs" role="tablist" aria-label="Account options">
+            <button type="button" class="account-mode-tab active" data-account-mode="signup">Create Account</button>
+            <button type="button" class="account-mode-tab" data-account-mode="signin">Sign In</button>
+          </div>
+
+          <div id="account-signup-panel">
+            <div class="account-step-head">
+              <div>
+                <h2 id="account-modal-title">Create your account</h2>
+                <p id="account-step-copy">Start with your account information.</p>
+              </div>
+              <strong id="account-step-indicator">1 / 3</strong>
+            </div>
+            <div class="account-progress"><i id="account-progress-bar"></i></div>
+
+            <div class="account-step" data-account-step="1">
+              <div class="account-field-grid two">
+                <label>First name<input id="signup-first-name" type="text" autocomplete="given-name" required></label>
+                <label>Last name<input id="signup-last-name" type="text" autocomplete="family-name" required></label>
+              </div>
+              <label>Email address<input id="signup-email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+              <div class="account-field-grid two">
+                <label>Password<input id="signup-password" type="password" autocomplete="new-password" minlength="8" required></label>
+                <label>Confirm password<input id="signup-password-confirm" type="password" autocomplete="new-password" minlength="8" required></label>
+              </div>
+              <small class="account-help">Use at least 8 characters. Your password is stored securely by Supabase Auth and is never saved in the website database.</small>
+            </div>
+
+            <div class="account-step" data-account-step="2" hidden>
+              <label>Business / company name<input id="signup-business-name" type="text" autocomplete="organization" required></label>
+              <div class="account-field-grid two">
+                <label>Phone<input id="signup-phone" type="tel" autocomplete="tel" required placeholder="(555) 555-5555"></label>
+                <label>Preferred contact
+                  <select id="signup-contact-method" required>
+                    <option value="">Choose…</option>
+                    <option>Email</option><option>Phone</option><option>Text</option><option>No preference</option>
+                  </select>
+                </label>
+              </div>
+              <label>Industry / business type<input id="signup-industry" type="text" placeholder="Mortgage, electrician, consulting…" required></label>
+              <label>Existing website <span class="account-optional">(optional)</span><input id="signup-website-url" type="url" autocomplete="url" placeholder="https://example.com"></label>
+              <div class="account-field-grid two">
+                <label>City<input id="signup-city" type="text" autocomplete="address-level2" required></label>
+                <label>State<input id="signup-state" type="text" autocomplete="address-level1" required placeholder="AZ"></label>
+              </div>
+            </div>
+
+            <div class="account-step" data-account-step="3" hidden>
+              <label>Project name<input id="signup-project-name" type="text" required placeholder="My New Website"></label>
+              <label>Project type
+                <select id="signup-project-type" required>
+                  <option value="">Choose…</option>
+                  <option>New Website</option>
+                  <option>Website Redesign</option>
+                </select>
+              </label>
+              <label>Primary goal
+                <select id="signup-primary-goal" required>
+                  <option value="">Choose…</option>
+                  <option>Generate Leads</option>
+                  <option>Sell Products Online</option>
+                  <option>Book Appointments</option>
+                  <option>Build Brand Awareness</option>
+                  <option>Showcase Portfolio / Work</option>
+                  <option>Provide Business Information</option>
+                  <option>Replace / Modernize Existing Site</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <div class="account-field-grid two">
+                <label>Target launch
+                  <select id="signup-launch-timeframe" required>
+                    <option value="">Choose…</option>
+                    <option>ASAP</option>
+                    <option>Within 2–4 weeks</option>
+                    <option>Within 1–2 months</option>
+                    <option>Within 3 months</option>
+                    <option>3+ months / Flexible</option>
+                  </select>
+                </label>
+                <label>Budget range
+                  <select id="signup-budget-range" required>
+                    <option value="">Choose…</option>
+                    <option>Under $500</option>
+                    <option>$500–$1,000</option>
+                    <option>$1,000–$2,000</option>
+                    <option>$2,000–$5,000</option>
+                    <option>$5,000+</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </label>
+              </div>
+              <div class="account-draft-note">Your current Website Builder selections will stay on this device and will be attached to your new project after you confirm your email.</div>
+            </div>
+
+            <div class="account-wizard-actions">
+              <button id="account-step-back" class="account-btn secondary" type="button" hidden>Back</button>
+              <button id="account-step-next" class="account-btn primary" type="button">Continue</button>
+              <button id="account-create-account" class="account-btn primary" type="button" hidden>Create Account</button>
+            </div>
+          </div>
+
+          <div id="account-signin-panel" hidden>
+            <h2>Welcome back</h2>
+            <p>Sign in to load and continue your saved website projects.</p>
+            <label>Email address<input id="signin-email" type="email" autocomplete="email" placeholder="you@example.com"></label>
+            <label>Password<input id="signin-password" type="password" autocomplete="current-password"></label>
+            <button id="account-signin" class="account-btn primary wide" type="button">Sign In</button>
+          </div>
+        </div>
+
+        <div id="account-modal-signed-in" hidden>
+          <h2>My Account</h2>
+          <div class="account-success">✓ Signed in as <strong id="account-modal-user-email"></strong></div>
+          <div class="account-modal-actions">
+            <a class="account-btn primary" href="${location.pathname.includes('/catalog/') ? 'builder.html' : 'catalog/builder.html'}">My Projects</a>
+            <button id="account-modal-save" class="account-btn secondary" type="button">Save Current Design</button>
+            <button id="account-modal-signout" class="account-btn secondary" type="button">Sign Out</button>
+          </div>
+        </div>
+
+        <p id="account-modal-status" class="account-modal-status" role="status"></p>
+      </section>
+    </div>`;
+  }
+
+  function ensureAccountModal(){
+    if(!$('#account-modal')){
+      document.body.insertAdjacentHTML('beforeend',accountModalMarkup());
     }
+    if(!$('#fs-account-styles')){
+      const s=document.createElement('style');
+      s.id='fs-account-styles';
+      s.textContent=`
+        .account-modal[hidden]{display:none!important}
+        .account-modal{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:18px}
+        .account-modal-backdrop{position:absolute;inset:0;background:rgba(2,12,24,.72);backdrop-filter:blur(7px)}
+        .account-modal-card{position:relative;z-index:1;width:min(650px,100%);max-height:min(90vh,850px);overflow:auto;background:#fff;color:#0e2a47;border:1px solid #dce6ef;border-radius:24px;padding:28px;box-shadow:0 34px 90px rgba(0,0,0,.32)}
+        .account-modal-close{position:absolute;right:15px;top:12px;border:0;background:transparent;color:#0e2a47;font-size:1.9rem;cursor:pointer}
+        .account-kicker{display:block;font-size:.72rem;font-weight:900;letter-spacing:.12em;color:#1697e6;margin-bottom:10px}
+        .account-modal-card h2{margin:0 0 8px;font-size:1.75rem;color:#0e2a47}
+        .account-modal-card p{margin:0 0 18px;color:#617386}
+        .account-mode-tabs{display:flex;gap:8px;margin:5px 0 22px;padding:5px;background:#f3f7fa;border-radius:999px}
+        .account-mode-tab{flex:1;border:0;background:transparent;padding:10px 14px;border-radius:999px;font:inherit;font-weight:850;color:#607386;cursor:pointer}
+        .account-mode-tab.active{background:#fff;color:#0e2a47;box-shadow:0 4px 15px rgba(14,42,71,.10)}
+        .account-step-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+        .account-step-head strong{font-size:.8rem;color:#1697e6;white-space:nowrap;padding-top:5px}
+        .account-progress{height:6px;background:#e8eff5;border-radius:999px;overflow:hidden;margin:0 0 22px}
+        .account-progress i{display:block;height:100%;width:33.333%;background:#1697e6;border-radius:inherit;transition:width .2s ease}
+        .account-modal-card label{display:block;font-size:.8rem;font-weight:850;color:#263f55;margin:12px 0}
+        .account-modal-card input,.account-modal-card select{display:block;width:100%;margin-top:6px;padding:12px 13px;border:1px solid #cbd8e3;border-radius:11px;background:#fff;color:#0e2a47;font:inherit;outline:none}
+        .account-modal-card input:focus,.account-modal-card select:focus{border-color:#1697e6;box-shadow:0 0 0 4px rgba(22,151,230,.10)}
+        .account-field-grid{display:grid;gap:12px}.account-field-grid.two{grid-template-columns:1fr 1fr}
+        .account-help{display:block;color:#718395;line-height:1.5;margin-top:4px}
+        .account-optional{font-weight:600;color:#8495a4}
+        .account-wizard-actions,.account-modal-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+        .account-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:11px 18px;font:inherit;font-size:.88rem;font-weight:850;cursor:pointer;text-decoration:none;border:1px solid transparent}
+        .account-btn.primary{background:#e53935;color:#fff}.account-btn.secondary{background:#fff;color:#0e2a47;border-color:#cbd8e3}.account-btn.wide{width:100%;margin-top:8px}
+        .account-draft-note{margin-top:14px;padding:12px 14px;background:#eef8ff;border:1px solid #bfe4fa;border-radius:12px;color:#31566f;font-size:.82rem;line-height:1.5}
+        .account-success{padding:12px 14px;border-radius:12px;background:#eefaf1;color:#16803a;font-weight:800}
+        .account-modal-status{min-height:1.4em;margin:13px 0 0!important;font-size:.82rem!important}.account-modal-status.error{color:#b42318!important}.account-modal-status.success{color:#16803a!important}
+        body.account-modal-open{overflow:hidden}
+        @media(max-width:620px){.account-modal{padding:10px}.account-modal-card{padding:23px 18px;border-radius:20px;max-height:94vh}.account-field-grid.two{grid-template-columns:1fr}.account-mode-tabs{margin-right:30px}}
+      `;
+      document.head.appendChild(s);
+    }
+  }
+
+  function openAccountModal(mode='signup'){
+    ensureAccountModal();
+    const modal=$('#account-modal');
+    if(!modal)return;
+    modal.hidden=false;
+    document.body.classList.add('account-modal-open');
+    setAccountMode(state.user?'signedin':mode);
   }
 
   function closeAccountModal(){
     const modal=$('#account-modal');
-    if(modal){modal.hidden=true; document.body.style.overflow='';}
+    if(modal)modal.hidden=true;
+    document.body.classList.remove('account-modal-open');
+    modalStatus('');
+  }
+
+  function setAccountMode(mode){
+    const signedOut=$('#account-modal-signed-out');
+    const signedIn=$('#account-modal-signed-in');
+    if(state.user){
+      if(signedOut)signedOut.hidden=true;
+      if(signedIn)signedIn.hidden=false;
+      return;
+    }
+    if(signedOut)signedOut.hidden=false;
+    if(signedIn)signedIn.hidden=true;
+    const signup=mode!=='signin';
+    $('#account-signup-panel')?.toggleAttribute('hidden',!signup);
+    $('#account-signin-panel')?.toggleAttribute('hidden',signup);
+    document.querySelectorAll('[data-account-mode]').forEach(b=>b.classList.toggle('active',b.dataset.accountMode===(signup?'signup':'signin')));
   }
 
   function updateSharedAccountUI(){
@@ -511,54 +710,161 @@
     const signedOut=$('#account-modal-signed-out');
     const signedIn=$('#account-modal-signed-in');
     const userEmail=$('#account-modal-user-email');
-    if(mainBtn) mainBtn.textContent=state.user?'My Account':'Sign In';
-    if(catBtn) catBtn.textContent=state.user?'My Account':'Sign In';
+    if(mainBtn) mainBtn.textContent=state.user?'My Account':'Create Account';
+    if(catBtn) catBtn.textContent=state.user?'My Account':'Create Account';
     if(signedOut) signedOut.hidden=!!state.user;
     if(signedIn) signedIn.hidden=!state.user;
     if(userEmail) userEmail.textContent=state.user?.email||'';
   }
 
-  function initSharedAccountUI(){
-    $('#account-nav-button')?.addEventListener('click',openAccountModal);
-    $('#catalog-account-button')?.addEventListener('click',()=>{
-      if($('#account-modal')) openAccountModal();
-      else location.href='builder.html';
+  function value(id){ return $('#'+id)?.value.trim() || ''; }
+
+  function validateStep(step){
+    const ids=step===1
+      ? ['signup-first-name','signup-last-name','signup-email','signup-password','signup-password-confirm']
+      : step===2
+        ? ['signup-business-name','signup-phone','signup-contact-method','signup-industry','signup-city','signup-state']
+        : ['signup-project-name','signup-project-type','signup-primary-goal','signup-launch-timeframe','signup-budget-range'];
+    for(const id of ids){
+      const el=$('#'+id);
+      if(!el || !String(el.value||'').trim()){ el?.focus(); modalStatus('Please complete all required fields.','error'); return false; }
+    }
+    if(step===1){
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value('signup-email'))){ $('#signup-email')?.focus(); modalStatus('Enter a valid email address.','error'); return false; }
+      if(value('signup-password').length<8){ $('#signup-password')?.focus(); modalStatus('Password must be at least 8 characters.','error'); return false; }
+      if(value('signup-password')!==value('signup-password-confirm')){ $('#signup-password-confirm')?.focus(); modalStatus('Passwords do not match.','error'); return false; }
+    }
+    modalStatus('');
+    return true;
+  }
+
+  function collectSignupData(){
+    return {
+      profile:{
+        first_name:value('signup-first-name'),
+        last_name:value('signup-last-name'),
+        phone:value('signup-phone'),
+        preferred_contact_method:value('signup-contact-method'),
+        business_name:value('signup-business-name'),
+        industry:value('signup-industry'),
+        website_url:value('signup-website-url')||null,
+        city:value('signup-city'),
+        state:value('signup-state')
+      },
+      project:{
+        project_name:value('signup-project-name'),
+        business_name:value('signup-business-name'),
+        contact_name:[value('signup-first-name'),value('signup-last-name')].filter(Boolean).join(' '),
+        email:value('signup-email'),
+        phone:value('signup-phone'),
+        project_type:value('signup-project-type'),
+        primary_goal:value('signup-primary-goal'),
+        target_launch_timeframe:value('signup-launch-timeframe'),
+        budget_range:value('signup-budget-range')
+      }
+    };
+  }
+
+  async function createAccount(){
+    if(!validateStep(3))return;
+    const email=value('signup-email');
+    const password=value('signup-password');
+    const signup=collectSignupData();
+    localStorage.setItem(PENDING_SIGNUP,JSON.stringify(signup.project));
+    modalStatus('Creating your account…');
+    const redirectTo=new URL('/catalog/builder.html?confirmed=1',location.origin).href;
+    const {data,error}=await client.auth.signUp({
+      email,
+      password,
+      options:{
+        emailRedirectTo:redirectTo,
+        data:signup.profile
+      }
     });
+    if(error){modalStatus(error.message,'error');return;}
+    if(data?.session){
+      state.user=data.user;
+      await finalizePendingSignup();
+      updateSharedAccountUI();updateCloudUI();
+      modalStatus('✓ Account created and signed in.','success');
+    }else{
+      modalStatus('✓ Account created. Check your email and click the confirmation link. Your current website design will be waiting when you return.','success');
+      const actions=$('.account-wizard-actions'); if(actions)actions.hidden=true;
+    }
+  }
+
+  async function signInAccount(){
+    const email=value('signin-email');
+    const password=value('signin-password');
+    if(!email||!password){modalStatus('Enter your email and password.','error');return;}
+    modalStatus('Signing in…');
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error){modalStatus(error.message,'error');return;}
+    state.user=data.user;
+    await finalizePendingSignup();
+    updateSharedAccountUI();updateCloudUI();
+    await loadProjectList();
+    modalStatus('✓ Signed in successfully.','success');
+  }
+
+  async function finalizePendingSignup(){
+    if(!state.user)return;
+    let pending=null;
+    try{pending=JSON.parse(localStorage.getItem(PENDING_SIGNUP)||'null')}catch(e){}
+    if(!pending)return;
+    try{
+      await saveProject(pending);
+      localStorage.removeItem(PENDING_SIGNUP);
+      setStatus('✓ Account confirmed and your website project was saved.','success');
+    }catch(err){
+      console.error('Could not finalize pending signup project:',err);
+      setStatus('Your account is confirmed. Use Save Project to retry saving the project.','error');
+    }
+  }
+
+  function initSharedAccountUI(){
+    ensureAccountModal();
+    let step=1;
+    const showStep=n=>{
+      step=Math.min(3,Math.max(1,n));
+      document.querySelectorAll('[data-account-step]').forEach(el=>el.hidden=Number(el.dataset.accountStep)!==step);
+      const copy=['Start with your account information.','Tell us about your business.','Set up your first website project.'][step-1];
+      if($('#account-step-copy'))$('#account-step-copy').textContent=copy;
+      if($('#account-step-indicator'))$('#account-step-indicator').textContent=`${step} / 3`;
+      if($('#account-progress-bar'))$('#account-progress-bar').style.width=`${step*33.333}%`;
+      if($('#account-step-back'))$('#account-step-back').hidden=step===1;
+      if($('#account-step-next'))$('#account-step-next').hidden=step===3;
+      if($('#account-create-account'))$('#account-create-account').hidden=step!==3;
+      modalStatus('');
+    };
+
+    $('#account-nav-button')?.addEventListener('click',()=>openAccountModal('signup'));
+    $('#catalog-account-button')?.addEventListener('click',()=>openAccountModal('signup'));
     $('#save-my-design-main')?.addEventListener('click',async()=>{
-      if(!state.user){openAccountModal();return;}
+      if(!state.user){openAccountModal('signup');return;}
       try{await saveProject();modalStatus('✓ Current design saved.','success');}
       catch(err){modalStatus(err.message||'Could not save design.','error');}
     });
+
     document.querySelectorAll('[data-close-account]').forEach(x=>x.addEventListener('click',closeAccountModal));
-    $('#account-modal-send')?.addEventListener('click',async()=>{
-      const email=$('#account-modal-email')?.value.trim();
-      if(!email){modalStatus('Enter your email address first.','error');return;}
-      modalStatus('Sending verification code…');
-      const {error}=await client.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
-      if(error){modalStatus(error.message,'error');return;}
-      $('#account-modal-otp-wrap').hidden=false;
-      modalStatus('Check your email for the verification code.','success');
-    });
-    $('#account-modal-verify')?.addEventListener('click',async()=>{
-      const email=$('#account-modal-email')?.value.trim();
-      const token=$('#account-modal-otp')?.value.trim();
-      if(!email||!token){modalStatus('Enter your email and verification code.','error');return;}
-      modalStatus('Verifying code…');
-      const {data,error}=await client.auth.verifyOtp({email,token,type:'email'});
-      if(error){modalStatus(error.message,'error');return;}
-      state.user=data.user;
-      updateSharedAccountUI(); updateCloudUI();
-      modalStatus('✓ Account ready. You are signed in.','success');
-    });
+    document.querySelectorAll('[data-account-mode]').forEach(btn=>btn.addEventListener('click',()=>setAccountMode(btn.dataset.accountMode)));
+
+    $('#account-step-next')?.addEventListener('click',()=>{if(validateStep(step))showStep(step+1)});
+    $('#account-step-back')?.addEventListener('click',()=>showStep(step-1));
+    $('#account-create-account')?.addEventListener('click',createAccount);
+    $('#account-signin')?.addEventListener('click',signInAccount);
+    $('#signin-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')signInAccount()});
+
     $('#account-modal-save')?.addEventListener('click',async()=>{
       try{await saveProject();modalStatus('✓ Current design saved to your account.','success');}
       catch(err){modalStatus(err.message||'Could not save design.','error');}
     });
     $('#account-modal-signout')?.addEventListener('click',async()=>{
       await client.auth.signOut();state.user=null;state.activeProjectId=null;localStorage.removeItem(ACTIVE_PROJECT);
-      updateSharedAccountUI();updateCloudUI();modalStatus('Signed out. Your local draft remains on this device.');
+      updateSharedAccountUI();updateCloudUI();setAccountMode('signin');modalStatus('Signed out. Your local draft remains on this device.');
     });
     document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAccountModal()});
+    showStep(1);
   }
 
   function updateCloudUI() {
@@ -579,37 +885,31 @@
     if (error) console.error(error);
     state.user = data?.session?.user || null;
     updateCloudUI();
-    if (state.user) await loadProjectList();
+    if (state.user) {
+      await finalizePendingSignup();
+      await loadProjectList();
+    }
   }
 
   async function initBuilderCloudUI() {
     if (!$('#cloud-account-panel')) return;
 
-    $('#cloud-send-code')?.addEventListener('click', async () => {
+    $('#cloud-sign-in')?.addEventListener('click', async () => {
       const email = $('#cloud-email')?.value.trim();
-      if (!email) { setStatus('Enter your email address first.', 'error'); return; }
-      setStatus('Sending verification code…');
-      const {error} = await client.auth.signInWithOtp({
-        email,
-        options: { shouldCreateUser: true }
-      });
-      if (error) { setStatus(error.message, 'error'); return; }
-      $('#cloud-otp-wrap').hidden = false;
-      setStatus('Check your email for the verification code.', 'success');
-    });
-
-    $('#cloud-verify-code')?.addEventListener('click', async () => {
-      const email = $('#cloud-email')?.value.trim();
-      const token = $('#cloud-otp')?.value.trim();
-      if (!email || !token) { setStatus('Enter your email and verification code.', 'error'); return; }
-      setStatus('Verifying code…');
-      const {data, error} = await client.auth.verifyOtp({email, token, type:'email'});
-      if (error) { setStatus(error.message, 'error'); return; }
-      state.user = data.user;
-      setStatus('✓ Signed in. You can now save this project.', 'success');
+      const password = $('#cloud-password')?.value || '';
+      if (!email || !password) { setStatus('Enter your email and password.', 'error'); return; }
+      setStatus('Signing in…');
+      const {data,error}=await client.auth.signInWithPassword({email,password});
+      if(error){setStatus(error.message,'error');return;}
+      state.user=data.user;
+      await finalizePendingSignup();
+      setStatus('✓ Signed in.', 'success');
       updateCloudUI();
       await loadProjectList();
     });
+
+    $('#cloud-create-account')?.addEventListener('click',()=>openAccountModal('signup'));
+    $('#cloud-password')?.addEventListener('keydown',e=>{if(e.key==='Enter')$('#cloud-sign-in')?.click()});
 
     $('#cloud-save-project')?.addEventListener('click', async () => {
       try { await saveProject(); }
@@ -634,10 +934,15 @@
     });
 
     await refreshSession();
+    if(state.user) await finalizePendingSignup();
 
-    client.auth.onAuthStateChange((_event, session) => {
+    client.auth.onAuthStateChange(async (_event, session) => {
       state.user = session?.user || null;
       updateCloudUI();
+      if(state.user){
+        await finalizePendingSignup();
+        await loadProjectList();
+      }
     });
   }
 

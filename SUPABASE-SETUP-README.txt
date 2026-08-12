@@ -38,3 +38,11 @@ AUTOSAVE
 - The first autosave creates the user's active project if one does not exist.
 - Manual Save Project remains available as a retry/explicit save.
 - Effects use the EF-xx prefix consistently in cloud snapshots and restore logic.
+
+ACCOUNT CREATION WIZARD (2026-08)
+- Create Account is a 3-step wizard: Account, Business, First Project.
+- Signup uses Supabase email/password auth with Confirm Email enabled.
+- Profile fields are sent in auth user metadata for public.handle_new_user().
+- Project details are held locally until email confirmation completes.
+- After the confirmation link returns to /catalog/builder.html, the pending project and current builder selections are saved automatically.
+- Existing users sign in with email/password.
