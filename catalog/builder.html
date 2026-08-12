@@ -20,11 +20,10 @@
   <p class="builder-muted" id="active-cloud-project">Local draft — not saved to cloud yet</p>
   <div id="cloud-logged-out">
     <label class="builder-field">Email<input id="cloud-email" type="email" placeholder="you@example.com" autocomplete="email"></label>
-    <button id="cloud-send-code" class="demo-btn" type="button">Send Verification Code</button>
-    <div id="cloud-otp-wrap" hidden>
-      <label class="builder-field">Verification code<input id="cloud-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456"></label>
-      <button id="cloud-verify-code" class="demo-btn" type="button">Verify & Sign In</button>
-    </div>
+    <label class="builder-field">Password<input id="cloud-password" type="password" autocomplete="current-password"></label>
+    <button id="cloud-sign-in" class="demo-btn" type="button">Sign In</button>
+    <button id="cloud-create-account" type="button">Create Account</button>
+    <p class="builder-muted" style="margin-top:10px">New here? Create an account to save this design and your project details.</p>
   </div>
   <div id="cloud-logged-in" hidden>
     <p class="cloud-signed-in">Signed in as <strong id="cloud-user-email"></strong></p>
