@@ -661,6 +661,7 @@
         .account-optional{font-weight:600;color:#8495a4}
         .account-wizard-actions,.account-modal-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
         .account-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:11px 18px;font:inherit;font-size:.88rem;font-weight:850;cursor:pointer;text-decoration:none;border:1px solid transparent}
+        #account-create-account[hidden],#account-step-next[hidden],#account-step-back[hidden]{display:none!important}
         .account-btn.primary{background:#e53935;color:#fff}.account-btn.secondary{background:#fff;color:#0e2a47;border-color:#cbd8e3}.account-btn.wide{width:100%;margin-top:8px}
         .account-draft-note{margin-top:14px;padding:12px 14px;background:#eef8ff;border:1px solid #bfe4fa;border-radius:12px;color:#31566f;font-size:.82rem;line-height:1.5}
         .account-success{padding:12px 14px;border-radius:12px;background:#eefaf1;color:#16803a;font-weight:800}
