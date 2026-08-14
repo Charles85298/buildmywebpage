@@ -615,6 +615,44 @@ body.dark .attached-selections-box pre{
   border-color:#35516e !important;
 }
 
+
+/* Live Website Examples */
+.live-demo-badge{
+  position:absolute;
+  top:14px;
+  left:14px;
+  z-index:3;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(255,255,255,.92);
+  color:#0E2A47;
+  border:1px solid rgba(148,163,184,.30);
+  box-shadow:0 8px 22px rgba(14,42,71,.10);
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.live-demo-badge::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#22C55E;
+  box-shadow:0 0 0 4px rgba(34,197,94,.12);
+}
+.style-card:focus-visible{
+  outline:3px solid rgba(22,151,230,.45);
+  outline-offset:4px;
+}
+body.dark .live-demo-badge{
+  background:rgba(16,33,49,.94);
+  color:#f5f8fc;
+  border-color:#49647c;
+}
+
 </style>
 
 </head>
@@ -636,7 +674,7 @@ body.dark .attached-selections-box pre{
     </a>
     <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">☰</button>
     <div class="nav-links" id="nav-links">
-      <a href="#library">Style Library</a>
+      <a href="#library">Website Examples</a>
       <a href="#design-catalog">Design Catalog</a>
       <a href="#work">Client Work</a><a href="#process">Process</a>
       <a href="#pricing">Pricing</a>
@@ -660,7 +698,7 @@ body.dark .attached-selections-box pre{
         <h1>Websites that look <span class="gradient-text">ahead of the curve</span> and work hard for your business.</h1>
         <p class="hero-lead">Fleming Solutions helps startups, local businesses, and professional firms launch modern digital experiences built to attract attention, earn trust, and convert visitors into customers.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#library">Explore the Style Library <span>→</span></a>
+          <a class="btn btn-primary" href="#library">View Website Examples <span>→</span></a>
 	  <a class="btn btn-primary" href="catalog/builder.html">Explore Design Catalog<span>→</span></a>
           
         </div>
@@ -684,15 +722,16 @@ body.dark .attached-selections-box pre{
   <section class="library section-pad" id="library">
     <div class="container">
       <div class="section-heading centered" data-reveal>
-        <p class="eyebrow">The style library</p>
-        <h2>One studio, ten visual languages — see the range before you choose.</h2>
-        <p>Each card below is a fully built, live demo site for a fictional business — real code, not a mockup. Click through to see exactly what your project could look like.</p>
+        <p class="eyebrow">Live website examples</p>
+        <h2>Explore 10 complete website styles — then open any demo live.</h2>
+        <p>Each example below is a complete, working website—not just a screenshot. Open any live demo in a new tab, explore the full page, then come back and use the Design Catalog to build your own direction.</p>
       </div>
       <div class="library-grid">
 
-        <a href="styles/01-brutalist.html" class="style-card" data-reveal>
+        <a href="styles/01-brutalist.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#F5F3EE;">
-            <img src="assets/previews/local/preview-45.svg" alt="" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/vinyl,record/all?lock=201" alt="" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(245,243,238,0.95), rgba(245,243,238,0.15) 60%);"></div>
             <div class="card-swatches"><i style="background:#111111;"></i><i style="background:#FF3B1A;"></i></div>
             <div class="tag" style="color:#111111;">STATIC PRESS</div>
@@ -701,13 +740,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">01 — Brutalist / Print</div>
             <h3>Raw grid, loud type</h3>
             <p>For an independent record label &amp; zine. Hairline rules, stark contrast, type that does the shouting.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/02-warm-editorial.html" class="style-card" data-reveal>
+        <a href="styles/02-warm-editorial.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#F2F5EE;">
-            <img src="assets/previews/local/preview-43.svg" alt="" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/sourdough,bread/all?lock=202" alt="" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(242,245,238,0.95), rgba(242,245,238,0.1) 60%);"></div>
             <div class="card-swatches"><i style="background:#5B6B4F;"></i><i style="background:#8B5A6B;"></i></div>
             <div class="tag" style="color:#5B6B4F; font-style:italic;">Wheat &amp; Ash</div>
@@ -716,13 +756,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">02 — Warm Editorial</div>
             <h3>Soft, considered, tactile</h3>
             <p>An artisan neighborhood bakery. Generous whitespace, sage and plum instead of the usual cream-and-clay.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/03-dark-saas.html" class="style-card" data-reveal>
+        <a href="styles/03-dark-saas.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#0B1220;">
-            <img src="assets/previews/local/preview-42.svg" alt="" style="opacity:0.5;" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/server,datacenter/all?lock=203" alt="" style="opacity:0.5;" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(11,18,32,0.95), rgba(11,18,32,0.25) 60%);"></div>
             <div class="card-swatches"><i style="background:#7C9CFF;"></i><i style="background:#C792EA;"></i></div>
             <div class="tag" style="color:#E7ECFC;">Fluxline</div>
@@ -731,13 +772,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">03 — Dark SaaS</div>
             <h3>Product-led, technical</h3>
             <p>A developer tooling startup. Deep navy canvas, gradient accent, real interface chrome.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/04-playful.html" class="style-card" data-reveal>
+        <a href="styles/04-playful.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#FFFBF2;">
-            <img src="assets/previews/local/preview-37.svg" alt="" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/children,art/all?lock=304" alt="" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(255,251,242,0.95), rgba(255,251,242,0.1) 60%);"></div>
             <div class="card-swatches"><i style="background:#FF6B6B;"></i><i style="background:#4EA8DE;"></i></div>
             <div class="tag" style="color:#FF6B6B;">Bloomtown</div>
@@ -746,13 +788,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">04 — Playful Maximalist</div>
             <h3>Bright, bouncy, big-hearted</h3>
             <p>A kids' creative workshop studio. Rounded shapes, high-energy color, hand-drawn accents.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/05-luxury.html" class="style-card" data-reveal>
+        <a href="styles/05-luxury.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#12140F;">
-            <img src="assets/previews/local/preview-38.svg" alt="" style="opacity:0.55;" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/desert,adobe,architecture/all?lock=205" alt"" style="opacity:0.55;" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(18,20,15,0.95), rgba(18,20,15,0.2) 60%);"></div>
             <div class="card-swatches"><i style="background:#B8935A;"></i><i style="background:#EDE7DA;"></i></div>
             <div class="tag" style="color:#B8935A; letter-spacing:0.06em;">MARROW HOUSE</div>
@@ -761,13 +804,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">05 — Quiet Luxury</div>
             <h3>Dark, restrained, expensive</h3>
             <p>A ten-room boutique hotel. Deep charcoal-green, brass accent, negative space that signals restraint.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/06-retro.html" class="style-card" data-reveal>
+        <a href="styles/06-retro.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#1A0B2E;">
-            <img src="assets/previews/local/preview-41.svg" alt="" style="opacity:0.55; mix-blend-mode:luminosity;" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/record,store,vinyl/all?lock=206" alt="" style="opacity:0.55; mix-blend-mode:luminosity;" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(26,11,46,0.95), rgba(26,11,46,0.15) 60%);"></div>
             <div class="card-swatches"><i style="background:#FF2E9A;"></i><i style="background:#00E5FF;"></i></div>
             <div class="tag" style="color:#00E5FF;">NEON STATIC</div>
@@ -776,13 +820,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">06 — Retro / Y2K</div>
             <h3>Chrome, grids, nostalgia</h3>
             <p>An independent vinyl &amp; game shop. Gradient chrome type, scanlines, a perspective grid floor.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/07-organic.html" class="style-card" data-reveal>
+        <a href="styles/07-organic.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#F1EEE2;">
-            <img src="assets/previews/local/preview-36.svg" alt="" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/botanical,plant,leaves/all?lock=207" alt="" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(241,238,226,0.95), rgba(241,238,226,0.1) 60%);"></div>
             <div class="card-swatches"><i style="background:#23331F;"></i><i style="background:#C9A24B;"></i></div>
             <div class="tag" style="color:#23331F; font-style:italic;">Root &amp; Bloom</div>
@@ -791,13 +836,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">07 — Organic / Botanical</div>
             <h3>Earthy, hand-drawn, unhurried</h3>
             <p>A small-batch plant skincare line. Forest green and ochre, line-drawn botanical illustration, slow-reveal scroll motion.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/08-handyman.html" class="style-card" data-reveal>
+        <a href="styles/08-handyman.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#1C1C1C;">
-            <img src="assets/previews/local/preview-44.svg" alt="" style="opacity:0.6;" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/tools,toolbox/all?lock=208" alt="" style="opacity:0.6;" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(28,28,28,0.95), rgba(28,28,28,0.15) 60%);"></div>
             <div class="card-swatches"><i style="background:#FF6B00;"></i><i style="background:#FFC93C;"></i></div>
             <div class="tag" style="color:#FF6B00;">IRONCLAD</div>
@@ -806,13 +852,14 @@ body.dark .attached-selections-box pre{
             <div class="card-num">08 — Industrial Trade</div>
             <h3>Sturdy, direct, no-nonsense</h3>
             <p>A residential handyman company. Safety-orange accents, hazard-stripe dividers, and a service list that reads like a toolbox.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
-        <a href="styles/09-portfolio.html" class="style-card" data-reveal>
+        <a href="styles/09-portfolio.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#FAFAF8;">
-            <img src="assets/previews/local/preview-39.svg" alt="" style="opacity:0.5;" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/desk,workspace,minimal/all?lock=209" alt="" style="opacity:0.5;" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(250,250,248,0.95), rgba(250,250,248,0.15) 60%);"></div>
             <div class="card-swatches"><i style="background:#4338CA;"></i><i style="background:#14161A;"></i></div>
             <div class="tag" style="color:#14161A;">John Doe</div>
@@ -821,14 +868,15 @@ body.dark .attached-selections-box pre{
             <div class="card-num">09 — Personal Portfolio</div>
             <h3>Precise, quiet confidence</h3>
             <p>A product designer's resume site. Swiss-grid structure, one accent color, and a chronological record that does the persuading.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-
 width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>        
 
-	  <a href="styles/10-mortgage.html" class="style-card" data-reveal>
+	  <a href="styles/10-mortgage.html" class="style-card" data-reveal target="_blank" rel="noopener noreferrer">
           <div class="card-preview" style="background:#0E2A47;">
-            <img src="assets/previews/local/preview-40.svg" alt="" style="opacity:0.35;" onerror="this.style.display='none'">
+            <span class="live-demo-badge">LIVE DEMO</span>
+            <img src="https://loremflickr.com/500/400/family,home,house/all?lock=210" alt="" style="opacity:0.35;" onerror="this.style.display='none'">
             <div class="shade" style="background:linear-gradient(0deg, rgba(14,42,71,0.95), rgba(14,42,71,0.2) 60%);"></div>
             <div class="card-swatches"><i style="background:#1697E6;"></i><i style="background:#F59E08;"></i></div>
             <div class="tag" style="color:#fff;">RIGHT AWAY LENDING</div>
@@ -837,7 +885,7 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <div class="card-num">10 — Financial / Trust</div>
             <h3>Corporate, reassuring, precise</h3>
 	    <p>A mortgage lender. Navy and gold for stability, a serif display for gravitas, and a real rate calculator doing actual work on the page.</p>
-            <span class="card-link">View live demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="card-link">Open Live Demo <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
 
@@ -1024,8 +1072,8 @@ width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <label>Business<input name="business" placeholder="Company name"></label>
           </div>
           <div class="form-row">
-            <label>Email<input type="email" name="email" required placeholder="charles.flemingIII@outlook.com"></label>
-            <label>Phone<input type="tel" name="phone" placeholder="(480) 294-1334"></label>
+            <label>Email<input type="email" name="email" required placeholder="you@example.com"></label>
+            <label>Phone<input type="tel" name="phone" placeholder="(555) 555-5555"></label>
           </div>
           <label>What do you need?
             <select name="service">
