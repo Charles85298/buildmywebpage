@@ -69,13 +69,16 @@
     return out;
   }
   function build(s,compact=false){
-    const t=heroText(s), menu=menuItems(s), showNav=!!s.nv||!!s.h.menu||compact, showFooter=!!s.fo||compact;
-    const nav=showNav?`<nav class="pv-nav ${navClass(s.nv?.code)}">${menu.map(x=>`<a>${esc(x)}</a>`).join('')}</nav>`:'';
-    const header=`<header class="pv-header ${headerClass(s.hd?.code)}"><b class="pv-brand">${esc(s.h.logoText||'YourBrand')}</b><button class="pv-menu" aria-label="Menu">☰</button>${nav}<button class="pv-cta ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button></header>`;
+    const t=heroText(s), menu=menuItems(s), showNav=!!s.nv||!!s.h.menu||compact, showFooter=!!s.fo||compact, sideNav=s.nv?.code==='NV-04';
+    const links=menu.map((x,i)=>`<a class="${i===0?'active':''}">${sideNav?`<i>${['⌂','◇','▣','○','✉'][i]||'•'}</i>`:''}<span>${esc(x)}</span></a>`).join('');
+    const nav=showNav?`<nav class="pv-nav ${navClass(s.nv?.code)}">${links}</nav>`:'';
+    const header=`<header class="pv-header ${headerClass(s.hd?.code)}"><b class="pv-brand">${esc(s.h.logoText||'YourBrand')}</b><button class="pv-menu" aria-label="Menu">☰</button>${sideNav?'':nav}<button class="pv-cta ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button></header>`;
+    const side=sideNav?`<aside class="pv-side-nav"><b class="pv-side-brand">${esc(s.h.logoText||'YourBrand')}</b>${nav}<button class="pv-side-cta ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button><small>☰ Menu collapses on mobile</small></aside>`:'';
     const hero=`<section class="pv-hero pv-hero-${String(s.hr?.code||'HR-01').split('-')[1]||'01'}"><div class="pv-hero-copy"><small>${esc(s.hero.eyebrow||s.h.eyebrow||'YOUR WEBSITE')}</small><h1>${esc(t.headline)}</h1><p>${esc(t.description)}</p><div class="pv-hero-actions"><button class="pv-primary ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button>${compact?'':`<button class="pv-secondary ${buttonClass(s.bt?.code)}">Learn More</button>`}</div></div><div class="pv-hero-art"><i></i><i></i><i></i></div></section>`;
     const footer=showFooter?`<footer class="pv-footer"><b>${esc(s.h.logoText||'YourBrand')}</b><span>${menu.slice(0,4).map(esc).join(' · ')}</span>${s.fo?`<small>${esc(s.fo.code)} · ${esc(s.fo.name||'Footer')}</small>`:''}</footer>`:'';
-    const cls=['pv-live-site',compact?'pv-compact':'pv-full',s.fx.length?'pv-has-effect':'',`pv-font-${String(s.ft?.code||'').replace(/[^a-z0-9]/gi,'').toLowerCase()}`].filter(Boolean).join(' ');
-    return `<div class="${cls}" style="--pv-dark:${s.colors.dark};--pv-primary:${s.colors.primary};--pv-soft:${s.colors.soft};--pv-bg:${s.colors.background};--pv-heading:${s.colors.heading};--pv-body:${s.colors.body};--pv-header-text:${s.colors.headerText};--pv-footer:${s.colors.footer};--pv-footer-text:${s.colors.footerText};--pv-border:${s.colors.border};--pv-surface:${s.colors.surface};--pv-font:${s.font};--pv-radius:${Number(s.theme.surface_border_radius||16)}px;--pv-section-space:${Number(s.theme.section_spacing||72)}px">${header}${hero}${sectionsHtml(s,compact)}${footer}</div>`;
+    const cls=['pv-live-site',compact?'pv-compact':'pv-full',sideNav?'pv-side-layout':'',s.fx.length?'pv-has-effect':'',`pv-font-${String(s.ft?.code||'').replace(/[^a-z0-9]/gi,'').toLowerCase()}`].filter(Boolean).join(' ');
+    const content=`<div class="pv-site-content">${sideNav?header:''}${hero}${sectionsHtml(s,compact)}${footer}</div>`;
+    return `<div class="${cls}" style="--pv-dark:${s.colors.dark};--pv-primary:${s.colors.primary};--pv-soft:${s.colors.soft};--pv-bg:${s.colors.background};--pv-heading:${s.colors.heading};--pv-body:${s.colors.body};--pv-header-text:${s.colors.headerText};--pv-footer:${s.colors.footer};--pv-footer-text:${s.colors.footerText};--pv-border:${s.colors.border};--pv-surface:${s.colors.surface};--pv-font:${s.font};--pv-radius:${Number(s.theme.surface_border_radius||16)}px;--pv-section-space:${Number(s.theme.section_spacing||72)}px">${sideNav?side+content:header+hero+sectionsHtml(s,compact)+footer}</div>`;
   }
   function render(el,opts={}){if(!el)return; const s=state(); el.innerHTML=build(s,!!opts.compact); el.dataset.previewSignature=signature(); return s;}
   function signature(){return [KEYS.selections,KEYS.theme,KEYS.design,KEYS.hh,KEYS.nav].map(k=>localStorage.getItem(k)||'').join('|')}

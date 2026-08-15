@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Navigation Editor | BuildMyWebpage</title><link rel="stylesheet" href="catalog.css?v=1.13"></head>
+<title>Navigation Editor | BuildMyWebpage</title><link rel="stylesheet" href="catalog.css?v=1.14"></head>
 <body class="component-editor-page">
 <header class="editor-appbar"><a href="navigation.html" class="editor-back">← Back to Navigation</a><div class="editor-title"><strong id="ed-code">NV-01</strong><span id="ed-name">Navigation</span><em>Menu Editor</em></div><div class="editor-devices"><button data-device="desktop" class="active">▣ Desktop</button><button data-device="tablet">▯ Tablet</button><button data-device="mobile">▯ Mobile</button></div><div class="editor-actions"><button id="ed-reset">↶ Reset</button><button id="ed-save" class="demo-btn">☁ Save This Design</button></div></header>
 <main class="component-editor-shell"><aside class="editor-controls">
@@ -12,20 +12,47 @@
 <label>Active Item<select data-ed="activeStyle"><option value="underline">Underline</option><option value="pill">Pill</option><option value="color">Color Only</option><option value="none">None</option></select></label>
 </div></details>
 <details><summary>CTA SETTINGS</summary><div class="editor-fields"><label>CTA Text<input type="text" data-ed="ctaText"></label><label>CTA Color<input type="color" data-ed="ctaColor"></label><label class="switch-row">Show CTA<input type="checkbox" data-ed="showCta"></label></div></details>
-<details><summary>MOBILE MENU</summary><div class="editor-fields"><label>Mobile Style<select data-ed="mobileStyle"><option value="drawer">Slide Drawer</option><option value="dropdown">Dropdown</option><option value="fullscreen">Fullscreen</option></select></label><label>Menu Icon<select data-ed="icon"><option value="☰">Hamburger</option><option value="≡">Lines</option><option value="⋮">Dots</option></select></label></div></details>
+<details id="side-nav-settings"><summary>SIDE NAVIGATION</summary><div class="editor-fields">
+<label>Side Position<select data-ed="sidePosition"><option value="left">Left</option><option value="right">Right</option></select></label>
+<label>Sidebar Width<div class="range-row"><input type="range" min="200" max="360" step="10" data-ed="sideWidth"><output data-out="sideWidth"></output></div></label>
+<label class="switch-row">Fixed While Scrolling<input type="checkbox" data-ed="sideFixed"></label>
+<label class="switch-row">Collapsible Desktop Menu<input type="checkbox" data-ed="sideCollapsible"></label>
+<label class="switch-row">Show Menu Icons<input type="checkbox" data-ed="sideIcons"></label>
+<p class="editor-field-note">On tablet and phone, Side Navigation automatically becomes a slide-out drawer.</p>
+</div></details><details><summary>MOBILE MENU</summary><div class="editor-fields"><label>Mobile Style<select data-ed="mobileStyle"><option value="drawer">Slide Drawer</option><option value="dropdown">Dropdown</option><option value="fullscreen">Fullscreen</option></select></label><label>Menu Icon<select data-ed="icon"><option value="☰">Hamburger</option><option value="≡">Lines</option><option value="⋮">Dots</option></select></label></div></details>
 </aside>
 <section class="editor-workspace"><div class="editor-preview-frame desktop" id="editor-frame"><div class="navigation-live-site" id="nav-site"><header id="nav-preview"><b>YOURLOGO</b><button id="nav-mobile-trigger">☰</button><nav id="nav-links-preview"></nav><button id="nav-cta-preview"></button></header><section><small>YOUR WEBSITE</small><h1>Clear navigation makes every page easier to explore.</h1><p>Customize the menu and preview it across device sizes.</p></section></div></div><section class="editor-alternatives"><h3>Other Navigation Options</h3><div class="alt-header-grid" id="alt-nav-grid"></div></section><p id="ed-status" class="editor-status">Changes are saved locally while you work.</p></section></main>
 <nav class="editor-stepper ordered-editor-stepper"><span>✓ 1 Header & Hero</span><strong>2 Navigation / Menu</strong><span>3 Frames / Sections</span><span>4 Typography</span><span>5 Inputs</span><span>6 Buttons</span><span>7 Cards</span><span>8 Tables</span><span>9 Galleries</span><span>10 Effects</span><span>11 Footer</span><span>12 Review</span><a href="frames.html">Next: Frames / Sections →</a></nav>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js?v=1.13"></script><script src="preview-renderer.js?v=1.13"></script><script src="workspace.js?v=1.13"></script><script src="../supabase-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js?v=1.14"></script><script src="preview-renderer.js?v=1.14"></script><script src="workspace.js?v=1.14"></script><script src="../supabase-app.js"></script>
 <script>
 (()=>{const code=new URLSearchParams(location.search).get('code')||'NV-01',STORE='fs-navigation-editor-v1',SELECT='fs-builder-selections';
-const presets={'NV-01':{name:'Classic Horizontal Menu'},'NV-02':{name:'Centered Navigation',align:'center'},'NV-03':{name:'Floating Pill Menu',activeStyle:'pill'},'NV-04':{name:'Sidebar Navigation',align:'left'},'NV-05':{name:'Mega Menu'},'NV-06':{name:'Minimal Menu',activeStyle:'color'},'NV-07':{name:'Icon + Label Menu'},'NV-08':{name:'Mobile-First Menu',mobileStyle:'fullscreen'}};
-const base={name:'Navigation',menu:'Home\\nServices\\nPortfolio\\nAbout\\nContact',align:'right',gap:24,text:'#0E2A47',hover:'#1697E6',background:'#FFFFFF',activeStyle:'underline',ctaText:'Get Started',ctaColor:'#1697E6',showCta:true,mobileStyle:'drawer',icon:'☰'};
+const presets={'NV-01':{name:'Classic Horizontal Menu'},'NV-02':{name:'Centered Navigation',align:'center'},'NV-03':{name:'Floating Pill Menu',activeStyle:'pill'},'NV-04':{name:'Side Navigation',align:'left',sidePosition:'left',sideWidth:260,sideFixed:true,sideCollapsible:true,sideIcons:true,mobileStyle:'drawer'},'NV-05':{name:'Mega Menu'},'NV-06':{name:'Minimal Menu',activeStyle:'color'},'NV-07':{name:'Icon + Label Menu'},'NV-08':{name:'Mobile-First Menu',mobileStyle:'fullscreen'}};
+const base={name:'Navigation',sidePosition:'left',sideWidth:260,sideFixed:true,sideCollapsible:true,sideIcons:true,menu:'Home\\nServices\\nPortfolio\\nAbout\\nContact',align:'right',gap:24,text:'#0E2A47',hover:'#1697E6',background:'#FFFFFF',activeStyle:'underline',ctaText:'Get Started',ctaColor:'#1697E6',showCta:true,mobileStyle:'drawer',icon:'☰'};
 let all={};try{all=JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){}let state={...base,...(presets[code]||{}),...(all[code]||{})};
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];$('#ed-code').textContent=code;$('#ed-name').textContent=state.name;
 function save(){all[code]=state;localStorage.setItem(STORE,JSON.stringify(all))}
 function fill(){$$('[data-ed]').forEach(el=>{const k=el.dataset.ed;if(el.type==='checkbox')el.checked=!!state[k];else el.value=state[k]??''});render()}
-function render(){$$('[data-out]').forEach(o=>o.textContent=state[o.dataset.out]+' px');const h=$('#nav-preview');h.style.background=state.background;h.style.color=state.text;const n=$('#nav-links-preview');n.style.gap=state.gap+'px';n.style.justifyContent=state.align==='left'?'flex-start':state.align==='center'?'center':'flex-end';n.innerHTML=String(state.menu).split(/\\n+/).filter(Boolean).map((x,i)=>`<a class="${i===0?'active':''}">${x}</a>`).join('');n.querySelectorAll('a').forEach(a=>{a.style.color=state.text;a.style.setProperty('--nav-hover',state.hover)});n.dataset.activeStyle=state.activeStyle;$('#nav-cta-preview').textContent=state.ctaText;$('#nav-cta-preview').style.background=state.ctaColor;$('#nav-cta-preview').hidden=!state.showCta;$('#nav-mobile-trigger').textContent=state.icon;save()}
+function render(){
+  $$('[data-out]').forEach(o=>o.textContent=state[o.dataset.out]+(o.dataset.out==='sideWidth'?' px':' px'));
+  const site=$('#nav-site'), h=$('#nav-preview'), n=$('#nav-links-preview'), side=code==='NV-04';
+  site.classList.toggle('side-nav-editor',side);
+  site.classList.toggle('side-right',side&&state.sidePosition==='right');
+  site.style.setProperty('--editor-side-width',(state.sideWidth||260)+'px');
+  site.classList.toggle('side-fixed',side&&state.sideFixed);
+  site.classList.toggle('side-collapsible',side&&state.sideCollapsible);
+  site.classList.toggle('side-icons',side&&state.sideIcons);
+  h.style.background=state.background;h.style.color=state.text;
+  n.style.gap=side?'8px':state.gap+'px';
+  n.style.justifyContent=side?'flex-start':state.align==='left'?'flex-start':state.align==='center'?'center':'flex-end';
+  const icons=['⌂','◇','▣','○','✉','•'];
+  n.innerHTML=String(state.menu).split(/\n+/).filter(Boolean).map((x,i)=>`<a class="${i===0?'active':''}">${side&&state.sideIcons?`<i>${icons[i]||'•'}</i>`:''}<span>${x}</span></a>`).join('');
+  n.querySelectorAll('a').forEach(a=>{a.style.color=state.text;a.style.setProperty('--nav-hover',state.hover)});
+  n.dataset.activeStyle=state.activeStyle;
+  $('#nav-cta-preview').textContent=state.ctaText;$('#nav-cta-preview').style.background=state.ctaColor;$('#nav-cta-preview').hidden=!state.showCta;
+  $('#nav-mobile-trigger').textContent=state.icon;
+  const sideSettings=$('#side-nav-settings');if(sideSettings)sideSettings.hidden=!side;
+  save()
+}
 $$('[data-ed]').forEach(el=>el.addEventListener(el.type==='checkbox'?'change':'input',()=>{const k=el.dataset.ed;state[k]=el.type==='checkbox'?el.checked:el.type==='range'?Number(el.value):el.value;render()}));$$('[data-device]').forEach(b=>b.onclick=()=>{$$('[data-device]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#editor-frame').className='editor-preview-frame '+b.dataset.device});$('#ed-reset').onclick=()=>{state={...base,...(presets[code]||{})};fill()};
 $('#ed-save').onclick=async()=>{let d={};try{d=JSON.parse(localStorage.getItem(SELECT)||'{}')}catch(e){}Object.keys(d).forEach(k=>{if(k.startsWith('NV-'))delete d[k]});d[code]={code,name:state.name,category:'Navigation',page:'navigation.html',selectedAt:Date.now(),colors:{colorMode:'custom',styleSettings:state},editorSettings:state};localStorage.setItem(SELECT,JSON.stringify(d));let st=$('#ed-status');st.textContent='✓ Navigation selected and saved locally.';if(window.fsCloud?.saveProject){try{await window.fsCloud.saveProject();st.textContent='✓ Navigation saved to your Supabase project.'}catch(e){st.textContent='✓ Saved locally. Sign in to save it to your cloud project.'}}window.dispatchEvent(new Event('fs-selection-change'))};
 const alt=$('#alt-nav-grid');Object.entries(presets).forEach(([k,p])=>alt.insertAdjacentHTML('beforeend',`<a class="alt-header-card ${k===code?'active':''}" href="navigation-editor.html?code=${k}"><div class="mini-site"><div><b>YOURLOGO</b><span>Home&nbsp; Services&nbsp; Contact</span></div><i></i></div><strong>${k}</strong><span>${p.name}</span></a>`));fill()})();
