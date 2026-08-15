@@ -912,3 +912,65 @@ body.dark.catalog-workspace .studio-toolbar:after{background:linear-gradient(180
  .pv-side-layout .pv-site-content>.pv-header .pv-nav{display:none}
  .pv-side-layout .pv-menu{display:block}
 }
+
+/* ===== Mobile readability pass v1.16 ===== */
+@media (max-width: 600px){
+  /* Catalog/body copy */
+  .catalog-workspace,
+  .catalog-workspace p,
+  .catalog-workspace small,
+  .catalog-workspace .hero p,
+  .studio-page-intro p,
+  .studio-component-card small,
+  .visual-card-copy p,
+  .studio-library-divider p{
+    font-weight:500;
+  }
+
+  .catalog-workspace .hero p,
+  .studio-page-intro p,
+  .visual-card-copy p{
+    color:#53697d;
+  }
+
+  .studio-component-card small,
+  .studio-library-divider p{
+    color:#5c7184;
+  }
+
+  /* Sidebar labels need more weight on small screens */
+  .workspace-sidebar a,
+  .workspace-sidebar button,
+  .workspace-sidebar .step-state,
+  .project-tools a{
+    font-weight:800;
+  }
+
+  /* Live preview copy */
+  .pv-live-site p,
+  .pv-live-site span,
+  .pv-live-site small,
+  .pv-live-site a{
+    font-weight:500;
+  }
+
+  .pv-live-site .pv-nav a,
+  .pv-live-site .pv-footer,
+  .pv-live-site button{
+    font-weight:700;
+  }
+
+  /* Forms/search controls */
+  .studio-search input,
+  .studio-filter{
+    font-weight:700;
+  }
+
+  body.dark .catalog-workspace .hero p,
+  body.dark .studio-page-intro p,
+  body.dark .visual-card-copy p,
+  body.dark .studio-component-card small,
+  body.dark .studio-library-divider p{
+    color:#b7c9d8;
+  }
+}
