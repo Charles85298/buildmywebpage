@@ -20,10 +20,11 @@
     const many=p=>vals
       .filter(x=>String(x.code||'').startsWith(p+'-'))
       .sort((a,b)=>Number(a.selectedAt||0)-Number(b.selectedAt||0));
-    const cp=one('CP'), hd=one('HD'), nv=one('NV'), ft=one('FT'), bt=one('BT'), cd=one('CD'), ga=one('GA'), input=one('IN'), fo=one('FO');
+    const cp=one('CP'), hd=one('HD'), hr=one('HR'), nv=one('NV'), ft=one('FT'), bt=one('BT'), cd=one('CD'), ga=one('GA'), input=one('IN'), fo=one('FO');
     const sc=many('SC'), fx=many('FX').concat(many('EF'));
     const palette=PALETTES[cp?.code]||['#0E2A47','#1697E6','#EAF6FF','#FFFFFF'];
-    const h=(hd&&hh[hd.code])||hd?.editorSettings||{};
+    const h=(hd&&hh[hd.sourceCode||hd.code])||hd?.editorSettings||{};
+    const hero=(hr&&hh[hr.sourceCode||hr.code?.replace(/^HR-/,'HD-')])||hr?.editorSettings||{};
     const n=(nv&&navs[nv.code])||nv?.editorSettings||{};
     const chosenColors=(item)=>{
       const c=item?.colors||{}; if(c.colorMode==='custom')return {primary:c.primaryBg,primaryText:c.primaryText,secondary:c.secondaryBg,secondaryText:c.secondaryText};
@@ -47,7 +48,7 @@
       border:hasPalette?palette[2]:(theme.surface_border_color||'#dfe8f1'),
       surface:hasPalette?palette[3]:(theme.surface_background||palette[3])
     };
-    return {selections,vals,theme,design,hh,navs,cp,hd,nv,ft,bt,cd,ga,input,fo,sc,fx,h,n,colors,font:FONT_MAP[ft?.code]||'Inter,Arial,sans-serif'};
+    return {selections,vals,theme,design,hh,navs,cp,hd,hr,nv,ft,bt,cd,ga,input,fo,sc,fx,h,hero,n,colors,font:FONT_MAP[ft?.code]||'Inter,Arial,sans-serif'};
   };
   const menuItems=s=>String(s.n.menu||s.h.menu||'Home\nAbout\nServices\nContact').split(/\n+/).map(x=>x.trim()).filter(Boolean).slice(0,6);
   const buttonClass=code=>{
@@ -56,7 +57,7 @@
   const headerClass=code=>`pv-header-${String(code||'HD-01').split('-')[1]||'01'}`;
   const navClass=code=>`pv-nav-${String(code||'NV-01').split('-')[1]||'01'}`;
   const cardClass=code=>`pv-card-${String(code||'CD-01').split('-')[1]||'01'}`;
-  const heroText=s=>({headline:s.h.headline||'Build Your Dream Website',description:s.h.description||'Create a stunning website that brings your selected design system together.',cta:s.h.ctaText||'Get Started'});
+  const heroText=s=>({headline:s.hero.headline||s.h.headline||'Build Your Dream Website',description:s.hero.description||s.h.description||'Create a stunning website that brings your selected design system together.',cta:s.hero.heroPrimary||s.h.ctaText||'Get Started'});
   function sectionsHtml(s,compact){
     const chosen=s.sc.length?s.sc.slice(0,compact?1:4):[];
     const cards=s.cd?`<div class="pv-cards ${cardClass(s.cd.code)}"><article><span>01</span><b>${esc(s.cd.name||'Professional Design')}</b><p>Clear, polished content styled with your selected card design.</p></article><article><span>02</span><b>Development</b><p>Responsive experiences built for desktop, tablet and mobile.</p></article><article><span>03</span><b>Support</b><p>A strong structure that makes the next step easy to understand.</p></article></div>`:'';
@@ -71,7 +72,7 @@
     const t=heroText(s), menu=menuItems(s), showNav=!!s.nv||!!s.h.menu||compact, showFooter=!!s.fo||compact;
     const nav=showNav?`<nav class="pv-nav ${navClass(s.nv?.code)}">${menu.map(x=>`<a>${esc(x)}</a>`).join('')}</nav>`:'';
     const header=`<header class="pv-header ${headerClass(s.hd?.code)}"><b class="pv-brand">${esc(s.h.logoText||'YourBrand')}</b><button class="pv-menu" aria-label="Menu">☰</button>${nav}<button class="pv-cta ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button></header>`;
-    const hero=`<section class="pv-hero"><div class="pv-hero-copy"><small>${esc(s.h.eyebrow||'YOUR WEBSITE')}</small><h1>${esc(t.headline)}</h1><p>${esc(t.description)}</p><div class="pv-hero-actions"><button class="pv-primary ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button>${compact?'':`<button class="pv-secondary ${buttonClass(s.bt?.code)}">Learn More</button>`}</div></div><div class="pv-hero-art"><i></i><i></i><i></i></div></section>`;
+    const hero=`<section class="pv-hero pv-hero-${String(s.hr?.code||'HR-01').split('-')[1]||'01'}"><div class="pv-hero-copy"><small>${esc(s.hero.eyebrow||s.h.eyebrow||'YOUR WEBSITE')}</small><h1>${esc(t.headline)}</h1><p>${esc(t.description)}</p><div class="pv-hero-actions"><button class="pv-primary ${buttonClass(s.bt?.code)}">${esc(t.cta)}</button>${compact?'':`<button class="pv-secondary ${buttonClass(s.bt?.code)}">Learn More</button>`}</div></div><div class="pv-hero-art"><i></i><i></i><i></i></div></section>`;
     const footer=showFooter?`<footer class="pv-footer"><b>${esc(s.h.logoText||'YourBrand')}</b><span>${menu.slice(0,4).map(esc).join(' · ')}</span>${s.fo?`<small>${esc(s.fo.code)} · ${esc(s.fo.name||'Footer')}</small>`:''}</footer>`:'';
     const cls=['pv-live-site',compact?'pv-compact':'pv-full',s.fx.length?'pv-has-effect':'',`pv-font-${String(s.ft?.code||'').replace(/[^a-z0-9]/gi,'').toLowerCase()}`].filter(Boolean).join(' ');
     return `<div class="${cls}" style="--pv-dark:${s.colors.dark};--pv-primary:${s.colors.primary};--pv-soft:${s.colors.soft};--pv-bg:${s.colors.background};--pv-heading:${s.colors.heading};--pv-body:${s.colors.body};--pv-header-text:${s.colors.headerText};--pv-footer:${s.colors.footer};--pv-footer-text:${s.colors.footerText};--pv-border:${s.colors.border};--pv-surface:${s.colors.surface};--pv-font:${s.font};--pv-radius:${Number(s.theme.surface_border_radius||16)}px;--pv-section-space:${Number(s.theme.section_spacing||72)}px">${header}${hero}${sectionsHtml(s,compact)}${footer}</div>`;

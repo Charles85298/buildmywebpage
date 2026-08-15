@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Navigation | Fleming Solutions Design Catalog</title><meta content="Header menus, pills, sidebars, breadcrumbs, tabs, mega-menu patterns, and mobile controls." name="description"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/><link href="catalog.css?v=1.11" rel="stylesheet"/></head><body><header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="../index.html#design-catalog">← Main site</a></div></header>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Navigation | Fleming Solutions Design Catalog</title><meta content="Header menus, pills, sidebars, breadcrumbs, tabs, mega-menu patterns, and mobile controls." name="description"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/><link href="catalog.css?v=1.12" rel="stylesheet"/></head><body><header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="../index.html#design-catalog">← Main site</a></div></header>
 <main><section class="hero"><div class="wrap"><div class="kicker">Website Design Menu · Navigation</div><h1>04. Navigation</h1><p>Header menus, pills, sidebars, breadcrumbs, tabs, mega-menu patterns, and mobile controls. Choose the specimen you like and reference its catalog code when requesting your website.</p></div></section><div class="wrap">
 <section class="studio-page-intro">
   <div><span class="studio-step">STEP 04 · NAVIGATION & MENU</span><h2>Choose how visitors move through your website.</h2><p>Compare menu structures, interaction patterns, and responsive approaches. Your selected navigation is reflected in the live website preview.</p></div>
@@ -88,14 +88,25 @@
       <div class="visual-card-copy"><h3>Mobile-First Menu</h3><p>Compact navigation optimized around mobile interactions.</p></div>
       <div class="visual-card-actions"><a class="visual-customize" href="navigation-editor.html?code=NV-08">Customize →</a><button class="quick-select" data-quick-select="NV-08" type="button">Quick Select</button></div>
     </article></div>
-<div class="studio-step-nav"><a href="headers.html?focus=hero">← Hero</a><a class="studio-next" href="fonts.html">Continue to Typography →</a></div></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js?v=1.11"></script><script src="preview-renderer.js?v=1.11"></script><script src="workspace.js?v=1.11"></script><script src="../supabase-app.js"></script>
+<div class="studio-step-nav"><a href="headers.html?focus=hero">← Hero</a><a class="studio-next" href="fonts.html">Continue to Typography →</a></div></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js?v=1.12"></script><script src="preview-renderer.js?v=1.12"></script><script src="workspace.js?v=1.12"></script><script src="../supabase-app.js"></script>
 <script>
 (()=>{
  const STORE='fs-builder-selections';
  const defs={'NV-01':'Classic Horizontal Menu','NV-02':'Centered Navigation','NV-03':'Floating Pill Menu','NV-04':'Sidebar Navigation','NV-05':'Mega Menu','NV-06':'Minimal Menu','NV-07':'Icon + Label Menu','NV-08':'Mobile-First Menu'};
- const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}};const write=d=>localStorage.setItem(STORE,JSON.stringify(d));
- function refresh(){const d=read();document.querySelectorAll('[data-state-for]').forEach(x=>{const y=!!d[x.dataset.stateFor];x.textContent=y?'✓ Selected':'Not selected';x.classList.toggle('yes',y)});document.querySelectorAll('[data-quick-select]').forEach(b=>b.textContent=d[b.dataset.quickSelect]?'✓ Selected':'Quick Select');}
- document.querySelectorAll('[data-quick-select]').forEach(b=>b.onclick=()=>{const d=read(),c=b.dataset.quickSelect;if(d[c])delete d[c];else d[c]={code:c,name:defs[c],category:'Navigation / Menu',page:'navigation.html',selectedAt:Date.now(),colors:{colorMode:'global'}};write(d);refresh();window.dispatchEvent(new Event('fs-selection-change'));});refresh();
+ const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}};
+ const write=d=>localStorage.setItem(STORE,JSON.stringify(d));
+ function refresh(){
+   const d=read();
+   document.querySelectorAll('[data-state-for]').forEach(x=>{const y=!!d[x.dataset.stateFor];x.textContent=y?'✓ Selected':'Not selected';x.classList.toggle('yes',y)});
+   document.querySelectorAll('[data-quick-select]').forEach(b=>{const y=!!d[b.dataset.quickSelect];b.textContent=y?'✓ Selected':'Quick Select';b.setAttribute('aria-pressed',String(y));b.closest('.visual-catalog-card')?.classList.toggle('builder-selected',y)});
+ }
+ document.querySelectorAll('[data-quick-select]').forEach(b=>b.onclick=()=>{
+   const d=read(),c=b.dataset.quickSelect,already=!!d[c];
+   Object.keys(d).forEach(k=>{if(k.startsWith('NV-'))delete d[k]});
+   if(!already)d[c]={code:c,name:defs[c],category:'Navigation',page:'navigation.html',selectedAt:Date.now(),colors:{colorMode:'global'}};
+   write(d);refresh();window.dispatchEvent(new Event('fs-selection-change'));
+ });
+ window.addEventListener('fs-selection-change',refresh);window.addEventListener('storage',refresh);refresh();
 })();
 </script>
 </body></html>

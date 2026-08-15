@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Header & Hero Editor | BuildMyWebpage</title>
-<link rel="stylesheet" href="catalog.css?v=1.11">
+<link rel="stylesheet" href="catalog.css?v=1.12">
 </head>
 <body class="component-editor-page">
 <header class="editor-appbar">
@@ -86,7 +86,7 @@
 </main>
 
 <nav class="editor-stepper ordered-editor-stepper">
- <strong>1 Header & Hero</strong>
+ <strong id="editor-mode-step">Header / Hero</strong>
  <span>2 Navigation / Menu</span>
  <span>3 Frames / Sections</span>
  <span>4 Typography</span>
@@ -102,10 +102,10 @@
 </nav>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="catalog.js?v=1.11"></script><script src="preview-renderer.js?v=1.11"></script><script src="workspace.js?v=1.11"></script><script src="../supabase-app.js"></script>
+<script src="catalog.js?v=1.12"></script><script src="preview-renderer.js?v=1.12"></script><script src="workspace.js?v=1.12"></script><script src="../supabase-app.js"></script>
 <script>
 (()=>{
- const params=new URLSearchParams(location.search), code=params.get('code')||'HD-01';
+ const params=new URLSearchParams(location.search), code=params.get('code')||'HD-01', heroMode=params.get('mode')==='hero', selectionCode=heroMode?code.replace(/^HD-/,'HR-'):code;
  const STORE='fs-header-hero-editor-v1', SELECT='fs-builder-selections';
  const presets={
   'HD-01':{name:'Classic Split Nav',headerBg:'#0E2A47',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#69BE28',heroStyle:'image'},
@@ -118,7 +118,7 @@
  let all={};try{all=JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){}
  let state={...base,...(presets[code]||{}),...(all[code]||{})};
  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
- $('#ed-code').textContent=code; $('#ed-name').textContent=state.name||'Header & Hero';
+ $('#ed-code').textContent=selectionCode; $('#ed-name').textContent=(heroMode?'Hero · ':'Header · ')+(state.name||'Design');
 
  function saveLocal(){all[code]=state;localStorage.setItem(STORE,JSON.stringify(all));}
  function fill(){ $$('[data-ed]').forEach(el=>{let k=el.dataset.ed;if(el.type==='checkbox')el.checked=!!state[k];else el.value=state[k]??''}); render();}
@@ -144,13 +144,20 @@
  $('#ed-reset').onclick=()=>{state={...base,...(presets[code]||{})};fill()};
  $('#ed-save').onclick=async()=>{
    let selections={};try{selections=JSON.parse(localStorage.getItem(SELECT)||'{}')}catch(e){}
-   selections[code]={code,name:state.name,category:'Headers & Heroes',page:'headers.html',selectedAt:Date.now(),colors:{colorMode:'custom',primaryBg:state.headerBg,primaryText:state.headerText,primaryHover:state.ctaBg,styleSettings:state},editorSettings:state};
+   const prefix=heroMode?'HR-':'HD-';Object.keys(selections).forEach(k=>{if(k.startsWith(prefix))delete selections[k]});
+   selections[selectionCode]={code:selectionCode,sourceCode:code,name:state.name,category:heroMode?'Hero':'Header',page:'headers.html'+(heroMode?'?focus=hero':''),selectedAt:Date.now(),colors:{colorMode:'custom',primaryBg:state.headerBg,primaryText:state.headerText,primaryHover:state.ctaBg,styleSettings:state},editorSettings:state};
    localStorage.setItem(SELECT,JSON.stringify(selections)); saveLocal();
-   let st=$('#ed-status');st.textContent='✓ Header & Hero selected and saved locally.';
+   window.dispatchEvent(new Event('fs-selection-change'));
+   let st=$('#ed-status');st.textContent=heroMode?'✓ Hero selected and saved locally.':'✓ Header selected and saved locally.';
    if(window.fsCloud?.saveProject){try{await window.fsCloud.saveProject();st.textContent='✓ Header & Hero saved to your Supabase project.'}catch(e){st.textContent='✓ Saved locally. Sign in to save it to your cloud project.'}}
  };
  const alt=$('#alt-header-grid');
- Object.entries(presets).forEach(([k,p])=>{alt.insertAdjacentHTML('beforeend',`<a class="alt-header-card ${k===code?'active':''}" href="header-hero-editor.html?code=${k}"><div class="mini-site"><div style="background:${p.headerBg};color:${p.headerText}"><b>YOURLOGO</b><span>Home&nbsp; Services&nbsp; Contact</span></div><i></i></div><strong>${k}</strong><span>${p.name}</span></a>`)});
+ Object.entries(presets).forEach(([k,p])=>{alt.insertAdjacentHTML('beforeend',`<a class="alt-header-card ${k===code?'active':''}" href="header-hero-editor.html?code=${k}${heroMode?'&mode=hero':''}"><div class="mini-site"><div style="background:${p.headerBg};color:${p.headerText}"><b>YOURLOGO</b><span>Home&nbsp; Services&nbsp; Contact</span></div><i></i></div><strong>${k}</strong><span>${p.name}</span></a>`)});
+ if(heroMode){
+   const title=document.querySelector('.editor-head h1'); if(title)title.textContent='Customize Hero';
+   const back=document.querySelector('.editor-back'); if(back)back.href='headers.html?focus=hero';
+   const step=document.getElementById('editor-mode-step'); if(step)step.textContent='03 Hero';
+ }else{const step=document.getElementById('editor-mode-step');if(step)step.textContent='02 Header';}
  fill();
 })();
 </script>

@@ -365,22 +365,24 @@
     const info=getInfo(card);
     if(!info.code)return;
     const data=read();
-    const isPalette=String(info.code).startsWith('CP-');
+    const prefix=String(info.code).split('-')[0];
+    const isPalette=prefix==='CP';
+    const isSingleChoice=['CP','HD','HR','NV'].includes(prefix);
+    const already=!!data[info.code];
 
-    if(isPalette){
-      // Color Theme is Step 01 and is intentionally single-choice. Choosing a
-      // new palette replaces the old palette and becomes the global website
-      // color system used by the live preview and inherited component colors.
-      Object.keys(data).forEach(k=>{if(String(k).startsWith('CP-'))delete data[k]});
-      data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()};
-      syncPaletteToWebsite(card);
-    }else if(data[info.code]) delete data[info.code];
+    if(isSingleChoice){
+      // Foundation/header/hero/navigation are single-choice website decisions.
+      Object.keys(data).forEach(k=>{if(String(k).startsWith(prefix+'-'))delete data[k]});
+      if(!already)data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()};
+      if(isPalette && !already)syncPaletteToWebsite(card);
+    }else if(already) delete data[info.code];
     else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()};
 
     write(data);
-    if(isPalette){
+    if(isSingleChoice){
       document.querySelectorAll('.specimen').forEach(c=>{
-        const ci=getInfo(c); if(String(ci.code||'').startsWith('CP-'))setCard(c,ci.code===info.code);
+        const ci=getInfo(c);
+        if(String(ci.code||'').startsWith(prefix+'-'))setCard(c,!already && ci.code===info.code);
       });
     }else setCard(card,!!data[info.code]);
     window.dispatchEvent(new Event('fs-selection-change'));
@@ -554,28 +556,39 @@
 
   // Design Studio search/filter toolbar (v1.9)
   document.querySelectorAll('[data-studio-toolbar]').forEach(toolbar => {
-    const scope = toolbar.parentElement;
+    const scope = toolbar.closest('.wrap') || toolbar.parentElement || document;
     const input = toolbar.querySelector('input[type="search"]');
     const buttons = [...toolbar.querySelectorAll('[data-filter]')];
     const count = toolbar.querySelector('.studio-result-count');
     let active = 'all';
+    const normalize = s => String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
     const items = () => [...scope.querySelectorAll('[data-studio-item]')];
     const apply = () => {
-      const q = (input?.value || '').trim().toLowerCase();
+      const q = normalize(input?.value);
       let visible = 0;
       items().forEach(item => {
-        const hay = `${item.dataset.search || ''} ${item.textContent || ''}`.toLowerCase();
-        const tags = (item.dataset.filterTags || '').toLowerCase().split(/\s+/);
-        const show = (!q || hay.includes(q)) && (active === 'all' || tags.includes(active));
+        const hay = normalize(`${item.dataset.search || ''} ${item.textContent || ''} ${item.dataset.code || ''}`);
+        const tags = normalize(item.dataset.filterTags || '').split(/\s+/).filter(Boolean);
+        const matchesText = !q || q.split(/\s+/).every(part => hay.includes(part));
+        const matchesFilter = active === 'all' || tags.includes(active);
+        const show = matchesText && matchesFilter;
         item.hidden = !show;
+        item.setAttribute('aria-hidden',String(!show));
         if (show) visible++;
       });
       if (count) count.textContent = `${visible} shown`;
+      scope.querySelectorAll('.studio-library-divider').forEach(divider=>{
+        const next=divider.nextElementSibling;
+        if(next && (next.classList.contains('catalog-grid')||next.classList.contains('visual-catalog-grid'))){
+          divider.hidden = ![...next.querySelectorAll('[data-studio-item]')].some(x=>!x.hidden);
+        }
+      });
     };
     input?.addEventListener('input', apply);
+    input?.addEventListener('search', apply);
     buttons.forEach(btn => btn.addEventListener('click', () => {
       active = btn.dataset.filter || 'all';
-      buttons.forEach(x => x.classList.toggle('active', x === btn));
+      buttons.forEach(x => {x.classList.toggle('active', x === btn);x.setAttribute('aria-pressed',String(x===btn));});
       apply();
     }));
     apply();

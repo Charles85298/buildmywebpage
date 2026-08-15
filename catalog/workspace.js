@@ -3,7 +3,7 @@
   const steps=[
     ['01','Color Theme','colors.html','CP'],
     ['02','Header','headers.html','HD'],
-    ['03','Hero','headers.html?focus=hero','HD'],
+    ['03','Hero','headers.html?focus=hero','HR'],
     ['04','Navigation','navigation.html','NV'],
     ['05','Typography','fonts.html','FT'],
     ['06','Sections & Layouts','sections.html','SC'],
