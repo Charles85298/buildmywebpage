@@ -979,3 +979,28 @@ body.dark.catalog-workspace .studio-toolbar:after{background:linear-gradient(180
 body:has(.design-brief-head) .hero h1{
   color:var(--text);
 }
+
+/* ===== My Website Selections mobile contrast correction v1.18 ===== */
+body:has(.design-brief-head) .hero h1,
+body:has(.design-brief-head) .hero p{
+  color:#0e2a47;
+}
+body.dark:has(.design-brief-head) .hero h1,
+body.dark:has(.design-brief-head) .hero p{
+  color:#eef8ff;
+}
+@media(max-width:600px){
+  body:has(.design-brief-head) .hero h1{
+    color:#0e2a47;
+    opacity:1;
+  }
+  body:has(.design-brief-head) .hero p{
+    color:#0e2a47;
+    opacity:1;
+    font-weight:500;
+  }
+  body.dark:has(.design-brief-head) .hero h1,
+  body.dark:has(.design-brief-head) .hero p{
+    color:#eef8ff;
+  }
+}
