@@ -974,3 +974,8 @@ body.dark.catalog-workspace .studio-toolbar:after{background:linear-gradient(180
     color:#b7c9d8;
   }
 }
+
+/* ===== Builder heading color alignment v1.17 ===== */
+body:has(.design-brief-head) .hero h1{
+  color:var(--text);
+}
