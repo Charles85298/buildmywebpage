@@ -1,303 +1,221 @@
 <!DOCTYPE html>
+
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
+<head>
+<meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Root &amp; Bloom — Small-Batch Plant Skincare</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&amp;family=Work+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
-    <style>
-        :root{
-          --bg:#F1EEE2; --bg2:#E7E2D0; --ink:#23331F; --ochre:#C9A24B; --dim:rgba(35,51,31,0.62); --line:rgba(35,51,31,0.14);
-        }
-        *{box-sizing:border-box; margin:0; padding:0;}
-        body{background:var(--bg); color:var(--ink); font-family:'Work Sans', sans-serif; font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
-        a{color:inherit; text-decoration:none;}
-        .serif{font-family:'Newsreader', serif;}
-        .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
-        .back{
-          position:fixed; top:18px; left:18px; z-index:99; background:var(--ink); color:var(--bg);
-          font-size:11px; font-weight:500; padding:8px 13px; border-radius:100px;
-        }
-        [data-reveal]{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
-        [data-reveal].in{opacity:1; transform:translateY(0);}
-      
-        header{padding:28px 0;}
-        .nav-row{display:flex; justify-content:space-between; align-items:center;}
-        .logo{font-family:'Newsreader'; font-style:italic; font-size:22px;}
-        nav ul{list-style:none; display:flex; gap:32px; align-items:center;}
-        nav a{font-size:13.5px; color:var(--dim);}
-        .nav-btn{border:1px solid var(--ink); padding:9px 18px; border-radius:100px; font-size:13px; color:var(--ink) !important;}
-      
-        .hero{padding:50px 0 90px;}
-        .hero-grid{display:grid; grid-template-columns:1fr 0.9fr; gap:60px; align-items:center;}
-        @media(max-width:860px){.hero-grid{grid-template-columns:1fr;}}
-        .eyebrow{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ochre); margin-bottom:20px; font-weight:600;}
-        h1.hero-title{font-family:'Newsreader'; font-weight:400; font-size:clamp(36px,5.6vw,58px); line-height:1.12; margin-bottom:22px;}
-        h1.hero-title em{font-style:italic; color:#556B47;}
-        .hero-sub{font-size:15.5px; line-height:1.8; color:var(--dim); max-width:420px; margin-bottom:32px;}
-        .btn{background:var(--ink); color:var(--bg); padding:14px 26px; border-radius:100px; font-size:14px; display:inline-block;}
-        .btn.alt{background:transparent; border:1px solid var(--line); color:var(--ink);}
-        .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
-      
-        .leaf-frame{aspect-ratio:4/5; position:relative; border-radius:6px; overflow:hidden; background:linear-gradient(160deg,#DCD6BE,#B7C4A6);}
-        .leaf-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.85; mix-blend-mode:multiply;}
-        .leaf-frame svg{position:absolute; inset:0; width:100%; height:100%; z-index:2;}
-      
-        .strip{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:24px 0; background:var(--bg2);}
-        .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px; font-size:13px; color:var(--dim);}
-      
-        .products{padding:100px 0;}
-        .section-head{max-width:520px; margin-bottom:56px;}
-        .section-head .eyebrow{margin-bottom:16px;}
-        .section-head h2{font-family:'Newsreader'; font-weight:400; font-size:36px; line-height:1.2; margin-bottom:14px;}
-        .section-head p{font-size:14.5px; color:var(--dim); line-height:1.7;}
-        .product-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:34px;}
-        @media(max-width:860px){.product-grid{grid-template-columns:1fr 1fr;}}
-        @media(max-width:560px){.product-grid{grid-template-columns:1fr;}}
-        .product .ph{aspect-ratio:3/4; border-radius:4px; margin-bottom:18px; background:linear-gradient(150deg,#D8D2B9,#A9B896); position:relative; overflow:hidden;}
-        .product .ph img{width:100%; height:100%; object-fit:cover; opacity:0.9;}
-        .product h3{font-family:'Newsreader'; font-style:italic; font-size:19px; margin-bottom:6px;}
-        .product .price{font-size:13px; color:var(--ochre); margin-bottom:8px;}
-        .product p{font-size:13px; color:var(--dim); line-height:1.6;}
-      
-        .ingredients{padding:0 0 110px;}
-        .ing-inner{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
-        @media(max-width:860px){.ing-inner{grid-template-columns:1fr;}}
-        .ing-list{display:flex; flex-direction:column;}
-        .ing-row{display:flex; justify-content:space-between; align-items:baseline; padding:18px 0; border-top:1px solid var(--line);}
-        .ing-row:last-child{border-bottom:1px solid var(--line);}
-        .ing-row h4{font-family:'Newsreader'; font-style:italic; font-size:19px;}
-        .ing-row span{font-size:12.5px; color:var(--dim); max-width:220px; text-align:right;}
-        .ing-visual{aspect-ratio:1/1; background:linear-gradient(150deg,#B7C4A6,#556B47); border-radius:6px; overflow:hidden;}
-        .ing-visual img{width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.9;}
-      
-        .quote-band{background:var(--ink); color:var(--bg); padding:90px 0; text-align:center;}
-        .quote-band blockquote{font-family:'Newsreader'; font-style:italic; font-size:clamp(22px,3vw,32px); max-width:700px; margin:0 auto 20px; line-height:1.5;}
-        .quote-band cite{font-size:12.5px; letter-spacing:0.05em; text-transform:uppercase; opacity:0.6; font-style:normal;}
-      
-        .cta{padding:100px 0; text-align:center;}
-        .cta .eyebrow{justify-content:center; display:flex;}
-        .cta h2{font-family:'Newsreader'; font-weight:400; font-size:clamp(30px,4.4vw,46px); margin-bottom:26px; max-width:560px; margin-left:auto; margin-right:auto;}
-      
-        footer{border-top:1px solid var(--line); padding:34px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--dim);}
-      
-        .menu-toggle{display:none; border:0; background:transparent; color:var(--ink); font-size:22px; cursor:pointer; padding:4px 6px; line-height:1;}
-        @media(max-width:860px){
-          .menu-toggle{display:block;}
-          .nav-links{
-            position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); z-index:200;
-            background:var(--bg); border-left:1px solid var(--line);
-            flex-direction:column !important; align-items:flex-start !important; justify-content:flex-start !important;
-            padding:90px 28px 28px; gap:22px !important;
-            transform:translateX(100%); transition:transform .25s ease;
-            box-shadow:-20px 0 50px rgba(0,0,0,0.25);
-          }
-          .nav-links.open{transform:translateX(0);}
-          .nav-links li{width:100%;}
-        }
-        .nav-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:150; opacity:0; pointer-events:none; transition:opacity .25s ease;}
-        .nav-overlay.open{opacity:1; pointer-events:auto;}
-    </style>
-  </head>
-  <body>
-    <a class="back" href="../index.html">← Style Library</a>
-    <header>
-      <div class="nav-overlay" id="nav-overlay">
-      </div>
-      <div class="wrap nav-row">
-        <div class="logo">
-          Root &amp; Bloom
-        </div>
-        <button aria-label="Open menu" class="menu-toggle" id="menu-toggle">☰</button>
-        <nav>
-          <ul class="nav-links" id="nav-links">
-            <li>
-              <a href="#products">Shop</a>
-            </li>
-            <li>
-              <a href="#ingredients">Ingredients</a>
-            </li>
-            <li>
-              <a class="nav-btn" href="#products">Find a stockist</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <div>
-          <div class="eyebrow">
-            Small-batch · Plant-derived · Made in Arizona
-          </div>
-          <h1 class="hero-title">Skincare that reads <em>like a garden note.</em></h1>
+<style>
+  :root{
+    --bg:#F1EEE2; --bg2:#E7E2D0; --ink:#23331F; --ochre:#C9A24B; --dim:rgba(35,51,31,0.62); --line:rgba(35,51,31,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:'Work Sans', sans-serif; font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  a{color:inherit; text-decoration:none;}
+  .serif{font-family:'Newsreader', serif;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
+  .back{
+    position:fixed; top:18px; left:18px; z-index:99; background:var(--ink); color:var(--bg);
+    font-size:11px; font-weight:500; padding:8px 13px; border-radius:100px;
+  }
+  [data-reveal]{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  [data-reveal].in{opacity:1; transform:translateY(0);}
+
+  header{padding:28px 0;}
+  .nav-row{display:flex; justify-content:space-between; align-items:center;}
+  .logo{font-family:'Newsreader'; font-style:italic; font-size:22px;}
+  nav ul{list-style:none; display:flex; gap:32px; align-items:center;}
+  nav a{font-size:13.5px; color:var(--dim);}
+  .nav-btn{border:1px solid var(--ink); padding:9px 18px; border-radius:100px; font-size:13px; color:var(--ink) !important;}
+
+  .hero{padding:50px 0 90px;}
+  .hero-grid{display:grid; grid-template-columns:1fr 0.9fr; gap:60px; align-items:center;}
+  @media(max-width:860px){.hero-grid{grid-template-columns:1fr;}}
+  .eyebrow{font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ochre); margin-bottom:20px; font-weight:600;}
+  h1.hero-title{font-family:'Newsreader'; font-weight:400; font-size:clamp(36px,5.6vw,58px); line-height:1.12; margin-bottom:22px;}
+  h1.hero-title em{font-style:italic; color:#556B47;}
+  .hero-sub{font-size:15.5px; line-height:1.8; color:var(--dim); max-width:420px; margin-bottom:32px;}
+  .btn{background:var(--ink); color:var(--bg); padding:14px 26px; border-radius:100px; font-size:14px; display:inline-block;}
+  .btn.alt{background:transparent; border:1px solid var(--line); color:var(--ink);}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+
+  .leaf-frame{aspect-ratio:4/5; position:relative; border-radius:6px; overflow:hidden; background:linear-gradient(160deg,#DCD6BE,#B7C4A6);}
+  .leaf-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.85; mix-blend-mode:multiply;}
+  .leaf-frame svg{position:absolute; inset:0; width:100%; height:100%; z-index:2;}
+
+  .strip{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:24px 0; background:var(--bg2);}
+  .strip .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px; font-size:13px; color:var(--dim);}
+
+  .products{padding:100px 0;}
+  .section-head{max-width:520px; margin-bottom:56px;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-family:'Newsreader'; font-weight:400; font-size:36px; line-height:1.2; margin-bottom:14px;}
+  .section-head p{font-size:14.5px; color:var(--dim); line-height:1.7;}
+  .product-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:34px;}
+  @media(max-width:860px){.product-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:560px){.product-grid{grid-template-columns:1fr;}}
+  .product .ph{aspect-ratio:3/4; border-radius:4px; margin-bottom:18px; background:linear-gradient(150deg,#D8D2B9,#A9B896); position:relative; overflow:hidden;}
+  .product .ph img{width:100%; height:100%; object-fit:cover; opacity:0.9;}
+  .product h3{font-family:'Newsreader'; font-style:italic; font-size:19px; margin-bottom:6px;}
+  .product .price{font-size:13px; color:var(--ochre); margin-bottom:8px;}
+  .product p{font-size:13px; color:var(--dim); line-height:1.6;}
+
+  .ingredients{padding:0 0 110px;}
+  .ing-inner{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  @media(max-width:860px){.ing-inner{grid-template-columns:1fr;}}
+  .ing-list{display:flex; flex-direction:column;}
+  .ing-row{display:flex; justify-content:space-between; align-items:baseline; padding:18px 0; border-top:1px solid var(--line);}
+  .ing-row:last-child{border-bottom:1px solid var(--line);}
+  .ing-row h4{font-family:'Newsreader'; font-style:italic; font-size:19px;}
+  .ing-row span{font-size:12.5px; color:var(--dim); max-width:220px; text-align:right;}
+  .ing-visual{aspect-ratio:1/1; background:linear-gradient(150deg,#B7C4A6,#556B47); border-radius:6px; overflow:hidden;}
+  .ing-visual img{width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; opacity:0.9;}
+
+  .quote-band{background:var(--ink); color:var(--bg); padding:90px 0; text-align:center;}
+  .quote-band blockquote{font-family:'Newsreader'; font-style:italic; font-size:clamp(22px,3vw,32px); max-width:700px; margin:0 auto 20px; line-height:1.5;}
+  .quote-band cite{font-size:12.5px; letter-spacing:0.05em; text-transform:uppercase; opacity:0.6; font-style:normal;}
+
+  .cta{padding:100px 0; text-align:center;}
+  .cta .eyebrow{justify-content:center; display:flex;}
+  .cta h2{font-family:'Newsreader'; font-weight:400; font-size:clamp(30px,4.4vw,46px); margin-bottom:26px; max-width:560px; margin-left:auto; margin-right:auto;}
+
+  footer{border-top:1px solid var(--line); padding:34px 0; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--dim);}
+
+  .menu-toggle{display:none; border:0; background:transparent; color:var(--ink); font-size:22px; cursor:pointer; padding:4px 6px; line-height:1;}
+  @media(max-width:860px){
+    .menu-toggle{display:block;}
+    .nav-links{
+      position:fixed; top:0; right:0; height:100vh; width:min(78vw,320px); z-index:200;
+      background:var(--bg); border-left:1px solid var(--line);
+      flex-direction:column !important; align-items:flex-start !important; justify-content:flex-start !important;
+      padding:90px 28px 28px; gap:22px !important;
+      transform:translateX(100%); transition:transform .25s ease;
+      box-shadow:-20px 0 50px rgba(0,0,0,0.25);
+    }
+    .nav-links.open{transform:translateX(0);}
+    .nav-links li{width:100%;}
+  }
+  .nav-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:150; opacity:0; pointer-events:none; transition:opacity .25s ease;}
+  .nav-overlay.open{opacity:1; pointer-events:auto;}
+</style>
+</head>
+<body>
+<a class="back" href="../index.html">← Style Library</a>
+<header>
+<div class="nav-overlay" id="nav-overlay"></div>
+<div class="wrap nav-row">
+<div class="logo">Root &amp; Bloom</div>
+<button aria-label="Open menu" class="menu-toggle" id="menu-toggle">☰</button>
+<nav><ul class="nav-links" id="nav-links">
+<li><a href="#products">Shop</a></li>
+<li><a href="#ingredients">Ingredients</a></li>
+<li><a class="nav-btn" href="#products">Find a stockist</a></li>
+</ul></nav>
+</div>
+</header>
+<section class="hero">
+<div class="wrap hero-grid">
+<div>
+<div class="eyebrow">Small-batch · Plant-derived · Made in Arizona</div>
+<h1 class="hero-title">Skincare that reads <em>like a garden note.</em></h1>
 <p class="hero-sub">Five products, no filler ingredients, and a batch size small enough that the same two hands mix every jar. We name what's in the bottle — nothing you'd need a chemistry degree to pronounce.</p>
-          <div class="hero-actions">
-            <a class="btn" href="#products">Shop the line</a>
+<div class="hero-actions">
+<a class="btn" href="#products">Shop the line</a>
 <a class="btn alt" href="#ingredients">See what's inside</a>
-          </div>
-        </div>
-        <div class="leaf-frame">
-          <img alt="Botanical leaves" onerror="this.style.display='none'" src="../assets/previews/local/preview-61.svg"/>
+</div>
+</div>
+<div class="leaf-frame">
+<img alt="Botanical leaves" onerror="this.style.display='none'" src="https://loremflickr.com/700/880/botanical,plant,leaves/all?lock=141"/>
 <svg fill="none" viewbox="0 0 300 375" xmlns="http://www.w3.org/2000/svg">
 <path d="M150 60 C 90 100, 70 200, 150 320 C 230 200, 210 100, 150 60 Z" fill="none" opacity="0.35" stroke="#23331F" stroke-width="1.4"></path>
 <path d="M150 70 L150 310" opacity="0.3" stroke="#23331F" stroke-width="1"></path>
 <path d="M150 120 L110 100 M150 120 L190 100 M150 170 L105 155 M150 170 L195 155 M150 220 L110 210 M150 220 L190 210 M150 265 L120 258 M150 265 L180 258" opacity="0.3" stroke="#23331F" stroke-width="0.8"></path>
 </svg>
-        </div>
-      </div>
-    </section>
-    <div class="strip">
-      <div class="wrap">
-        <span>No synthetic fragrance</span>
+</div>
+</div>
+</section>
+<div class="strip">
+<div class="wrap">
+<span>No synthetic fragrance</span>
 <span>Cold-processed in small batches</span>
 <span>Glass, not plastic</span>
 <span>Every ingredient named, always</span>
-      </div>
-    </div>
-    <section class="products" id="products">
-      <div class="wrap">
-        <div class="section-head">
-          <div class="eyebrow">
-            The line
-          </div>
-          <h2>Five products. That's the whole shop.</h2>
+</div>
+</div>
+<section class="products" id="products">
+<div class="wrap">
+<div class="section-head">
+<div class="eyebrow">The line</div>
+<h2>Five products. That's the whole shop.</h2>
 <p>We'd rather perfect five formulas than launch fifty. Each one is reformulated only when the ingredients themselves change with the season.</p>
-        </div>
-        <div class="product-grid">
-          <div class="product">
-            <div class="ph">
-              <img alt="" onerror="this.style.display='none'" src="../assets/previews/local/preview-10.svg"/>
-            </div>
-            <h3>Calendula Salve</h3>
-            <div class="price">
-              $28
-            </div>
-            <p>A do-anything balm — dry hands, elbows, cuticles.</p>
-          </div>
-          <div class="product">
-            <div class="ph">
-              <img alt="" onerror="this.style.display='none'" src="../assets/previews/local/preview-08.svg"/>
-            </div>
-            <h3>Chamomile Oil Cleanser</h3>
-            <div class="price">
-              $34
-            </div>
-            <p>Oat and chamomile, gentle enough for daily use.</p>
-          </div>
-          <div class="product">
-            <div class="ph">
-              <img alt="" onerror="this.style.display='none'" src="../assets/previews/local/preview-09.svg"/>
-            </div>
-            <h3>Rosehip Night Serum</h3>
-            <div class="price">
-              $46
-            </div>
-            <p>Cold-pressed rosehip and squalane, nothing else.</p>
-          </div>
-          <div class="product">
-            <div class="ph">
-              <img alt="" onerror="this.style.display='none'" src="../assets/previews/local/preview-12.svg"/>
-            </div>
-            <h3>Yarrow Toner</h3>
-            <div class="price">
-              $26
-            </div>
-            <p>A splash toner, not an astringent — no sting.</p>
-          </div>
-          <div class="product">
-            <div class="ph">
-              <img alt="" onerror="this.style.display='none'" src="../assets/previews/local/preview-07.svg"/>
-            </div>
-            <h3>Clay &amp; Nettle Mask</h3>
-            <div class="price">
-              $32
-            </div>
-            <p>French green clay, dried nettle, once-a-week ritual.</p>
-          </div>
-          <div class="product">
-            <div class="ph">
-              <img alt="" onerror="this.style.display='none'" src="../assets/previews/local/preview-11.svg"/>
-            </div>
-            <h3>Sample Set</h3>
-            <div class="price">
-              $18
-            </div>
-            <p>All five, in travel jars, before you commit.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="ingredients" id="ingredients">
-      <div class="wrap ing-inner">
-        <div class="ing-list">
-          <div class="section-head" style="margin-bottom:24px;">
-            <div class="eyebrow">
-              Ingredients
-            </div>
-            <h2 style="font-size:30px;">What actually goes in the jar</h2>
-          </div>
-          <div class="ing-row">
-            <h4>Calendula</h4><span>Grown on a half-acre plot 20 minutes from the studio</span>
-          </div>
-          <div class="ing-row">
-            <h4>Rosehip oil</h4><span>Cold-pressed, imported from a single Chilean grower</span>
-          </div>
-          <div class="ing-row">
-            <h4>Beeswax</h4><span>From three hives we keep behind the studio</span>
-          </div>
-          <div class="ing-row">
-            <h4>Green clay</h4><span>Sourced from a family-run quarry in France</span>
-          </div>
-        </div>
-        <div class="ing-visual">
-          <img alt="Calendula flower" onerror="this.style.display='none'" src="../assets/previews/local/preview-54.svg"/>
-        </div>
-      </div>
-    </section>
-    <section class="quote-band">
-      <div class="wrap">
-        <blockquote>"The only serum I've used where I can actually picture the plant it came from."</blockquote>
+</div>
+<div class="product-grid">
+<div class="product"><div class="ph"><img alt="" onerror="this.style.display='none'" src="https://loremflickr.com/380/500/skincare,jar/all?lock=150"/></div><h3>Calendula Salve</h3><div class="price">$28</div><p>A do-anything balm — dry hands, elbows, cuticles.</p></div>
+<div class="product"><div class="ph"><img alt="" onerror="this.style.display='none'" src="https://loremflickr.com/380/500/cleanser,bottle/all?lock=151"/></div><h3>Chamomile Oil Cleanser</h3><div class="price">$34</div><p>Oat and chamomile, gentle enough for daily use.</p></div>
+<div class="product"><div class="ph"><img alt="" onerror="this.style.display='none'" src="https://loremflickr.com/380/500/serum,bottle/all?lock=152"/></div><h3>Rosehip Night Serum</h3><div class="price">$46</div><p>Cold-pressed rosehip and squalane, nothing else.</p></div>
+<div class="product"><div class="ph"><img alt="" onerror="this.style.display='none'" src="https://loremflickr.com/380/500/toner,bottle/all?lock=153"/></div><h3>Yarrow Toner</h3><div class="price">$26</div><p>A splash toner, not an astringent — no sting.</p></div>
+<div class="product"><div class="ph"><img alt="" onerror="this.style.display='none'" src="https://loremflickr.com/380/500/clay,mask/all?lock=154"/></div><h3>Clay &amp; Nettle Mask</h3><div class="price">$32</div><p>French green clay, dried nettle, once-a-week ritual.</p></div>
+<div class="product"><div class="ph"><img alt="" onerror="this.style.display='none'" src="https://loremflickr.com/380/500/skincare,set/all?lock=155"/></div><h3>Sample Set</h3><div class="price">$18</div><p>All five, in travel jars, before you commit.</p></div>
+</div>
+</div>
+</section>
+<section class="ingredients" id="ingredients">
+<div class="wrap ing-inner">
+<div class="ing-list">
+<div class="section-head" style="margin-bottom:24px;">
+<div class="eyebrow">Ingredients</div>
+<h2 style="font-size:30px;">What actually goes in the jar</h2>
+</div>
+<div class="ing-row"><h4>Calendula</h4><span>Grown on a half-acre plot 20 minutes from the studio</span></div>
+<div class="ing-row"><h4>Rosehip oil</h4><span>Cold-pressed, imported from a single Chilean grower</span></div>
+<div class="ing-row"><h4>Beeswax</h4><span>From three hives we keep behind the studio</span></div>
+<div class="ing-row"><h4>Green clay</h4><span>Sourced from a family-run quarry in France</span></div>
+</div>
+<div class="ing-visual"><img alt="Calendula flower" onerror="this.style.display='none'" src="https://loremflickr.com/600/600/calendula,flower/all?lock=161"/></div>
+</div>
+</section>
+<section class="quote-band">
+<div class="wrap">
+<blockquote>"The only serum I've used where I can actually picture the plant it came from."</blockquote>
 <cite>— A customer, in a handwritten note we kept</cite>
-      </div>
-    </section>
-    <section class="cta">
-      <div class="wrap">
-        <div class="eyebrow">
-          Join the list
-        </div>
-        <h2>We restock in small batches — get notified before we sell out.</h2>
+</div>
+</section>
+<section class="cta">
+<div class="wrap">
+<div class="eyebrow">Join the list</div>
+<h2>We restock in small batches — get notified before we sell out.</h2>
 <a class="btn" href="#ingredients">Join the list</a>
-      </div>
-    </section>
-    <footer>
-      <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
-        <span>Root &amp; Bloom Botanicals</span>
+</div>
+</section>
+<footer>
+<div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+<span>Root &amp; Bloom Botanicals</span>
 <span>Design demo by Fleming Solutions</span>
-      </div>
-    </footer>
-    <script>
-        const els = document.querySelectorAll('.product, .ing-row');
-        els.forEach(el => el.setAttribute('data-reveal',''));
-        const io = new IntersectionObserver((entries)=>{
-          entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-        }, {threshold:0.15});
-        els.forEach(el=>io.observe(el));
-    </script>
-    <script>
-        (function(){
-          const toggle = document.getElementById('menu-toggle');
-          const links = document.getElementById('nav-links');
-          const overlay = document.getElementById('nav-overlay');
-          if(!toggle || !links) return;
-          function closeMenu(){ links.classList.remove('open'); overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
-          function openMenu(){ links.classList.add('open'); overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
-          toggle.addEventListener('click', function(){ links.classList.contains('open') ? closeMenu() : openMenu(); });
-          overlay.addEventListener('click', closeMenu);
-          links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
-        })();
-    </script>
-  </body>
+</div>
+</footer>
+<script>
+  const els = document.querySelectorAll('.product, .ing-row');
+  els.forEach(el => el.setAttribute('data-reveal',''));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.15});
+  els.forEach(el=>io.observe(el));
+</script>
+<script>
+  (function(){
+    const toggle = document.getElementById('menu-toggle');
+    const links = document.getElementById('nav-links');
+    const overlay = document.getElementById('nav-overlay');
+    if(!toggle || !links) return;
+    function closeMenu(){ links.classList.remove('open'); overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    function openMenu(){ links.classList.add('open'); overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+    toggle.addEventListener('click', function(){ links.classList.contains('open') ? closeMenu() : openMenu(); });
+    overlay.addEventListener('click', closeMenu);
+    links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  })();
+</script>
+</body>
 </html>
