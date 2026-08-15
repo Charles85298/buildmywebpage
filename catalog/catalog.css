@@ -1004,3 +1004,18 @@ body.dark:has(.design-brief-head) .hero p{
     color:#eef8ff;
   }
 }
+
+/* ===== My Website Selections top text correction v1.19 ===== */
+body:has(.design-brief-head):not(.dark) .hero,
+body:has(.design-brief-head):not(.dark) .hero .kicker,
+body:has(.design-brief-head):not(.dark) .hero h1,
+body:has(.design-brief-head):not(.dark) .hero p{
+  color:#0e2a47 !important;
+  opacity:1 !important;
+}
+body.dark:has(.design-brief-head) .hero .kicker,
+body.dark:has(.design-brief-head) .hero h1,
+body.dark:has(.design-brief-head) .hero p{
+  color:#eef8ff !important;
+  opacity:1 !important;
+}
