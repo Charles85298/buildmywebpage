@@ -367,7 +367,7 @@
     const data=read();
     const prefix=String(info.code).split('-')[0];
     const isPalette=prefix==='CP';
-    const isSingleChoice=['CP','HD','HR','NV'].includes(prefix);
+    const isSingleChoice=['CP','HD','HR','NV','FT','FO'].includes(prefix);
     const already=!!data[info.code];
 
     if(isSingleChoice){
