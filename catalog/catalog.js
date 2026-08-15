@@ -596,3 +596,55 @@
 })();
 
 
+
+(()=>{
+
+  // Automatic readable text for cards/samples based on actual rendered background.
+  function fsRelativeLuminance(rgb){
+    const vals=rgb.map(v=>{
+      const c=v/255;
+      return c<=0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055,2.4);
+    });
+    return 0.2126*vals[0]+0.7152*vals[1]+0.0722*vals[2];
+  }
+  function fsParseRgb(value){
+    if(!value)return null;
+    const m=String(value).match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+    return m ? [Number(m[1]),Number(m[2]),Number(m[3])] : null;
+  }
+  function fsEffectiveBackground(el){
+    let node=el;
+    while(node && node!==document.documentElement){
+      const cs=getComputedStyle(node);
+      const rgb=fsParseRgb(cs.backgroundColor);
+      if(rgb && cs.backgroundColor!=='rgba(0, 0, 0, 0)' && cs.backgroundColor!=='transparent'){
+        return rgb;
+      }
+      node=node.parentElement;
+    }
+    return [255,255,255];
+  }
+  function fsApplyCardContrast(root=document){
+    const targets=[
+      ...root.querySelectorAll('.card-demo'),
+      ...root.querySelectorAll('.section-mini'),
+      ...root.querySelectorAll('.footer-mini'),
+      ...root.querySelectorAll('.effect-box'),
+      ...root.querySelectorAll('.visual-site-thumb'),
+      ...root.querySelectorAll('.sample')
+    ];
+    targets.forEach(el=>{
+      const rgb=fsEffectiveBackground(el);
+      const dark=fsRelativeLuminance(rgb)<0.43;
+      el.classList.toggle('contrast-dark',dark);
+      el.classList.toggle('contrast-light',!dark);
+    });
+  }
+  fsApplyCardContrast();
+  window.addEventListener('fs-theme-change',()=>setTimeout(()=>fsApplyCardContrast(),20));
+  window.addEventListener('fs-selection-change',()=>setTimeout(()=>fsApplyCardContrast(),20));
+  if('MutationObserver' in window){
+    new MutationObserver(()=>fsApplyCardContrast()).observe(document.body,{subtree:true,attributes:true,attributeFilter:['style','class']});
+  }
+
+})();

@@ -1019,3 +1019,53 @@ body.dark:has(.design-brief-head) .hero p{
   color:#eef8ff !important;
   opacity:1 !important;
 }
+
+/* ===== Automatic card text contrast v1.20 ===== */
+.contrast-dark,
+.contrast-dark h1,
+.contrast-dark h2,
+.contrast-dark h3,
+.contrast-dark h4,
+.contrast-dark h5,
+.contrast-dark h6,
+.contrast-dark p,
+.contrast-dark small,
+.contrast-dark span:not(.code):not(.selected-state),
+.contrast-dark strong,
+.contrast-dark b{
+  color:#ffffff !important;
+}
+.contrast-dark .code,
+.contrast-dark a{
+  color:#7dd3fc;
+}
+.contrast-light,
+.contrast-light h1,
+.contrast-light h2,
+.contrast-light h3,
+.contrast-light h4,
+.contrast-light h5,
+.contrast-light h6,
+.contrast-light p,
+.contrast-light small,
+.contrast-light span:not(.code):not(.selected-state),
+.contrast-light strong,
+.contrast-light b{
+  color:#0e2a47 !important;
+}
+.contrast-light .code,
+.contrast-light a{
+  color:#087bc1;
+}
+
+/* Preserve status colors and button text where intentional. */
+.contrast-dark .selected-state.yes,
+.contrast-light .selected-state.yes{color:#15803d !important}
+.contrast-dark button,
+.contrast-light button{color:inherit}
+.contrast-dark .demo-btn,
+.contrast-dark .select-design,
+.contrast-dark .quick-select,
+.contrast-dark .visual-customize{
+  color:#ffffff;
+}
