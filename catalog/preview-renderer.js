@@ -10,8 +10,16 @@
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const state=()=>{
     const selections=read(KEYS.selections,{}), vals=Object.values(selections), theme=read(KEYS.theme,{}), design=read(KEYS.design,{}), hh=read(KEYS.hh,{}), navs=read(KEYS.nav,{});
-    const one=p=>vals.find(x=>String(x.code||'').startsWith(p+'-'));
-    const many=p=>vals.filter(x=>String(x.code||'').startsWith(p+'-'));
+    // Single-choice preview categories should reflect the option the customer
+    // selected most recently, not the first item ever stored for that prefix.
+    // This lets the live preview change immediately even when older saved
+    // alternatives remain in My Selections.
+    const one=p=>vals
+      .filter(x=>String(x.code||'').startsWith(p+'-'))
+      .sort((a,b)=>Number(b.selectedAt||0)-Number(a.selectedAt||0))[0];
+    const many=p=>vals
+      .filter(x=>String(x.code||'').startsWith(p+'-'))
+      .sort((a,b)=>Number(a.selectedAt||0)-Number(b.selectedAt||0));
     const cp=one('CP'), hd=one('HD'), nv=one('NV'), ft=one('FT'), bt=one('BT'), cd=one('CD'), ga=one('GA'), input=one('IN'), fo=one('FO');
     const sc=many('SC'), fx=many('FX').concat(many('EF'));
     const palette=PALETTES[cp?.code]||['#0E2A47','#1697E6','#EAF6FF','#FFFFFF'];

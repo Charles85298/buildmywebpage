@@ -56,9 +56,10 @@
     const list=document.getElementById('rail-selection-list');
     if(list){
       const rows=steps.map(([n,label,href,prefix])=>{
-        let x=vals.find(v=>String(v.code||'').startsWith(prefix+'-'));
-        if(prefix==='SC')x=vals.find(v=>/section/i.test(String(v.category||''))||String(v.code||'').startsWith('SC-'));
-        if(prefix==='EF')x=vals.find(v=>/effect/i.test(String(v.category||''))||/^E[FX]-/.test(String(v.code||'')));
+        const latest=items=>items.sort((a,b)=>Number(b.selectedAt||0)-Number(a.selectedAt||0))[0];
+        let x=latest(vals.filter(v=>String(v.code||'').startsWith(prefix+'-')));
+        if(prefix==='SC')x=latest(vals.filter(v=>/section/i.test(String(v.category||''))||String(v.code||'').startsWith('SC-')));
+        if(prefix==='EF')x=latest(vals.filter(v=>/effect/i.test(String(v.category||''))||/^E[FX]-/.test(String(v.code||''))));
         return `<a href="${href}" class="rail-row ${x?'done':''}"><span>${x?'✓':'○'} ${label}</span><em>${x?(x.code||'Selected'):'Choose'}</em></a>`;
       }).join('');
       list.innerHTML=rows;
