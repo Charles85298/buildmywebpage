@@ -37,36 +37,42 @@
     </details>
   </section>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js"></script><script src="../supabase-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js"></script><script src="preview-renderer.js"></script><script src="workspace.js"></script><script src="../supabase-app.js"></script>
 <script>
-(()=>{const STORE='fs-builder-selections',THEME='fs-project-theme-v1',DESIGN='fs-design-system-v1',HH='fs-header-hero-editor-v1',NAV='fs-navigation-editor-v1';
-const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];const read=(k,f={})=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}};
-const selections=read(STORE),theme=read(THEME),design=read(DESIGN),hh=read(HH),navs=read(NAV);const vals=Object.values(selections);
-const headerSel=vals.find(x=>String(x.code).startsWith('HD-')),navSel=vals.find(x=>String(x.code).startsWith('NV-')),buttonSel=vals.find(x=>String(x.code).startsWith('BT-')),footerSel=vals.find(x=>String(x.code).startsWith('FO-'));
-const h=(headerSel&&hh[headerSel.code])||headerSel?.editorSettings||{}, n=(navSel&&navs[navSel.code])||navSel?.editorSettings||{};
-const header=$('#assembled-header');header.style.background=h.headerBg||theme.header_background||design.secondary||'#0E2A47';header.style.color=h.headerText||theme.header_text_color||'#fff';header.style.minHeight=(h.headerHeight||76)+'px';header.style.padding='0 '+(h.spacing||24)+'px';
-$('#assembled-cta').style.background=h.ctaBg||design.primary||'#1697E6';$('#assembled-cta').textContent=h.ctaText||'Get Started';
-const links=String(n.menu||h.menu||'Home\\nServices\\nAbout\\nPortfolio\\nContact').split(/\\n+/).filter(Boolean);$('#assembled-nav').innerHTML=links.map(x=>`<a>${x}</a>`).join('');$('#assembled-nav').style.gap=(n.gap||22)+'px';
-$('.assembled-hero').style.background=theme.section_background_secondary||'#eaf4fb';$('.assembled-hero').style.color=theme.body_heading_color||design.heading||'#0E2A47';$('.assembled-hero h1').textContent=h.headline||'Build Your Dream Website With Confidence';$('.assembled-hero p').textContent=h.description||'Your selected components and global theme appear together here.';
-$$('.assembled-section').forEach((s,i)=>{s.style.background=i%2?theme.section_background_secondary||'#f6f9fc':theme.section_background_primary||'#fff';s.style.color=theme.section_text_color||design.body||'#334155';s.style.padding=(theme.section_spacing||72)+'px 24px'});$$('.assembled-cards article').forEach(c=>{c.style.background=theme.surface_background||'#fff';c.style.borderColor=theme.surface_border_color||'#dfe8f1';c.style.borderRadius=(theme.surface_border_radius||16)+'px'});
-$('#assembled-footer').style.background=theme.footer_background||design.secondary||'#0E2A47';$('#assembled-footer').style.color=theme.footer_text_color||'#fff';
-const flowPrefixes=['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'];const complete=flowPrefixes.filter(p=>vals.some(x=>String(x.code).startsWith(p+'-'))||localStorage.getItem('fs-skip-'+p)).length;const pct=Math.round(complete/flowPrefixes.length*100);$('#pv-percent').textContent=pct+'% Complete';$('#pv-count').textContent=vals.length+' saved design selections';
-$('#pv-selections').innerHTML=flowPrefixes.map(p=>{const x=vals.find(v=>String(v.code).startsWith(p+'-'));return `<span class="${x?'done':''}">${x?'✓ '+x.code+' · '+x.name:'○ '+p+' not selected'}</span>`}).join('');
+(()=>{
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const FLOW=[['CP','Color Theme'],['HD','Header / Hero'],['NV','Navigation'],['FT','Typography'],['SC','Sections & Layouts'],['CD','Cards'],['GA','Images & Galleries'],['IN','Forms & Inputs'],['BT','Buttons & CTAs'],['FO','Footer'],['FX','Effects & Animation']];
+let latestState=null,latestPct=0;
+function updateMeta(state){
+  latestState=state;
+  const vals=state.vals;
+  const complete=FLOW.filter(([p])=>vals.some(x=>String(x.code||'').startsWith(p+'-'))||localStorage.getItem('fs-skip-'+p)==='1').length;
+  latestPct=Math.round(complete/FLOW.length*100);
+  $('#pv-percent').textContent=latestPct+'% Complete';
+  $('#pv-count').textContent=vals.length+' saved design selections';
+  $('#pv-selections').innerHTML=FLOW.map(([p,label])=>{const x=vals.find(v=>String(v.code||'').startsWith(p+'-'));return `<span class="${x?'done':''}">${x?'✓ '+x.code+' · '+x.name:'○ '+label+' not selected'}</span>`}).join('');
+}
+const assembled=$('#assembled-site');
+if(window.FSPreview){
+  window.FSPreview.watch(assembled,{compact:false,onRender:updateMeta});
+  updateMeta(window.FSPreview.state());
+}
 $$('[data-pv]').forEach(b=>b.onclick=()=>{$$('[data-pv]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#project-device').className='project-device '+b.dataset.pv});
 
 async function referencePayload(){
-  const assembled=$('#assembled-site');
+  const state=window.FSPreview?.state()||latestState||{};
+  const previewHtml=assembled.outerHTML;
   const designData={
     saved_at:new Date().toISOString(),
-    selections,
-    theme,
-    design_system:design,
-    header_editor:hh,
-    navigation_editor:navs,
-    skipped_steps:['HD','NV','FR','FT','IN','BT','CD','TB','GA','FX','FO'].filter(p=>localStorage.getItem('fs-skip-'+p)==='1'),
-    completion_percent:pct
+    selections:state.selections||{},
+    theme:state.theme||{},
+    design_system:state.design||{},
+    header_editor:state.hh||{},
+    navigation_editor:state.navs||{},
+    skipped_steps:FLOW.map(x=>x[0]).filter(p=>localStorage.getItem('fs-skip-'+p)==='1'),
+    completion_percent:latestPct
   };
-  return {previewHtml:assembled.outerHTML, previewData:designData};
+  return {previewHtml,previewData:designData};
 }
 
 async function refreshReferences(){
@@ -74,59 +80,16 @@ async function refreshReferences(){
   if(!list || !window.fsCloud?.listReferenceDocuments)return;
   try{
     const refs=await window.fsCloud.listReferenceDocuments();
-    if(!refs.length){
-      list.innerHTML='<p class="builder-muted">No saved preview references yet.</p>';
-      return;
-    }
-    list.innerHTML=refs.map(r=>`<article class="saved-reference-row">
-      <div><strong>${r.title}</strong><span>Version ${r.version_number} · ${new Date(r.created_at).toLocaleString()}</span></div>
-      <button type="button" data-open-reference="${r.id}">Open Reference</button>
-    </article>`).join('');
+    if(!refs.length){list.innerHTML='<p class="builder-muted">No saved preview references yet.</p>';return;}
+    list.innerHTML=refs.map(r=>`<article class="saved-reference-row"><div><strong>${r.title}</strong><span>Version ${r.version_number} · ${new Date(r.created_at).toLocaleString()}</span></div><button type="button" data-open-reference="${r.id}">Open Reference</button></article>`).join('');
     list.querySelectorAll('[data-open-reference]').forEach(b=>b.onclick=()=>openReference(b.dataset.openReference));
-  }catch(e){
-    list.innerHTML='<p class="cloud-error">Could not load saved references.</p>';
-  }
+  }catch(e){list.innerHTML='<p class="cloud-error">Could not load saved references.</p>'}
 }
-
 async function openReference(id){
-  try{
-    const r=await window.fsCloud.getReferenceDocument(id);
-    $('#reference-viewer-title').textContent=r.title;
-    $('#reference-viewer-version').textContent='VERSION '+r.version_number;
-    $('#reference-viewer-body').innerHTML=r.preview_html;
-    $('#reference-viewer-data').textContent=JSON.stringify(r.preview_data,null,2);
-    $('#reference-viewer').hidden=false;
-    document.body.style.overflow='hidden';
-  }catch(e){
-    $('#reference-save-status').textContent=e.message||'Could not open reference.';
-  }
+  try{const r=await window.fsCloud.getReferenceDocument(id);$('#reference-viewer-title').textContent=r.title;$('#reference-viewer-version').textContent='VERSION '+r.version_number;$('#reference-viewer-body').innerHTML=r.preview_html;$('#reference-viewer-data').textContent=JSON.stringify(r.preview_data,null,2);$('#reference-viewer').hidden=false;document.body.style.overflow='hidden'}catch(e){$('#reference-save-status').textContent=e.message||'Could not open reference.'}
 }
-
-$('#save-reference')?.addEventListener('click',async()=>{
-  const status=$('#reference-save-status');
-  status.textContent='Saving reference…';
-  try{
-    if(!window.fsCloud?.saveReferenceDocument)throw new Error('Supabase reference saving is not available.');
-    const {previewHtml,previewData}=await referencePayload();
-    const ref=await window.fsCloud.saveReferenceDocument({
-      title:$('#reference-title')?.value.trim()||undefined,
-      previewHtml,
-      previewData
-    });
-    status.textContent=`✓ Saved Version ${ref.version_number}`;
-    $('#reference-title').value='';
-    await refreshReferences();
-  }catch(e){
-    status.textContent=e.message||'Could not save reference.';
-  }
-});
-
-document.querySelectorAll('[data-close-reference]').forEach(x=>x.onclick=()=>{
-  $('#reference-viewer').hidden=true;
-  document.body.style.overflow='';
-});
-
+$('#save-reference')?.addEventListener('click',async()=>{const status=$('#reference-save-status');status.textContent='Saving reference…';try{if(!window.fsCloud?.saveReferenceDocument)throw new Error('Supabase reference saving is not available.');const {previewHtml,previewData}=await referencePayload();const ref=await window.fsCloud.saveReferenceDocument({title:$('#reference-title')?.value.trim()||undefined,previewHtml,previewData});status.textContent=`✓ Saved Version ${ref.version_number}`;$('#reference-title').value='';await refreshReferences()}catch(e){status.textContent=e.message||'Could not save reference.'}});
+document.querySelectorAll('[data-close-reference]').forEach(x=>x.onclick=()=>{$('#reference-viewer').hidden=true;document.body.style.overflow=''});
 setTimeout(refreshReferences,700);
-
 })();
 </script></body></html>
