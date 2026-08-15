@@ -31,18 +31,21 @@
       return {primary:design.primary,primaryText:design.primaryText,secondary:design.secondary,secondaryText:design.secondaryText};
     };
     const bc=chosenColors(bt), hc=chosenColors(hd);
+    const hasPalette=!!cp;
     const colors={
-      dark:h.headerBg||hc.secondary||theme.header_background||design.secondary||palette[0],
-      primary:h.ctaBg||bc.primary||design.primary||palette[1],
-      soft:theme.section_background_secondary||design.surface||palette[2],
-      background:theme.section_background_primary||design.background||palette[3],
-      heading:theme.body_heading_color||design.heading||palette[0],
-      body:theme.section_text_color||design.body||'#334155',
-      headerText:h.headerText||theme.header_text_color||'#fff',
-      footer:theme.footer_background||design.secondary||palette[0],
-      footerText:theme.footer_text_color||'#fff',
-      border:theme.surface_border_color||'#dfe8f1',
-      surface:theme.surface_background||palette[3]
+      // Step 01 Color Theme is the baseline for the assembled website. Specific
+      // component editor overrides (header/button custom colors) remain stronger.
+      dark:h.headerBg||hc.secondary||(hasPalette?palette[0]:(theme.header_background||design.secondary||palette[0])),
+      primary:h.ctaBg||bc.primary||(hasPalette?palette[1]:(design.primary||palette[1])),
+      soft:hasPalette?palette[2]:(theme.section_background_secondary||design.surface||palette[2]),
+      background:hasPalette?palette[3]:(theme.section_background_primary||design.background||palette[3]),
+      heading:hasPalette?palette[0]:(theme.body_heading_color||design.heading||palette[0]),
+      body:hasPalette?palette[0]:(theme.section_text_color||design.body||'#334155'),
+      headerText:h.headerText||(hasPalette?(parseInt(palette[0].slice(1,3),16)*299+parseInt(palette[0].slice(3,5),16)*587+parseInt(palette[0].slice(5,7),16)*114)/1000>=150?'#0F172A':'#FFFFFF':(theme.header_text_color||'#fff')),
+      footer:hasPalette?palette[0]:(theme.footer_background||design.secondary||palette[0]),
+      footerText:hasPalette?((parseInt(palette[0].slice(1,3),16)*299+parseInt(palette[0].slice(3,5),16)*587+parseInt(palette[0].slice(5,7),16)*114)/1000>=150?'#0F172A':'#FFFFFF'):(theme.footer_text_color||'#fff'),
+      border:hasPalette?palette[2]:(theme.surface_border_color||'#dfe8f1'),
+      surface:hasPalette?palette[3]:(theme.surface_background||palette[3])
     };
     return {selections,vals,theme,design,hh,navs,cp,hd,nv,ft,bt,cd,ga,input,fo,sc,fx,h,n,colors,font:FONT_MAP[ft?.code]||'Inter,Arial,sans-serif'};
   };

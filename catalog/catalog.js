@@ -313,14 +313,76 @@
     });
     refreshContrast(prefs);
   }
+  function readableText(hex){
+    const h=String(hex||'#000000').replace('#','');
+    if(!/^[0-9a-fA-F]{6}$/.test(h))return '#FFFFFF';
+    const rgb=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16));
+    const yiq=(rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000;
+    return yiq>=150?'#0F172A':'#FFFFFF';
+  }
+  function syncPaletteToWebsite(card){
+    const raw=String(card?.dataset?.palette||'');
+    const colors=raw.split(',').map(x=>x.trim().toUpperCase()).filter(x=>/^#[0-9A-F]{6}$/.test(x));
+    if(colors.length<4)return;
+    const [secondary,primary,surface,background]=colors;
+    const design={...readDesignSystem(),
+      primary,secondary,accent:surface,background,surface,
+      heading:secondary,body:secondary,
+      primaryText:readableText(primary),secondaryText:readableText(secondary),
+      _paletteUpdatedAt:Date.now()
+    };
+    writeDesignSystem(design);
+
+    const THEME_KEY='fs-project-theme-v1';
+    let theme={};
+    try{theme=JSON.parse(localStorage.getItem(THEME_KEY)||'{}')}catch(e){theme={}}
+    theme={...theme,
+      header_background:secondary,
+      header_text_color:readableText(secondary),
+      header_link_color:readableText(secondary),
+      header_cta_color:primary,
+      section_background_primary:background,
+      section_background_secondary:surface,
+      section_text_color:secondary,
+      section_heading_color:secondary,
+      body_background:background,
+      body_text_color:secondary,
+      body_heading_color:secondary,
+      body_link_color:primary,
+      page_background:background,
+      footer_background:secondary,
+      footer_text_color:readableText(secondary),
+      footer_link_color:readableText(secondary),
+      footer_accent_color:primary,
+      surface_background:background,
+      surface_border_color:surface,
+      _paletteUpdatedAt:Date.now()
+    };
+    localStorage.setItem(THEME_KEY,JSON.stringify(theme));
+    window.dispatchEvent(new Event('fs-theme-change'));
+  }
   function toggle(card){
     const info=getInfo(card);
     if(!info.code)return;
     const data=read();
-    if(data[info.code]) delete data[info.code];
+    const isPalette=String(info.code).startsWith('CP-');
+
+    if(isPalette){
+      // Color Theme is Step 01 and is intentionally single-choice. Choosing a
+      // new palette replaces the old palette and becomes the global website
+      // color system used by the live preview and inherited component colors.
+      Object.keys(data).forEach(k=>{if(String(k).startsWith('CP-'))delete data[k]});
+      data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()};
+      syncPaletteToWebsite(card);
+    }else if(data[info.code]) delete data[info.code];
     else data[info.code]={...info,selectedAt:Date.now(),colors:defaultColorPrefs()};
+
     write(data);
-    setCard(card,!!data[info.code]);
+    if(isPalette){
+      document.querySelectorAll('.specimen').forEach(c=>{
+        const ci=getInfo(c); if(String(ci.code||'').startsWith('CP-'))setCard(c,ci.code===info.code);
+      });
+    }else setCard(card,!!data[info.code]);
     window.dispatchEvent(new Event('fs-selection-change'));
   }
   
