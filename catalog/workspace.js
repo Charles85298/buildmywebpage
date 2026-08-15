@@ -39,7 +39,7 @@
       <nav class="builder-steps">${steps.map(([n,label,href,prefix])=>`<a href="${href}" class="builder-step ${activeFor(href)?'active':''}" data-prefix="${prefix}"><i>${n}</i><span>${label}</span><b class="step-state">${done(prefix,label)?'✓':''}</b></a>`).join('')}</nav>
       <div class="sidebar-divider compact"></div><div class="workspace-label">MORE COMPONENTS</div><nav class="project-tools secondary-tools"><a href="frames.html"><span>▣</span> Frames & Borders</a><a href="tables.html"><span>▦</span> Tables</a><a href="labels.html"><span>◆</span> Labels & Badges</a><a href="alerts.html"><span>!</span> Alerts & Feedback</a></nav>
       <div class="sidebar-divider"></div><div class="workspace-label">YOUR PROJECT</div>
-      <nav class="project-tools"><a href="builder.html" class="${file==='builder.html'?'active':''}"><span>⌑</span> Save Design</a><a href="builder.html" class="${file==='builder.html'?'active':''}"><span>▤</span> My Selections <b id="workspace-selection-count">${selectionValues().length}</b></a><a href="website-preview.html" class="${file==='website-preview.html'?'active':''}"><span>◉</span> Website Preview</a></nav>
+      <nav class="project-tools"><a href="builder.html" class="${file==='builder.html'?'active':''}"><span>⌑</span> Save Design</a><a href="builder.html" class="${file==='builder.html'?'active':''}"><span>▤</span> My Selections <b id="workspace-selection-count">${selectionValues().length}</b></a><a href="website-preview.html" class="${file==='website-preview.html'?'active':''}"><span>◉</span> Website Preview</a><button type="button" class="workspace-clear-selections" id="workspace-clear-selections"><span>↻</span> Clear Selections</button></nav>
       <a class="sidebar-help" href="../index.html#contact"><b>Need Help?</b><small>Questions about a design choice?</small><span>Contact Us →</span></a>`;
     return aside;
   }
@@ -95,11 +95,48 @@
     site.style.overflow='hidden';
   }
 
+
+  const PROJECT_KEYS=['fs-builder-selections','fs-project-theme-v1','fs-design-system-v1','fs-header-hero-editor-v1','fs-navigation-editor-v1','fs-builder-details'];
+  function openClearDialog(){
+    let dialog=document.getElementById('workspace-clear-dialog');
+    if(!dialog){
+      dialog=document.createElement('div');
+      dialog.id='workspace-clear-dialog';
+      dialog.className='workspace-confirm-backdrop';
+      dialog.innerHTML=`<div class="workspace-confirm" role="dialog" aria-modal="true" aria-labelledby="clear-dialog-title">
+        <div class="workspace-confirm-icon">↻</div>
+        <h3 id="clear-dialog-title">Clear all website selections?</h3>
+        <p>This removes your selected theme, header, sections, buttons and other builder choices, and resets the live preview. Your account and light/dark display preference are not affected.</p>
+        <div class="workspace-confirm-actions"><button type="button" data-clear-cancel>Cancel</button><button type="button" class="danger" data-clear-confirm>Clear Everything</button></div>
+      </div>`;
+      document.body.appendChild(dialog);
+      dialog.querySelector('[data-clear-cancel]').onclick=()=>dialog.classList.remove('show');
+      dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.classList.remove('show')});
+      dialog.querySelector('[data-clear-confirm]').onclick=()=>{
+        PROJECT_KEYS.forEach(k=>localStorage.removeItem(k));
+        // Remove guided-builder skip markers without touching unrelated account/site preferences.
+        Object.keys(localStorage).filter(k=>k.startsWith('fs-skip-')).forEach(k=>localStorage.removeItem(k));
+        dialog.classList.remove('show');
+        renderRail();
+        window.dispatchEvent(new Event('fs-selection-change'));
+        window.dispatchEvent(new Event('fs-theme-change'));
+        document.querySelectorAll('.step-state').forEach(x=>x.textContent='');
+        document.querySelectorAll('[data-state-for]').forEach(x=>{x.textContent='Not selected';x.classList.remove('yes')});
+        document.querySelectorAll('[data-quick-select]').forEach(x=>x.textContent='Quick Select');
+        document.querySelectorAll('.specimen.selected,.visual-catalog-card.selected').forEach(x=>x.classList.remove('selected'));
+        const toast=document.createElement('div');toast.className='workspace-clear-toast';toast.textContent='Website selections cleared';document.body.appendChild(toast);requestAnimationFrame(()=>toast.classList.add('show'));setTimeout(()=>toast.remove(),1800);
+      };
+    }
+    dialog.classList.add('show');
+    setTimeout(()=>dialog.querySelector('[data-clear-cancel]')?.focus(),20);
+  }
+
   function install(){
     if(document.querySelector('.builder-sidebar'))return;
     document.body.classList.add('catalog-workspace');
     if(file==='index.html')document.body.classList.add('builder-home');
     document.body.prepend(sidebar());
+    document.getElementById('workspace-clear-selections')?.addEventListener('click',openClearDialog);
     const r=rail();if(r)document.body.appendChild(r);
     const toggle=document.createElement('button');toggle.className='workspace-menu-toggle';toggle.type='button';toggle.setAttribute('aria-label','Open catalog navigation');toggle.setAttribute('aria-expanded','false');toggle.innerHTML='☰';document.body.appendChild(toggle);
     toggle.addEventListener('click',(e)=>{e.preventDefault();e.stopPropagation();const open=!document.body.classList.contains('workspace-menu-open');document.body.classList.toggle('workspace-menu-open',open);document.body.classList.remove('workspace-preview-open');toggle.setAttribute('aria-expanded',String(open))});
