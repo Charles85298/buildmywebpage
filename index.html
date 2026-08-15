@@ -308,6 +308,92 @@
       body.dark .premium-cap-grid .premium-cap-card p{color:#d5e0ea!important;opacity:1!important}
       body.dark .premium-cap-grid .premium-cap-card .card-link{color:#62c9ff!important}
       body.dark .premium-tech-strip a{background:#102638!important;border-color:#3f5e77!important;color:#dce8f2!important}
+    
+      /* Fleming Solutions metallic-blue hero buttons */
+      .btn-metallic-blue{
+        position:relative;
+        isolation:isolate;
+        overflow:hidden;
+        color:#fff !important;
+        border:1px solid rgba(109,218,255,.9) !important;
+        background:
+          linear-gradient(180deg,
+            #66dcff 0%,
+            #22aaff 8%,
+            #087bea 28%,
+            #0061d5 52%,
+            #003d9f 74%,
+            #0878e9 91%,
+            #002f82 100%) !important;
+        box-shadow:
+          inset 0 2px 1px rgba(255,255,255,.85),
+          inset 0 -3px 5px rgba(0,25,85,.65),
+          inset 0 0 18px rgba(0,190,255,.32),
+          0 5px 0 #002665,
+          0 11px 24px rgba(0,87,200,.35),
+          0 0 20px rgba(38,184,255,.22) !important;
+        text-shadow:
+          0 1px 1px rgba(0,24,75,.9),
+          0 0 8px rgba(255,255,255,.22);
+      }
+
+      .btn-metallic-blue::before{
+        content:"";
+        position:absolute;
+        z-index:-1;
+        left:8%;
+        right:8%;
+        top:5%;
+        height:42%;
+        border-radius:999px;
+        background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.08));
+        opacity:.62;
+        pointer-events:none;
+      }
+
+      .btn-metallic-blue::after{
+        content:"";
+        position:absolute;
+        z-index:2;
+        top:-45%;
+        left:-65%;
+        width:42%;
+        height:190%;
+        transform:rotate(20deg);
+        background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+        transition:left .6s ease;
+        pointer-events:none;
+      }
+
+      .btn-metallic-blue:hover{
+        transform:translateY(-3px) !important;
+        filter:saturate(1.08) brightness(1.06);
+        box-shadow:
+          inset 0 2px 1px rgba(255,255,255,.95),
+          inset 0 -3px 5px rgba(0,25,85,.68),
+          inset 0 0 20px rgba(0,200,255,.38),
+          0 6px 0 #002665,
+          0 16px 32px rgba(0,87,200,.42),
+          0 0 26px rgba(38,184,255,.3) !important;
+      }
+
+      .btn-metallic-blue:hover::after{
+        left:125%;
+      }
+
+      .btn-metallic-blue:active{
+        transform:translateY(2px) !important;
+        box-shadow:
+          inset 0 2px 6px rgba(0,22,75,.35),
+          0 2px 0 #002665,
+          0 7px 16px rgba(0,87,200,.28) !important;
+      }
+
+      body.dark .btn-metallic-blue{
+        color:#fff !important;
+        border-color:#63d5ff !important;
+      }
+
     </style>
     <style id="premium-upgrade">
       /* =========================================================
@@ -711,9 +797,9 @@
         <h1>Websites that look <span class="gradient-text">ahead of the curve</span> and work hard for your business.</h1>
         <p class="hero-lead">Fleming Solutions helps startups, local businesses, and professional firms launch modern digital experiences built to attract attention, earn trust, and convert visitors into customers.</p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#library">View Website Examples <span>→</span></a>
-	  <a class="btn btn-primary" href="catalog/builder.html">Explore Design Catalog<span>→</span></a>
-            </div>
+		<a class="btn btn-primary btn-metallic-blue" href="catalog/builder.html">Start Designing <span>→</span></a>              
+		<a class="btn btn-primary btn-metallic-blue" href="#library">View Examples <span>→</span></a>
+	    </div>
             <div class="hero-proof">
               <div>
                 <strong>National</strong><span>Service area</span>
