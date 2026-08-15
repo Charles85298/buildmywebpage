@@ -1,27 +1,46 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Header & Hero Editor | BuildMyWebpage</title>
 <link rel="stylesheet" href="catalog.css?v=1.20">
+  <script>
+(() => {
+  let theme = localStorage.getItem('fs-theme');
+  if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (theme === 'dark') document.documentElement.classList.add('fs-dark-boot');
+  document.documentElement.style.colorScheme = theme;
+})();
+</script>
 </head>
-<body class="component-editor-page">
-<header class="editor-appbar">
-  <a href="headers.html" class="editor-back">← Back to Headers & Heroes</a>
-  <div class="editor-title"><strong id="ed-code">HD-01</strong><span id="ed-name">Header & Hero</span><em>Header / Hero</em></div>
-  <div class="editor-devices">
-    <button data-device="desktop" class="active">▣ Desktop</button>
+  <body class="component-editor-page">
+    <header class="editor-appbar">
+      <a href="headers.html" class="editor-back">← Back to Headers & Heroes</a>
+      <div class="editor-title">
+        <strong id="ed-code">HD-01</strong><span id="ed-name">Header & Hero</span><em>Header / Hero</em>
+      </div>
+      <div class="editor-devices">
+        <button data-device="desktop" class="active">▣ Desktop</button>
     <button data-device="tablet">▯ Tablet</button>
     <button data-device="mobile">▯ Mobile</button>
-  </div>
-  <div class="editor-actions"><button id="ed-reset">↶ Reset</button><button id="ed-save" class="demo-btn">☁ Save This Design</button></div>
-</header>
-
-<main class="component-editor-shell">
-<aside class="editor-controls">
-  <details open><summary>HEADER SETTINGS</summary><div class="editor-fields">
-    <label>Logo Position<select data-ed="logoPosition"><option>Left</option><option>Center</option><option>Right</option></select></label>
-    <label>Header Height<div class="range-row"><input type="range" min="56" max="130" data-ed="headerHeight"><output data-out="headerHeight"></output></div></label>
+      </div>
+      <div class="editor-actions">
+        <button id="ed-reset">↶ Reset</button><button id="ed-save" class="demo-btn">☁ Save This Design</button>
+      </div>
+    </header>
+    <main class="component-editor-shell">
+      <aside class="editor-controls">
+        <details open>
+          <summary>
+            HEADER SETTINGS
+          </summary>
+          <div class="editor-fields">
+            <label>Logo Position<select data-ed="logoPosition"><option>Left</option><option>Center</option><option>Right</option></select></label>
+    <label>Header Height
+            <div class="range-row">
+              <input type="range" min="56" max="130" data-ed="headerHeight"><output data-out="headerHeight"></output>
+            </div>
+            </label>
     <label>Background<input type="color" data-ed="headerBg"></label>
     <label>Text Color<input type="color" data-ed="headerText"></label>
     <label>Link Color<input type="color" data-ed="linkColor"></label>
@@ -31,62 +50,100 @@
     <label class="switch-row">Transparent Header<input type="checkbox" data-ed="transparent"></label>
     <label class="switch-row">Header Shadow<input type="checkbox" data-ed="shadow"></label>
     <label>Bottom Border<select data-ed="border"><option value="none">None</option><option value="line">Line</option><option value="accent">Accent</option></select></label>
-    <label>Content Spacing<div class="range-row"><input type="range" min="12" max="64" data-ed="spacing"><output data-out="spacing"></output></div></label>
-  </div></details>
-
-  <details><summary>NAVIGATION MENU</summary><div class="editor-fields">
-    <label>Menu Items<textarea rows="4" data-ed="menu">Home&#10;Services&#10;About&#10;Portfolio&#10;Contact</textarea></label>
+    <label>Content Spacing
+            <div class="range-row">
+              <input type="range" min="12" max="64" data-ed="spacing"><output data-out="spacing"></output>
+            </div>
+            </label>
+          </div>
+        </details>
+        <details>
+          <summary>
+            NAVIGATION MENU
+          </summary>
+          <div class="editor-fields">
+            <label>Menu Items
+            <textarea rows="4" data-ed="menu">
+              Home&#10;Services&#10;About&#10;Portfolio&#10;Contact
+            </textarea>
+            </label>
     <label>Menu Alignment<select data-ed="menuAlign"><option value="right">Right</option><option value="center">Center</option><option value="left">Left</option></select></label>
     <label class="switch-row">Show CTA<input type="checkbox" data-ed="showCta"></label>
-  </div></details>
-
-  <details><summary>HERO SETTINGS</summary><div class="editor-fields">
-    <label>Eyebrow<input type="text" data-ed="eyebrow"></label>
-    <label>Headline<textarea rows="3" data-ed="headline"></textarea></label>
-    <label>Description<textarea rows="3" data-ed="description"></textarea></label>
+          </div>
+        </details>
+        <details>
+          <summary>
+            HERO SETTINGS
+          </summary>
+          <div class="editor-fields">
+            <label>Eyebrow<input type="text" data-ed="eyebrow"></label>
+    <label>Headline
+            <textarea rows="3" data-ed="headline">
+            </textarea>
+            </label>
+    <label>Description
+            <textarea rows="3" data-ed="description">
+            </textarea>
+            </label>
     <label>Hero Style<select data-ed="heroStyle"><option value="image">Image</option><option value="gradient">Gradient</option><option value="split">Split</option><option value="minimal">Minimal</option></select></label>
-    <label>Overlay Strength<div class="range-row"><input type="range" min="0" max="85" data-ed="overlay"><output data-out="overlay"></output></div></label>
+    <label>Overlay Strength
+            <div class="range-row">
+              <input type="range" min="0" max="85" data-ed="overlay"><output data-out="overlay"></output>
+            </div>
+            </label>
     <label>Headline Color<input type="color" data-ed="heroText"></label>
     <label>Primary Button<input type="text" data-ed="heroPrimary"></label>
     <label>Secondary Button<input type="text" data-ed="heroSecondary"></label>
-  </div></details>
-
-  <details><summary>ADVANCED</summary><div class="editor-fields">
-    <label>Header Radius<div class="range-row"><input type="range" min="0" max="32" data-ed="radius"><output data-out="radius"></output></div></label>
+          </div>
+        </details>
+        <details>
+          <summary>
+            ADVANCED
+          </summary>
+          <div class="editor-fields">
+            <label>Header Radius
+            <div class="range-row">
+              <input type="range" min="0" max="32" data-ed="radius"><output data-out="radius"></output>
+            </div>
+            </label>
     <label>Max Content Width<input type="number" min="900" max="1800" step="20" data-ed="maxWidth"></label>
-  </div></details>
-</aside>
-
-<section class="editor-workspace">
-  <div class="editor-preview-frame desktop" id="editor-frame">
-    <div class="editor-site" id="editor-site">
-      <header class="live-header" id="live-header">
-        <div class="live-logo"><span class="logo-mark">◇</span><strong>YOURLOGO</strong></div>
-        <button class="mobile-menu">☰</button>
-        <nav id="live-nav"></nav>
-        <button class="live-cta" id="live-cta"></button>
-      </header>
-      <section class="live-hero" id="live-hero">
-        <div class="hero-copy">
-          <small id="live-eyebrow"></small>
+          </div>
+        </details>
+      </aside>
+      <section class="editor-workspace">
+        <div class="editor-preview-frame desktop" id="editor-frame">
+          <div class="editor-site" id="editor-site">
+            <header class="live-header" id="live-header">
+              <div class="live-logo">
+                <span class="logo-mark">◇</span><strong>YOURLOGO</strong>
+              </div>
+              <button class="mobile-menu">☰</button>
+              <nav id="live-nav">
+              </nav>
+              <button class="live-cta" id="live-cta"></button>
+            </header>
+            <section class="live-hero" id="live-hero">
+              <div class="hero-copy">
+                <small id="live-eyebrow"></small>
           <h1 id="live-headline"></h1>
           <p id="live-description"></p>
-          <div class="hero-buttons"><button id="live-primary"></button><button id="live-secondary"></button></div>
+                <div class="hero-buttons">
+                  <button id="live-primary"></button><button id="live-secondary"></button>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
+        <section class="editor-alternatives">
+          <h3>Other Header & Hero Options</h3>
+          <div class="alt-header-grid" id="alt-header-grid">
+          </div>
+        </section>
+        <p id="ed-status" class="editor-status">Changes are saved locally while you work.</p>
       </section>
-    </div>
-  </div>
-
-  <section class="editor-alternatives">
-    <h3>Other Header & Hero Options</h3>
-    <div class="alt-header-grid" id="alt-header-grid"></div>
-  </section>
-  <p id="ed-status" class="editor-status">Changes are saved locally while you work.</p>
-</section>
-</main>
-
-<nav class="editor-stepper ordered-editor-stepper">
- <strong id="editor-mode-step">Header / Hero</strong>
+    </main>
+    <nav class="editor-stepper ordered-editor-stepper">
+      <strong id="editor-mode-step">Header / Hero</strong>
  <span>2 Navigation / Menu</span>
  <span>3 Frames / Sections</span>
  <span>4 Typography</span>
@@ -99,66 +156,74 @@
  <span>11 Footer</span>
  <span>12 Review</span>
  <a href="navigation.html">Next: Navigation / Menu →</a>
-</nav>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="catalog.js?v=1.20"></script><script src="preview-renderer.js?v=1.20"></script><script src="workspace.js?v=1.20"></script><script src="../supabase-app.js"></script>
-<script>
-(()=>{
- const params=new URLSearchParams(location.search), code=params.get('code')||'HD-01', heroMode=params.get('mode')==='hero', selectionCode=heroMode?code.replace(/^HD-/,'HR-'):code;
- const STORE='fs-header-hero-editor-v1', SELECT='fs-builder-selections';
- const presets={
-  'HD-01':{name:'Classic Split Nav',headerBg:'#0E2A47',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#69BE28',heroStyle:'image'},
-  'HD-02':{name:'Compact Split Nav',headerBg:'#FFFFFF',headerText:'#0E2A47',linkColor:'#0E2A47',ctaBg:'#1697E6',heroStyle:'image',headerHeight:66},
-  'HD-03':{name:'Floating Glass Nav',headerBg:'#EAF4FB',headerText:'#0E2A47',linkColor:'#0E2A47',ctaBg:'#1697E6',heroStyle:'image',transparent:true,radius:18},
-  'HD-04':{name:'Overlay Navigation',headerBg:'#07192B',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#1697E6',heroStyle:'image',transparent:true},
-  'HD-05':{name:'Centered Logo Nav',headerBg:'#07192B',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#1697E6',heroStyle:'image',logoPosition:'Center'}
- };
- const base={name:'Header & Hero',logoPosition:'Left',headerHeight:86,headerBg:'#0E2A47',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#69BE28',ctaText:'Get A Quote',sticky:true,transparent:false,shadow:true,border:'none',spacing:32,menu:'Home\\nServices\\nAbout\\nPortfolio\\nContact',menuAlign:'right',showCta:true,eyebrow:'YOUR BUSINESS',headline:'Build Your Dream Website With Confidence',description:'Professional design. Powerful features. Stunning results.',heroStyle:'image',overlay:42,heroText:'#FFFFFF',heroPrimary:'Get Started Today',heroSecondary:'Watch Demo',radius:0,maxWidth:1400};
- let all={};try{all=JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){}
- let state={...base,...(presets[code]||{}),...(all[code]||{})};
- const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
- $('#ed-code').textContent=selectionCode; $('#ed-name').textContent=(heroMode?'Hero · ':'Header · ')+(state.name||'Design');
-
- function saveLocal(){all[code]=state;localStorage.setItem(STORE,JSON.stringify(all));}
- function fill(){ $$('[data-ed]').forEach(el=>{let k=el.dataset.ed;if(el.type==='checkbox')el.checked=!!state[k];else el.value=state[k]??''}); render();}
- function render(){
-  $$('[data-out]').forEach(o=>o.textContent=state[o.dataset.out]+(o.dataset.out==='overlay'?'%':' px'));
-  let h=$('#live-header'); h.style.height=state.headerHeight+'px';h.style.padding='0 '+state.spacing+'px';h.style.color=state.headerText;
-  h.style.background=state.transparent?'rgba(14,42,71,.55)':state.headerBg;h.style.backdropFilter=state.transparent?'blur(14px)':'none';
-  h.style.boxShadow=state.shadow?'0 10px 30px rgba(0,0,0,.16)':'none';h.style.borderRadius=state.radius+'px';
-  h.style.borderBottom=state.border==='line'?'1px solid rgba(255,255,255,.25)':state.border==='accent'?'3px solid '+state.ctaBg:'none';
-  let logo=$('.live-logo'); logo.style.color=state.headerText;
-  let nav=$('#live-nav'); nav.innerHTML=String(state.menu).split(/\\n+/).filter(Boolean).map(x=>`<a>${x}</a>`).join('');nav.style.color=state.linkColor;
-  nav.style.justifyContent=state.menuAlign==='left'?'flex-start':state.menuAlign==='center'?'center':'flex-end';
-  let c=$('#live-cta');c.textContent=state.ctaText;c.style.background=state.ctaBg;c.hidden=!state.showCta;
-  let hero=$('#live-hero');hero.dataset.style=state.heroStyle;hero.style.setProperty('--overlay',state.overlay/100);
-  $('#live-eyebrow').textContent=state.eyebrow;$('#live-headline').textContent=state.headline;$('#live-description').textContent=state.description;
-  $('.hero-copy').style.color=state.heroText;$('#live-primary').textContent=state.heroPrimary;$('#live-primary').style.background=state.ctaBg;$('#live-secondary').textContent=state.heroSecondary;
-  $('#editor-site').style.maxWidth=state.maxWidth+'px';
-  $('.live-logo').classList.toggle('center-logo',state.logoPosition==='Center');
-  saveLocal();
- }
- $$('[data-ed]').forEach(el=>el.addEventListener(el.type==='checkbox'?'change':'input',()=>{let k=el.dataset.ed;state[k]=el.type==='checkbox'?el.checked:el.type==='range'||el.type==='number'?Number(el.value):el.value;render()}));
- $$('[data-device]').forEach(b=>b.onclick=()=>{$$('[data-device]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#editor-frame').className='editor-preview-frame '+b.dataset.device});
- $('#ed-reset').onclick=()=>{state={...base,...(presets[code]||{})};fill()};
- $('#ed-save').onclick=async()=>{
-   let selections={};try{selections=JSON.parse(localStorage.getItem(SELECT)||'{}')}catch(e){}
-   const prefix=heroMode?'HR-':'HD-';Object.keys(selections).forEach(k=>{if(k.startsWith(prefix))delete selections[k]});
-   selections[selectionCode]={code:selectionCode,sourceCode:code,name:state.name,category:heroMode?'Hero':'Header',page:'headers.html'+(heroMode?'?focus=hero':''),selectedAt:Date.now(),colors:{colorMode:'custom',primaryBg:state.headerBg,primaryText:state.headerText,primaryHover:state.ctaBg,styleSettings:state},editorSettings:state};
-   localStorage.setItem(SELECT,JSON.stringify(selections)); saveLocal();
-   window.dispatchEvent(new Event('fs-selection-change'));
-   let st=$('#ed-status');st.textContent=heroMode?'✓ Hero selected and saved locally.':'✓ Header selected and saved locally.';
-   if(window.fsCloud?.saveProject){try{await window.fsCloud.saveProject();st.textContent='✓ Header & Hero saved to your Supabase project.'}catch(e){st.textContent='✓ Saved locally. Sign in to save it to your cloud project.'}}
- };
- const alt=$('#alt-header-grid');
- Object.entries(presets).forEach(([k,p])=>{alt.insertAdjacentHTML('beforeend',`<a class="alt-header-card ${k===code?'active':''}" href="header-hero-editor.html?code=${k}${heroMode?'&mode=hero':''}"><div class="mini-site"><div style="background:${p.headerBg};color:${p.headerText}"><b>YOURLOGO</b><span>Home&nbsp; Services&nbsp; Contact</span></div><i></i></div><strong>${k}</strong><span>${p.name}</span></a>`)});
- if(heroMode){
-   const title=document.querySelector('.editor-head h1'); if(title)title.textContent='Customize Hero';
-   const back=document.querySelector('.editor-back'); if(back)back.href='headers.html?focus=hero';
-   const step=document.getElementById('editor-mode-step'); if(step)step.textContent='03 Hero';
- }else{const step=document.getElementById('editor-mode-step');if(step)step.textContent='02 Header';}
- fill();
-})();
-</script>
-</body></html>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <script src="catalog.js?v=1.20">
+    </script>
+    <script src="preview-renderer.js?v=1.20">
+    </script>
+    <script src="workspace.js?v=1.20">
+    </script>
+    <script src="../supabase-app.js">
+    </script>
+    <script>
+      (()=>{
+       const params=new URLSearchParams(location.search), code=params.get('code')||'HD-01', heroMode=params.get('mode')==='hero', selectionCode=heroMode?code.replace(/^HD-/,'HR-'):code;
+       const STORE='fs-header-hero-editor-v1', SELECT='fs-builder-selections';
+       const presets={
+        'HD-01':{name:'Classic Split Nav',headerBg:'#0E2A47',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#69BE28',heroStyle:'image'},
+        'HD-02':{name:'Compact Split Nav',headerBg:'#FFFFFF',headerText:'#0E2A47',linkColor:'#0E2A47',ctaBg:'#1697E6',heroStyle:'image',headerHeight:66},
+        'HD-03':{name:'Floating Glass Nav',headerBg:'#EAF4FB',headerText:'#0E2A47',linkColor:'#0E2A47',ctaBg:'#1697E6',heroStyle:'image',transparent:true,radius:18},
+        'HD-04':{name:'Overlay Navigation',headerBg:'#07192B',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#1697E6',heroStyle:'image',transparent:true},
+        'HD-05':{name:'Centered Logo Nav',headerBg:'#07192B',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#1697E6',heroStyle:'image',logoPosition:'Center'}
+       };
+       const base={name:'Header & Hero',logoPosition:'Left',headerHeight:86,headerBg:'#0E2A47',headerText:'#FFFFFF',linkColor:'#FFFFFF',ctaBg:'#69BE28',ctaText:'Get A Quote',sticky:true,transparent:false,shadow:true,border:'none',spacing:32,menu:'Home\\nServices\\nAbout\\nPortfolio\\nContact',menuAlign:'right',showCta:true,eyebrow:'YOUR BUSINESS',headline:'Build Your Dream Website With Confidence',description:'Professional design. Powerful features. Stunning results.',heroStyle:'image',overlay:42,heroText:'#FFFFFF',heroPrimary:'Get Started Today',heroSecondary:'Watch Demo',radius:0,maxWidth:1400};
+       let all={};try{all=JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){}
+       let state={...base,...(presets[code]||{}),...(all[code]||{})};
+       const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+       $('#ed-code').textContent=selectionCode; $('#ed-name').textContent=(heroMode?'Hero · ':'Header · ')+(state.name||'Design');
+      
+       function saveLocal(){all[code]=state;localStorage.setItem(STORE,JSON.stringify(all));}
+       function fill(){ $$('[data-ed]').forEach(el=>{let k=el.dataset.ed;if(el.type==='checkbox')el.checked=!!state[k];else el.value=state[k]??''}); render();}
+       function render(){
+        $$('[data-out]').forEach(o=>o.textContent=state[o.dataset.out]+(o.dataset.out==='overlay'?'%':' px'));
+        let h=$('#live-header'); h.style.height=state.headerHeight+'px';h.style.padding='0 '+state.spacing+'px';h.style.color=state.headerText;
+        h.style.background=state.transparent?'rgba(14,42,71,.55)':state.headerBg;h.style.backdropFilter=state.transparent?'blur(14px)':'none';
+        h.style.boxShadow=state.shadow?'0 10px 30px rgba(0,0,0,.16)':'none';h.style.borderRadius=state.radius+'px';
+        h.style.borderBottom=state.border==='line'?'1px solid rgba(255,255,255,.25)':state.border==='accent'?'3px solid '+state.ctaBg:'none';
+        let logo=$('.live-logo'); logo.style.color=state.headerText;
+        let nav=$('#live-nav'); nav.innerHTML=String(state.menu).split(/\\n+/).filter(Boolean).map(x=>`<a>${x}</a>`).join('');nav.style.color=state.linkColor;
+        nav.style.justifyContent=state.menuAlign==='left'?'flex-start':state.menuAlign==='center'?'center':'flex-end';
+        let c=$('#live-cta');c.textContent=state.ctaText;c.style.background=state.ctaBg;c.hidden=!state.showCta;
+        let hero=$('#live-hero');hero.dataset.style=state.heroStyle;hero.style.setProperty('--overlay',state.overlay/100);
+        $('#live-eyebrow').textContent=state.eyebrow;$('#live-headline').textContent=state.headline;$('#live-description').textContent=state.description;
+        $('.hero-copy').style.color=state.heroText;$('#live-primary').textContent=state.heroPrimary;$('#live-primary').style.background=state.ctaBg;$('#live-secondary').textContent=state.heroSecondary;
+        $('#editor-site').style.maxWidth=state.maxWidth+'px';
+        $('.live-logo').classList.toggle('center-logo',state.logoPosition==='Center');
+        saveLocal();
+       }
+       $$('[data-ed]').forEach(el=>el.addEventListener(el.type==='checkbox'?'change':'input',()=>{let k=el.dataset.ed;state[k]=el.type==='checkbox'?el.checked:el.type==='range'||el.type==='number'?Number(el.value):el.value;render()}));
+       $$('[data-device]').forEach(b=>b.onclick=()=>{$$('[data-device]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#editor-frame').className='editor-preview-frame '+b.dataset.device});
+       $('#ed-reset').onclick=()=>{state={...base,...(presets[code]||{})};fill()};
+       $('#ed-save').onclick=async()=>{
+         let selections={};try{selections=JSON.parse(localStorage.getItem(SELECT)||'{}')}catch(e){}
+         const prefix=heroMode?'HR-':'HD-';Object.keys(selections).forEach(k=>{if(k.startsWith(prefix))delete selections[k]});
+         selections[selectionCode]={code:selectionCode,sourceCode:code,name:state.name,category:heroMode?'Hero':'Header',page:'headers.html'+(heroMode?'?focus=hero':''),selectedAt:Date.now(),colors:{colorMode:'custom',primaryBg:state.headerBg,primaryText:state.headerText,primaryHover:state.ctaBg,styleSettings:state},editorSettings:state};
+         localStorage.setItem(SELECT,JSON.stringify(selections)); saveLocal();
+         window.dispatchEvent(new Event('fs-selection-change'));
+         let st=$('#ed-status');st.textContent=heroMode?'✓ Hero selected and saved locally.':'✓ Header selected and saved locally.';
+         if(window.fsCloud?.saveProject){try{await window.fsCloud.saveProject();st.textContent='✓ Header & Hero saved to your Supabase project.'}catch(e){st.textContent='✓ Saved locally. Sign in to save it to your cloud project.'}}
+       };
+       const alt=$('#alt-header-grid');
+       Object.entries(presets).forEach(([k,p])=>{alt.insertAdjacentHTML('beforeend',`<a class="alt-header-card ${k===code?'active':''}" href="header-hero-editor.html?code=${k}${heroMode?'&mode=hero':''}"><div class="mini-site"><div style="background:${p.headerBg};color:${p.headerText}"><b>YOURLOGO</b><span>Home&nbsp; Services&nbsp; Contact</span></div><i></i></div><strong>${k}</strong><span>${p.name}</span></a>`)});
+       if(heroMode){
+         const title=document.querySelector('.editor-head h1'); if(title)title.textContent='Customize Hero';
+         const back=document.querySelector('.editor-back'); if(back)back.href='headers.html?focus=hero';
+         const step=document.getElementById('editor-mode-step'); if(step)step.textContent='03 Hero';
+       }else{const step=document.getElementById('editor-mode-step');if(step)step.textContent='02 Header';}
+       fill();
+      })();
+    </script>
+  </body>
+</html>

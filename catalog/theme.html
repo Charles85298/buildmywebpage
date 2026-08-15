@@ -1,31 +1,38 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Website Theme Builder | Fleming Solutions</title>
 <link rel="stylesheet" href="catalog.css?v=1.20">
+  <script>
+(() => {
+  let theme = localStorage.getItem('fs-theme');
+  if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (theme === 'dark') document.documentElement.classList.add('fs-dark-boot');
+  document.documentElement.style.colorScheme = theme;
+})();
+</script>
 </head>
-<body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a href="../index.html" class="catalog-brand">FS <span>Fleming Solutions</span></a>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a href="../index.html" class="catalog-brand">FS <span>Fleming Solutions</span></a>
     <a href="builder.html" class="builder-top-link">My Selections</a>
     <button id="catalog-account-button" class="catalog-account-button" type="button">Sign In</button>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="wrap">
-    <span class="code">GLOBAL WEBSITE THEME</span>
+      </div>
+    </header>
+    <section class="hero">
+      <div class="wrap">
+        <span class="code">GLOBAL WEBSITE THEME</span>
     <h1>Theme Builder</h1>
     <p>Set the global look for the page, header, sections, body, surfaces, spacing, and footer. Individual components can still override these defaults.</p>
-  </div>
-</section>
-
-<section class="catalog-tabs"><div class="wrap">
-  <nav class="tab-row">
-    <a class="tab" href="index.html">Catalog</a>
+      </div>
+    </section>
+    <section class="catalog-tabs">
+      <div class="wrap">
+        <nav class="tab-row">
+          <a class="tab" href="index.html">Catalog</a>
     <a class="tab active" href="theme.html">Theme</a>
     <a class="tab" href="colors.html">Colors</a>
     <a class="tab" href="headers.html">Headers & Heroes</a>
@@ -35,25 +42,30 @@
     <a class="tab" href="sections.html">Sections</a>
     <a class="tab" href="guided-builder.html">Guided Builder</a>
     <a class="tab" href="builder.html">My Selections</a>
-  </nav>
-</div></section>
-
-<div class="design-flow-prep"><strong>Global Theme</strong><span>Set website-wide colors, spacing and surfaces before or during the guided component flow.</span><a href="headers.html">Start Component Flow →</a></div><main class="wrap theme-builder-layout">
-  <section class="theme-controls-panel">
-    <div class="theme-toolbar">
-      <div><strong>Website Theme</strong><span id="theme-save-status"> Saved locally on this device.</span></div>
-      <div class="theme-toolbar-actions">
-        <button type="button" id="theme-reset">Reset Theme</button>
-        <button type="button" id="theme-save-cloud" class="demo-btn">Save Theme to Project</button>
+        </nav>
       </div>
+    </section>
+    <div class="design-flow-prep">
+      <strong>Global Theme</strong><span>Set website-wide colors, spacing and surfaces before or during the guided component flow.</span><a href="headers.html">Start Component Flow →</a>
     </div>
-
-    <div class="theme-accordion" id="theme-accordion">
-
-      <details open>
-        <summary>Header Theme</summary>
-        <div class="theme-fields">
-          <label>Style<select data-theme="header_style">
+    <main class="wrap theme-builder-layout">
+      <section class="theme-controls-panel">
+        <div class="theme-toolbar">
+          <div>
+            <strong>Website Theme</strong><span id="theme-save-status"> Saved locally on this device.</span>
+          </div>
+          <div class="theme-toolbar-actions">
+            <button type="button" id="theme-reset">Reset Theme</button>
+        <button type="button" id="theme-save-cloud" class="demo-btn">Save Theme to Project</button>
+          </div>
+        </div>
+        <div class="theme-accordion" id="theme-accordion">
+          <details open>
+            <summary>
+              Header Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Style<select data-theme="header_style">
             <option value="standard">Standard</option>
             <option value="floating">Floating</option>
             <option value="glass">Glass</option>
@@ -67,13 +79,14 @@
           <label class="theme-check"><input type="checkbox" data-theme="header_transparent"> Transparent</label>
           <label class="theme-check"><input type="checkbox" data-theme="header_sticky"> Sticky</label>
           <label class="theme-check"><input type="checkbox" data-theme="header_shadow"> Shadow</label>
-        </div>
-      </details>
-
-      <details>
-        <summary>Section Theme</summary>
-        <div class="theme-fields">
-          <label>Style<select data-theme="section_style">
+            </div>
+          </details>
+          <details>
+            <summary>
+              Section Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Style<select data-theme="section_style">
             <option value="clean">Clean</option>
             <option value="layered">Layered</option>
             <option value="gradient">Gradient</option>
@@ -92,25 +105,27 @@
             <option value="curve">Curve</option>
           </select></label>
           <label class="theme-check"><input type="checkbox" data-theme="section_alternating"> Alternate Section Backgrounds</label>
-        </div>
-      </details>
-
-      <details>
-        <summary>Body Theme</summary>
-        <div class="theme-fields">
-          <label>Background<input type="color" data-theme="body_background"></label>
+            </div>
+          </details>
+          <details>
+            <summary>
+              Body Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Background<input type="color" data-theme="body_background"></label>
           <label>Body Text<input type="color" data-theme="body_text_color"></label>
           <label>Heading Text<input type="color" data-theme="body_heading_color"></label>
           <label>Links<input type="color" data-theme="body_link_color"></label>
           <label>Line Height<input type="number" min="1.2" max="2.2" step="0.05" data-theme="body_line_height"></label>
           <label>Content Width<input type="number" min="760" max="1600" step="20" data-theme="body_content_width"></label>
-        </div>
-      </details>
-
-      <details>
-        <summary>Page Theme</summary>
-        <div class="theme-fields">
-          <label>Page Style<select data-theme="page_style">
+            </div>
+          </details>
+          <details>
+            <summary>
+              Page Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Page Style<select data-theme="page_style">
             <option value="full-width">Full Width</option>
             <option value="boxed">Boxed</option>
             <option value="framed">Framed</option>
@@ -127,13 +142,14 @@
             <option value="paper">Paper</option>
           </select></label>
           <label>Gradient<input type="text" data-theme="page_gradient" placeholder="Optional CSS gradient"></label>
-        </div>
-      </details>
-
-      <details>
-        <summary>Footer Theme</summary>
-        <div class="theme-fields">
-          <label>Style<select data-theme="footer_style">
+            </div>
+          </details>
+          <details>
+            <summary>
+              Footer Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Style<select data-theme="footer_style">
             <option value="multi-column">Multi Column</option>
             <option value="minimal">Minimal</option>
             <option value="cta">Large CTA</option>
@@ -147,13 +163,14 @@
           <label>Columns<input type="number" min="1" max="6" data-theme="footer_columns"></label>
           <label class="theme-check"><input type="checkbox" data-theme="footer_show_social"> Show Social</label>
           <label class="theme-check"><input type="checkbox" data-theme="footer_show_cta"> Show CTA</label>
-        </div>
-      </details>
-
-      <details>
-        <summary>Surface Theme</summary>
-        <div class="theme-fields">
-          <label>Style<select data-theme="surface_style">
+            </div>
+          </details>
+          <details>
+            <summary>
+              Surface Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Style<select data-theme="surface_style">
             <option value="standard">Standard</option>
             <option value="soft">Soft</option>
             <option value="glass">Glass</option>
@@ -169,279 +186,287 @@
             <option value="medium">Medium</option>
             <option value="strong">Strong</option>
           </select></label>
-        </div>
-      </details>
-
-      <details>
-        <summary>Spacing Theme</summary>
-        <div class="theme-fields">
-          <label>Density<select data-theme="spacing_style">
+            </div>
+          </details>
+          <details>
+            <summary>
+              Spacing Theme
+            </summary>
+            <div class="theme-fields">
+              <label>Density<select data-theme="spacing_style">
             <option value="compact">Compact</option>
             <option value="standard">Standard</option>
             <option value="airy">Airy</option>
           </select></label>
           <label>Section Spacing<input type="number" min="32" max="160" step="4" data-theme="section_spacing"></label>
           <label>Component Spacing<input type="number" min="8" max="64" step="4" data-theme="component_spacing"></label>
+            </div>
+          </details>
         </div>
-      </details>
-    </div>
-  </section>
-
-  <aside class="theme-preview-panel">
-    <div class="preview-toolbar">
-      <strong>Live Theme Preview</strong>
-      <div>
-        <button type="button" data-theme-view="desktop" class="active">Desktop</button>
+      </section>
+      <aside class="theme-preview-panel">
+        <div class="preview-toolbar">
+          <strong>Live Theme Preview</strong>
+          <div>
+            <button type="button" data-theme-view="desktop" class="active">Desktop</button>
         <button type="button" data-theme-view="tablet">Tablet</button>
         <button type="button" data-theme-view="mobile">Mobile</button>
-      </div>
-    </div>
-
-    <div class="theme-device desktop" id="theme-device">
-      <div class="theme-site-preview" id="theme-site-preview">
-        <header id="tp-header">
-          <b>YOUR LOGO</b>
-          <nav>Home &nbsp; Services &nbsp; Work</nav>
-          <button>Get Started</button>
-        </header>
-
-        <section class="tp-hero">
-          <small>YOUR BUSINESS</small>
+          </div>
+        </div>
+        <div class="theme-device desktop" id="theme-device">
+          <div class="theme-site-preview" id="theme-site-preview">
+            <header id="tp-header">
+              <b>YOUR LOGO</b>
+              <nav>
+                Home &nbsp; Services &nbsp; Work
+              </nav>
+              <button>Get Started</button>
+            </header>
+            <section class="tp-hero">
+              <small>YOUR BUSINESS</small>
           <h2>Professional websites built around your brand.</h2>
           <p>This live preview shows how your global theme choices work together.</p>
           <a href="javascript:void(0)">Learn More</a>
-        </section>
-
-        <section class="tp-section tp-section-a">
-          <h3>Featured Services</h3>
-          <div class="tp-card-grid">
-            <article><b>Service One</b><p>Surface and spacing theme.</p></article>
-            <article><b>Service Two</b><p>Global section styling.</p></article>
-            <article><b>Service Three</b><p>Consistent design system.</p></article>
-          </div>
-        </section>
-
-        <section class="tp-section tp-section-b">
-          <h3>Why Customers Choose You</h3>
+            </section>
+            <section class="tp-section tp-section-a">
+              <h3>Featured Services</h3>
+              <div class="tp-card-grid">
+                <article>
+                  <b>Service One</b><p>Surface and spacing theme.</p>
+                </article>
+                <article>
+                  <b>Service Two</b><p>Global section styling.</p>
+                </article>
+                <article>
+                  <b>Service Three</b><p>Consistent design system.</p>
+                </article>
+              </div>
+            </section>
+            <section class="tp-section tp-section-b">
+              <h3>Why Customers Choose You</h3>
           <p>Alternating sections make longer pages easier to scan.</p>
-        </section>
-
-        <footer id="tp-footer">
-          <strong>YOUR BUSINESS</strong>
+            </section>
+            <footer id="tp-footer">
+              <strong>YOUR BUSINESS</strong>
           <span>Services &nbsp; About &nbsp; Contact</span>
-        </footer>
-      </div>
-    </div>
-
-    <div class="theme-preview-note">
-      <span id="theme-inheritance">Global Theme → Components inherit these defaults</span>
-    </div>
-  </aside>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="catalog.js?v=1.20"></script><script src="preview-renderer.js?v=1.20"></script><script src="workspace.js?v=1.20"></script>
-<script src="../supabase-app.js"></script>
-<script>
-(() => {
-  const KEY='fs-project-theme-v1';
-
-  const defaults={
-    header_style:'standard',
-    header_background:'#FFFFFF',
-    header_text_color:'#0E2A47',
-    header_link_color:'#0E2A47',
-    header_cta_color:'#1697E6',
-    header_transparent:false,
-    header_sticky:true,
-    header_shadow:false,
-
-    section_style:'clean',
-    section_background_primary:'#FFFFFF',
-    section_background_secondary:'#F6F9FC',
-    section_text_color:'#334155',
-    section_heading_color:'#0E2A47',
-    section_alternating:true,
-    section_divider_style:'none',
-
-    body_background:'#FFFFFF',
-    body_text_color:'#334155',
-    body_heading_color:'#0E2A47',
-    body_link_color:'#1697E6',
-    body_line_height:1.6,
-    body_content_width:1200,
-
-    page_style:'full-width',
-    page_background:'#FFFFFF',
-    page_max_width:1440,
-    page_padding:24,
-    page_texture:'none',
-    page_gradient:'',
-
-    footer_style:'multi-column',
-    footer_background:'#0E2A47',
-    footer_text_color:'#FFFFFF',
-    footer_link_color:'#FFFFFF',
-    footer_accent_color:'#1697E6',
-    footer_columns:4,
-    footer_show_social:true,
-    footer_show_cta:true,
-
-    surface_style:'standard',
-    surface_background:'#FFFFFF',
-    surface_border_color:'#DFE8F1',
-    surface_border_radius:16,
-    surface_shadow:'soft',
-
-    spacing_style:'standard',
-    section_spacing:80,
-    component_spacing:24
-  };
-
-  const $=(s,r=document)=>r.querySelector(s);
-  const $$=(s,r=document)=>[...r.querySelectorAll(s)];
-
-  function read(){
-    try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}
-    catch(e){return {...defaults}}
-  }
-
-  function write(v){
-    localStorage.setItem(KEY,JSON.stringify(v));
-    apply(v);
-    const status=$('#theme-save-status');
-    if(status)status.textContent=' Saved locally on this device.';
-  }
-
-  function populate(){
-    const data=read();
-    $$('[data-theme]').forEach(el=>{
-      const k=el.dataset.theme;
-      if(el.type==='checkbox')el.checked=!!data[k];
-      else el.value=data[k] ?? '';
-    });
-    apply(data);
-  }
-
-  function textureCSS(name){
-    if(name==='grid')return 'linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)';
-    if(name==='dots')return 'radial-gradient(rgba(0,0,0,.08) 1px,transparent 1px)';
-    if(name==='paper')return 'linear-gradient(135deg,rgba(0,0,0,.025),transparent 55%)';
-    if(name==='noise')return 'linear-gradient(45deg,rgba(0,0,0,.02) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.02) 75%)';
-    return 'none';
-  }
-
-  function shadowValue(name){
-    if(name==='none')return 'none';
-    if(name==='medium')return '0 12px 28px rgba(0,0,0,.13)';
-    if(name==='strong')return '0 18px 44px rgba(0,0,0,.20)';
-    return '0 8px 22px rgba(0,0,0,.08)';
-  }
-
-  function apply(d){
-    const preview=$('#theme-site-preview');
-    if(!preview)return;
-
-    preview.style.background=d.page_gradient||d.page_background;
-    preview.style.color=d.body_text_color;
-    preview.style.lineHeight=d.body_line_height;
-    preview.style.maxWidth=(d.page_style==='boxed'||d.page_style==='framed')?d.page_max_width+'px':'100%';
-    preview.style.padding=d.page_style==='framed'?d.page_padding+'px':'0';
-
-    if(d.page_texture!=='none'){
-      preview.style.backgroundImage=textureCSS(d.page_texture);
-      preview.style.backgroundSize=d.page_texture==='grid'?'24px 24px':d.page_texture==='dots'?'18px 18px':'auto';
-    }else{
-      preview.style.backgroundImage='none';
-    }
-
-    const header=$('#tp-header');
-    header.style.background=d.header_transparent?'transparent':d.header_background;
-    header.style.color=d.header_text_color;
-    header.style.position=d.header_sticky?'sticky':'relative';
-    header.style.top='0';
-    header.style.boxShadow=d.header_shadow?'0 10px 28px rgba(0,0,0,.12)':'none';
-    header.style.borderRadius=d.header_style==='floating'?'16px':'0';
-    header.style.margin=d.header_style==='floating'?'10px':'0';
-    header.style.backdropFilter=d.header_style==='glass'?'blur(14px)':'none';
-    header.style.backgroundColor=d.header_style==='glass'?'color-mix(in srgb,'+d.header_background+' 72%,transparent)':header.style.backgroundColor;
-    $('#tp-header button').style.background=d.header_cta_color;
-    $('#tp-header nav').style.color=d.header_link_color;
-
-    const hero=$('.tp-hero');
-    hero.style.background=d.body_background;
-    hero.style.color=d.body_text_color;
-    $('.tp-hero h2').style.color=d.body_heading_color;
-    $('.tp-hero a').style.color=d.body_link_color;
-
-    const sections=$$('.tp-section');
-    sections.forEach((sec,i)=>{
-      sec.style.padding=d.section_spacing+'px 24px';
-      sec.style.background=(d.section_alternating && i%2===1)?d.section_background_secondary:d.section_background_primary;
-      sec.style.color=d.section_text_color;
-      $('h3',sec).style.color=d.section_heading_color;
-      sec.style.borderTop=d.section_divider_style==='line'?'1px solid '+d.surface_border_color:'0';
-      sec.style.clipPath=d.section_divider_style==='angle'?'polygon(0 4%,100% 0,100% 100%,0 100%)':'none';
-    });
-
-    $$('.tp-card-grid article').forEach(card=>{
-      card.style.background=d.surface_style==='glass'?'color-mix(in srgb,'+d.surface_background+' 75%,transparent)':d.surface_background;
-      card.style.border='1px solid '+d.surface_border_color;
-      card.style.borderRadius=d.surface_border_radius+'px';
-      card.style.boxShadow=shadowValue(d.surface_shadow);
-      card.style.padding=Math.max(12,d.component_spacing)+'px';
-      card.style.backdropFilter=d.surface_style==='glass'?'blur(12px)':'none';
-    });
-
-    const footer=$('#tp-footer');
-    footer.style.background=d.footer_background;
-    footer.style.color=d.footer_text_color;
-    footer.style.borderTop='4px solid '+d.footer_accent_color;
-    footer.style.gridTemplateColumns='repeat('+Math.min(4,Math.max(1,d.footer_columns))+',1fr)';
-
-    document.documentElement.style.setProperty('--theme-section-gap',d.section_spacing+'px');
-  }
-
-  $$('[data-theme]').forEach(el=>{
-    el.addEventListener(el.type==='checkbox'?'change':'input',()=>{
-      const d=read();
-      const k=el.dataset.theme;
-      if(el.type==='checkbox')d[k]=el.checked;
-      else if(el.type==='number')d[k]=Number(el.value);
-      else d[k]=el.value;
-      write(d);
-    });
-  });
-
-  $('[data-theme-view="desktop"]')?.addEventListener('click',()=>setView('desktop'));
-  $('[data-theme-view="tablet"]')?.addEventListener('click',()=>setView('tablet'));
-  $('[data-theme-view="mobile"]')?.addEventListener('click',()=>setView('mobile'));
-  function setView(view){
-    $$('[data-theme-view]').forEach(b=>b.classList.toggle('active',b.dataset.themeView===view));
-    $('#theme-device').className='theme-device '+view;
-  }
-
-  $('#theme-reset')?.addEventListener('click',()=>{
-    if(confirm('Reset the global website theme to defaults?')){
-      localStorage.setItem(KEY,JSON.stringify(defaults));
-      populate();
-    }
-  });
-
-  $('#theme-save-cloud')?.addEventListener('click',async()=>{
-    const status=$('#theme-save-status');
-    try{
-      if(!window.fsCloud?.saveTheme)throw new Error('Sign in and save the project first.');
-      status.textContent=' Saving theme…';
-      await window.fsCloud.saveTheme(read());
-      status.textContent=' ✓ Theme saved to Supabase.';
-    }catch(err){
-      status.textContent=' '+(err.message||'Could not save theme.');
-    }
-  });
-
-  populate();
-})();
-</script>
-</body>
+            </footer>
+          </div>
+        </div>
+        <div class="theme-preview-note">
+          <span id="theme-inheritance">Global Theme → Components inherit these defaults</span>
+        </div>
+      </aside>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <script src="catalog.js?v=1.20">
+    </script>
+    <script src="preview-renderer.js?v=1.20">
+    </script>
+    <script src="workspace.js?v=1.20">
+    </script>
+    <script src="../supabase-app.js">
+    </script>
+    <script>
+      (() => {
+        const KEY='fs-project-theme-v1';
+      
+        const defaults={
+          header_style:'standard',
+          header_background:'#FFFFFF',
+          header_text_color:'#0E2A47',
+          header_link_color:'#0E2A47',
+          header_cta_color:'#1697E6',
+          header_transparent:false,
+          header_sticky:true,
+          header_shadow:false,
+      
+          section_style:'clean',
+          section_background_primary:'#FFFFFF',
+          section_background_secondary:'#F6F9FC',
+          section_text_color:'#334155',
+          section_heading_color:'#0E2A47',
+          section_alternating:true,
+          section_divider_style:'none',
+      
+          body_background:'#FFFFFF',
+          body_text_color:'#334155',
+          body_heading_color:'#0E2A47',
+          body_link_color:'#1697E6',
+          body_line_height:1.6,
+          body_content_width:1200,
+      
+          page_style:'full-width',
+          page_background:'#FFFFFF',
+          page_max_width:1440,
+          page_padding:24,
+          page_texture:'none',
+          page_gradient:'',
+      
+          footer_style:'multi-column',
+          footer_background:'#0E2A47',
+          footer_text_color:'#FFFFFF',
+          footer_link_color:'#FFFFFF',
+          footer_accent_color:'#1697E6',
+          footer_columns:4,
+          footer_show_social:true,
+          footer_show_cta:true,
+      
+          surface_style:'standard',
+          surface_background:'#FFFFFF',
+          surface_border_color:'#DFE8F1',
+          surface_border_radius:16,
+          surface_shadow:'soft',
+      
+          spacing_style:'standard',
+          section_spacing:80,
+          component_spacing:24
+        };
+      
+        const $=(s,r=document)=>r.querySelector(s);
+        const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+      
+        function read(){
+          try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}
+          catch(e){return {...defaults}}
+        }
+      
+        function write(v){
+          localStorage.setItem(KEY,JSON.stringify(v));
+          apply(v);
+          const status=$('#theme-save-status');
+          if(status)status.textContent=' Saved locally on this device.';
+        }
+      
+        function populate(){
+          const data=read();
+          $$('[data-theme]').forEach(el=>{
+            const k=el.dataset.theme;
+            if(el.type==='checkbox')el.checked=!!data[k];
+            else el.value=data[k] ?? '';
+          });
+          apply(data);
+        }
+      
+        function textureCSS(name){
+          if(name==='grid')return 'linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)';
+          if(name==='dots')return 'radial-gradient(rgba(0,0,0,.08) 1px,transparent 1px)';
+          if(name==='paper')return 'linear-gradient(135deg,rgba(0,0,0,.025),transparent 55%)';
+          if(name==='noise')return 'linear-gradient(45deg,rgba(0,0,0,.02) 25%,transparent 25%,transparent 75%,rgba(0,0,0,.02) 75%)';
+          return 'none';
+        }
+      
+        function shadowValue(name){
+          if(name==='none')return 'none';
+          if(name==='medium')return '0 12px 28px rgba(0,0,0,.13)';
+          if(name==='strong')return '0 18px 44px rgba(0,0,0,.20)';
+          return '0 8px 22px rgba(0,0,0,.08)';
+        }
+      
+        function apply(d){
+          const preview=$('#theme-site-preview');
+          if(!preview)return;
+      
+          preview.style.background=d.page_gradient||d.page_background;
+          preview.style.color=d.body_text_color;
+          preview.style.lineHeight=d.body_line_height;
+          preview.style.maxWidth=(d.page_style==='boxed'||d.page_style==='framed')?d.page_max_width+'px':'100%';
+          preview.style.padding=d.page_style==='framed'?d.page_padding+'px':'0';
+      
+          if(d.page_texture!=='none'){
+            preview.style.backgroundImage=textureCSS(d.page_texture);
+            preview.style.backgroundSize=d.page_texture==='grid'?'24px 24px':d.page_texture==='dots'?'18px 18px':'auto';
+          }else{
+            preview.style.backgroundImage='none';
+          }
+      
+          const header=$('#tp-header');
+          header.style.background=d.header_transparent?'transparent':d.header_background;
+          header.style.color=d.header_text_color;
+          header.style.position=d.header_sticky?'sticky':'relative';
+          header.style.top='0';
+          header.style.boxShadow=d.header_shadow?'0 10px 28px rgba(0,0,0,.12)':'none';
+          header.style.borderRadius=d.header_style==='floating'?'16px':'0';
+          header.style.margin=d.header_style==='floating'?'10px':'0';
+          header.style.backdropFilter=d.header_style==='glass'?'blur(14px)':'none';
+          header.style.backgroundColor=d.header_style==='glass'?'color-mix(in srgb,'+d.header_background+' 72%,transparent)':header.style.backgroundColor;
+          $('#tp-header button').style.background=d.header_cta_color;
+          $('#tp-header nav').style.color=d.header_link_color;
+      
+          const hero=$('.tp-hero');
+          hero.style.background=d.body_background;
+          hero.style.color=d.body_text_color;
+          $('.tp-hero h2').style.color=d.body_heading_color;
+          $('.tp-hero a').style.color=d.body_link_color;
+      
+          const sections=$$('.tp-section');
+          sections.forEach((sec,i)=>{
+            sec.style.padding=d.section_spacing+'px 24px';
+            sec.style.background=(d.section_alternating && i%2===1)?d.section_background_secondary:d.section_background_primary;
+            sec.style.color=d.section_text_color;
+            $('h3',sec).style.color=d.section_heading_color;
+            sec.style.borderTop=d.section_divider_style==='line'?'1px solid '+d.surface_border_color:'0';
+            sec.style.clipPath=d.section_divider_style==='angle'?'polygon(0 4%,100% 0,100% 100%,0 100%)':'none';
+          });
+      
+          $$('.tp-card-grid article').forEach(card=>{
+            card.style.background=d.surface_style==='glass'?'color-mix(in srgb,'+d.surface_background+' 75%,transparent)':d.surface_background;
+            card.style.border='1px solid '+d.surface_border_color;
+            card.style.borderRadius=d.surface_border_radius+'px';
+            card.style.boxShadow=shadowValue(d.surface_shadow);
+            card.style.padding=Math.max(12,d.component_spacing)+'px';
+            card.style.backdropFilter=d.surface_style==='glass'?'blur(12px)':'none';
+          });
+      
+          const footer=$('#tp-footer');
+          footer.style.background=d.footer_background;
+          footer.style.color=d.footer_text_color;
+          footer.style.borderTop='4px solid '+d.footer_accent_color;
+          footer.style.gridTemplateColumns='repeat('+Math.min(4,Math.max(1,d.footer_columns))+',1fr)';
+      
+          document.documentElement.style.setProperty('--theme-section-gap',d.section_spacing+'px');
+        }
+      
+        $$('[data-theme]').forEach(el=>{
+          el.addEventListener(el.type==='checkbox'?'change':'input',()=>{
+            const d=read();
+            const k=el.dataset.theme;
+            if(el.type==='checkbox')d[k]=el.checked;
+            else if(el.type==='number')d[k]=Number(el.value);
+            else d[k]=el.value;
+            write(d);
+          });
+        });
+      
+        $('[data-theme-view="desktop"]')?.addEventListener('click',()=>setView('desktop'));
+        $('[data-theme-view="tablet"]')?.addEventListener('click',()=>setView('tablet'));
+        $('[data-theme-view="mobile"]')?.addEventListener('click',()=>setView('mobile'));
+        function setView(view){
+          $$('[data-theme-view]').forEach(b=>b.classList.toggle('active',b.dataset.themeView===view));
+          $('#theme-device').className='theme-device '+view;
+        }
+      
+        $('#theme-reset')?.addEventListener('click',()=>{
+          if(confirm('Reset the global website theme to defaults?')){
+            localStorage.setItem(KEY,JSON.stringify(defaults));
+            populate();
+          }
+        });
+      
+        $('#theme-save-cloud')?.addEventListener('click',async()=>{
+          const status=$('#theme-save-status');
+          try{
+            if(!window.fsCloud?.saveTheme)throw new Error('Sign in and save the project first.');
+            status.textContent=' Saving theme…';
+            await window.fsCloud.saveTheme(read());
+            status.textContent=' ✓ Theme saved to Supabase.';
+          }catch(err){
+            status.textContent=' '+(err.message||'Could not save theme.');
+          }
+        });
+      
+        populate();
+      })();
+    </script>
+  </body>
 </html>

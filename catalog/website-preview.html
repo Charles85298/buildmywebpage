@@ -1,95 +1,190 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website Preview | BuildMyWebpage</title><link rel="stylesheet" href="catalog.css?v=1.20"></head>
-<body><header class="topbar"><div class="topbar-inner"><a href="../index.html" class="catalog-brand">FS <span>Fleming Solutions</span></a><a href="builder.html" class="builder-top-link">My Selections</a><button id="catalog-account-button" class="catalog-account-button" type="button">Sign In</button></div></header>
-<section class="hero"><div class="wrap"><span class="code">LIVE WEBSITE ASSEMBLY</span><h1>Preview My Website</h1><p>Your current selections are assembled into one working visual direction. This is a concept preview, not the final production website.</p></div></section>
-<main class="wrap project-preview-layout"><section class="project-preview-toolbar"><div class="preview-toolbar"><strong>Responsive Preview</strong><div><button data-pv="desktop" class="active">Desktop</button><button data-pv="tablet">Tablet</button><button data-pv="mobile">Mobile</button></div></div><div class="preview-completion"><strong id="pv-percent">0% Complete</strong><span id="pv-count"></span></div>
-<div class="preview-reference-actions">
-  <input id="reference-title" type="text" placeholder="Reference title (optional)">
-  <button id="save-reference" class="demo-btn" type="button">Save Reference Snapshot</button>
-</div></section>
-<div class="project-device desktop" id="project-device"><div class="assembled-site" id="assembled-site">
-<header id="assembled-header"><b>YOURLOGO</b><button class="assembled-menu">☰</button><nav id="assembled-nav"></nav><button id="assembled-cta">Get Started</button></header>
-<section class="assembled-hero"><small>YOUR BUSINESS</small><h1>Build Your Dream Website With Confidence</h1><p>Your selected components and global theme appear together here.</p><div><button>Get Started</button><button>Learn More</button></div></section>
-<section class="assembled-section"><h2>Your Services</h2><div class="assembled-cards"><article><b>Service One</b><p>Professional service description.</p></article><article><b>Service Two</b><p>Professional service description.</p></article><article><b>Service Three</b><p>Professional service description.</p></article></div></section>
-<section class="assembled-section alt"><h2>Contact Us</h2><div class="assembled-form"><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Tell us about your project"></textarea><button>Send Message</button></div></section>
-<footer id="assembled-footer"><b>YOUR BUSINESS</b><span>Home · Services · About · Contact</span></footer>
-</div></div>
-
-<section class="saved-reference-panel">
-  <div class="saved-reference-head">
-    <div><span class="code">SUPABASE REFERENCE DOCUMENTS</span><h2>Saved Preview References</h2><p>Each save creates a new version so you can return to the exact design direction later.</p></div>
-    <span id="reference-save-status"></span>
-  </div>
-  <div id="saved-reference-list"><p class="builder-muted">Sign in and save this project to create reference snapshots.</p></div>
-</section>
-<section class="preview-selection-summary"><h2>Current Design Choices</h2><div id="pv-selections"></div><div class="preview-actions"><a class="demo-btn" href="headers.html">Continue Designing</a><a class="demo-btn secondary" href="builder.html">Review My Selections</a></div></section>
-</main>
-<div class="reference-viewer" id="reference-viewer" hidden>
-  <div class="reference-viewer-backdrop" data-close-reference></div>
-  <section class="reference-viewer-card">
-    <div class="reference-viewer-head">
-      <div><span class="code" id="reference-viewer-version"></span><h2 id="reference-viewer-title">Saved Reference</h2></div>
-      <button type="button" data-close-reference>×</button>
-    </div>
-    <div id="reference-viewer-body" class="reference-viewer-body"></div>
-    <details class="reference-data-details">
-      <summary>View Saved Design Data</summary>
-      <pre id="reference-viewer-data"></pre>
-    </details>
-  </section>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js?v=1.20"></script><script src="preview-renderer.js?v=1.20"></script><script src="workspace.js?v=1.20"></script><script src="../supabase-app.js"></script>
-<script>
-(()=>{
-const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
-const FLOW=[['CP','Color Theme'],['HD','Header / Hero'],['NV','Navigation'],['FT','Typography'],['SC','Sections & Layouts'],['CD','Cards'],['GA','Images & Galleries'],['IN','Forms & Inputs'],['BT','Buttons & CTAs'],['FO','Footer'],['FX','Effects & Animation']];
-let latestState=null,latestPct=0;
-function updateMeta(state){
-  latestState=state;
-  const vals=state.vals;
-  const complete=FLOW.filter(([p])=>vals.some(x=>String(x.code||'').startsWith(p+'-'))||localStorage.getItem('fs-skip-'+p)==='1').length;
-  latestPct=Math.round(complete/FLOW.length*100);
-  $('#pv-percent').textContent=latestPct+'% Complete';
-  $('#pv-count').textContent=vals.length+' saved design selections';
-  $('#pv-selections').innerHTML=FLOW.map(([p,label])=>{const x=vals.find(v=>String(v.code||'').startsWith(p+'-'));return `<span class="${x?'done':''}">${x?'✓ '+x.code+' · '+x.name:'○ '+label+' not selected'}</span>`}).join('');
-}
-const assembled=$('#assembled-site');
-if(window.FSPreview){
-  window.FSPreview.watch(assembled,{compact:false,onRender:updateMeta});
-  updateMeta(window.FSPreview.state());
-}
-$$('[data-pv]').forEach(b=>b.onclick=()=>{$$('[data-pv]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#project-device').className='project-device '+b.dataset.pv});
-
-async function referencePayload(){
-  const state=window.FSPreview?.state()||latestState||{};
-  const previewHtml=assembled.outerHTML;
-  const designData={
-    saved_at:new Date().toISOString(),
-    selections:state.selections||{},
-    theme:state.theme||{},
-    design_system:state.design||{},
-    header_editor:state.hh||{},
-    navigation_editor:state.navs||{},
-    skipped_steps:FLOW.map(x=>x[0]).filter(p=>localStorage.getItem('fs-skip-'+p)==='1'),
-    completion_percent:latestPct
-  };
-  return {previewHtml,previewData:designData};
-}
-
-async function refreshReferences(){
-  const list=$('#saved-reference-list');
-  if(!list || !window.fsCloud?.listReferenceDocuments)return;
-  try{
-    const refs=await window.fsCloud.listReferenceDocuments();
-    if(!refs.length){list.innerHTML='<p class="builder-muted">No saved preview references yet.</p>';return;}
-    list.innerHTML=refs.map(r=>`<article class="saved-reference-row"><div><strong>${r.title}</strong><span>Version ${r.version_number} · ${new Date(r.created_at).toLocaleString()}</span></div><button type="button" data-open-reference="${r.id}">Open Reference</button></article>`).join('');
-    list.querySelectorAll('[data-open-reference]').forEach(b=>b.onclick=()=>openReference(b.dataset.openReference));
-  }catch(e){list.innerHTML='<p class="cloud-error">Could not load saved references.</p>'}
-}
-async function openReference(id){
-  try{const r=await window.fsCloud.getReferenceDocument(id);$('#reference-viewer-title').textContent=r.title;$('#reference-viewer-version').textContent='VERSION '+r.version_number;$('#reference-viewer-body').innerHTML=r.preview_html;$('#reference-viewer-data').textContent=JSON.stringify(r.preview_data,null,2);$('#reference-viewer').hidden=false;document.body.style.overflow='hidden'}catch(e){$('#reference-save-status').textContent=e.message||'Could not open reference.'}
-}
-$('#save-reference')?.addEventListener('click',async()=>{const status=$('#reference-save-status');status.textContent='Saving reference…';try{if(!window.fsCloud?.saveReferenceDocument)throw new Error('Supabase reference saving is not available.');const {previewHtml,previewData}=await referencePayload();const ref=await window.fsCloud.saveReferenceDocument({title:$('#reference-title')?.value.trim()||undefined,previewHtml,previewData});status.textContent=`✓ Saved Version ${ref.version_number}`;$('#reference-title').value='';await refreshReferences()}catch(e){status.textContent=e.message||'Could not save reference.'}});
-document.querySelectorAll('[data-close-reference]').forEach(x=>x.onclick=()=>{$('#reference-viewer').hidden=true;document.body.style.overflow=''});
-setTimeout(refreshReferences,700);
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website Preview | BuildMyWebpage</title><link rel="stylesheet" href="catalog.css?v=1.20">
+  <script>
+(() => {
+  let theme = localStorage.getItem('fs-theme');
+  if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (theme === 'dark') document.documentElement.classList.add('fs-dark-boot');
+  document.documentElement.style.colorScheme = theme;
 })();
-</script></body></html>
+</script>
+</head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a href="../index.html" class="catalog-brand">FS <span>Fleming Solutions</span></a><a href="builder.html" class="builder-top-link">My Selections</a><button id="catalog-account-button" class="catalog-account-button" type="button">Sign In</button>
+      </div>
+    </header>
+    <section class="hero">
+      <div class="wrap">
+        <span class="code">LIVE WEBSITE ASSEMBLY</span><h1>Preview My Website</h1><p>Your current selections are assembled into one working visual direction. This is a concept preview, not the final production website.</p>
+      </div>
+    </section>
+    <main class="wrap project-preview-layout">
+      <section class="project-preview-toolbar">
+        <div class="preview-toolbar">
+          <strong>Responsive Preview</strong>
+          <div>
+            <button data-pv="desktop" class="active">Desktop</button><button data-pv="tablet">Tablet</button><button data-pv="mobile">Mobile</button>
+          </div>
+        </div>
+        <div class="preview-completion">
+          <strong id="pv-percent">0% Complete</strong><span id="pv-count"></span>
+        </div>
+        <div class="preview-reference-actions">
+          <input id="reference-title" type="text" placeholder="Reference title (optional)">
+  <button id="save-reference" class="demo-btn" type="button">Save Reference Snapshot</button>
+        </div>
+      </section>
+      <div class="project-device desktop" id="project-device">
+        <div class="assembled-site" id="assembled-site">
+          <header id="assembled-header">
+            <b>YOURLOGO</b><button class="assembled-menu">☰</button>
+            <nav id="assembled-nav">
+            </nav>
+            <button id="assembled-cta">Get Started</button>
+          </header>
+          <section class="assembled-hero">
+            <small>YOUR BUSINESS</small><h1>Build Your Dream Website With Confidence</h1><p>Your selected components and global theme appear together here.</p>
+            <div>
+              <button>Get Started</button><button>Learn More</button>
+            </div>
+          </section>
+          <section class="assembled-section">
+            <h2>Your Services</h2>
+            <div class="assembled-cards">
+              <article>
+                <b>Service One</b><p>Professional service description.</p>
+              </article>
+              <article>
+                <b>Service Two</b><p>Professional service description.</p>
+              </article>
+              <article>
+                <b>Service Three</b><p>Professional service description.</p>
+              </article>
+            </div>
+          </section>
+          <section class="assembled-section alt">
+            <h2>Contact Us</h2>
+            <div class="assembled-form">
+              <input placeholder="Name"><input placeholder="Email">
+              <textarea placeholder="Tell us about your project">
+              </textarea>
+              <button>Send Message</button>
+            </div>
+          </section>
+          <footer id="assembled-footer">
+            <b>YOUR BUSINESS</b><span>Home · Services · About · Contact</span>
+          </footer>
+        </div>
+      </div>
+      <section class="saved-reference-panel">
+        <div class="saved-reference-head">
+          <div>
+            <span class="code">SUPABASE REFERENCE DOCUMENTS</span><h2>Saved Preview References</h2><p>Each save creates a new version so you can return to the exact design direction later.</p>
+          </div>
+          <span id="reference-save-status"></span>
+        </div>
+        <div id="saved-reference-list">
+          <p class="builder-muted">Sign in and save this project to create reference snapshots.</p>
+        </div>
+      </section>
+      <section class="preview-selection-summary">
+        <h2>Current Design Choices</h2>
+        <div id="pv-selections">
+        </div>
+        <div class="preview-actions">
+          <a class="demo-btn" href="headers.html">Continue Designing</a><a class="demo-btn secondary" href="builder.html">Review My Selections</a>
+        </div>
+      </section>
+    </main>
+    <div class="reference-viewer" id="reference-viewer" hidden>
+      <div class="reference-viewer-backdrop" data-close-reference>
+      </div>
+      <section class="reference-viewer-card">
+        <div class="reference-viewer-head">
+          <div>
+            <span class="code" id="reference-viewer-version"></span><h2 id="reference-viewer-title">Saved Reference</h2>
+          </div>
+          <button type="button" data-close-reference>×</button>
+        </div>
+        <div id="reference-viewer-body" class="reference-viewer-body">
+        </div>
+        <details class="reference-data-details">
+          <summary>
+            View Saved Design Data
+          </summary>
+          <pre id="reference-viewer-data">
+          </pre>
+        </details>
+      </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <script src="catalog.js?v=1.20">
+    </script>
+    <script src="preview-renderer.js?v=1.20">
+    </script>
+    <script src="workspace.js?v=1.20">
+    </script>
+    <script src="../supabase-app.js">
+    </script>
+    <script>
+      (()=>{
+      const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+      const FLOW=[['CP','Color Theme'],['HD','Header / Hero'],['NV','Navigation'],['FT','Typography'],['SC','Sections & Layouts'],['CD','Cards'],['GA','Images & Galleries'],['IN','Forms & Inputs'],['BT','Buttons & CTAs'],['FO','Footer'],['FX','Effects & Animation']];
+      let latestState=null,latestPct=0;
+      function updateMeta(state){
+        latestState=state;
+        const vals=state.vals;
+        const complete=FLOW.filter(([p])=>vals.some(x=>String(x.code||'').startsWith(p+'-'))||localStorage.getItem('fs-skip-'+p)==='1').length;
+        latestPct=Math.round(complete/FLOW.length*100);
+        $('#pv-percent').textContent=latestPct+'% Complete';
+        $('#pv-count').textContent=vals.length+' saved design selections';
+        $('#pv-selections').innerHTML=FLOW.map(([p,label])=>{const x=vals.find(v=>String(v.code||'').startsWith(p+'-'));return `<span class="${x?'done':''}">${x?'✓ '+x.code+' · '+x.name:'○ '+label+' not selected'}</span>`}).join('');
+      }
+      const assembled=$('#assembled-site');
+      if(window.FSPreview){
+        window.FSPreview.watch(assembled,{compact:false,onRender:updateMeta});
+        updateMeta(window.FSPreview.state());
+      }
+      $$('[data-pv]').forEach(b=>b.onclick=()=>{$$('[data-pv]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#project-device').className='project-device '+b.dataset.pv});
+      
+      async function referencePayload(){
+        const state=window.FSPreview?.state()||latestState||{};
+        const previewHtml=assembled.outerHTML;
+        const designData={
+          saved_at:new Date().toISOString(),
+          selections:state.selections||{},
+          theme:state.theme||{},
+          design_system:state.design||{},
+          header_editor:state.hh||{},
+          navigation_editor:state.navs||{},
+          skipped_steps:FLOW.map(x=>x[0]).filter(p=>localStorage.getItem('fs-skip-'+p)==='1'),
+          completion_percent:latestPct
+        };
+        return {previewHtml,previewData:designData};
+      }
+      
+      async function refreshReferences(){
+        const list=$('#saved-reference-list');
+        if(!list || !window.fsCloud?.listReferenceDocuments)return;
+        try{
+          const refs=await window.fsCloud.listReferenceDocuments();
+          if(!refs.length){list.innerHTML='<p class="builder-muted">No saved preview references yet.</p>';return;}
+          list.innerHTML=refs.map(r=>`<article class="saved-reference-row"><div><strong>${r.title}</strong><span>Version ${r.version_number} · ${new Date(r.created_at).toLocaleString()}</span></div><button type="button" data-open-reference="${r.id}">Open Reference</button></article>`).join('');
+          list.querySelectorAll('[data-open-reference]').forEach(b=>b.onclick=()=>openReference(b.dataset.openReference));
+        }catch(e){list.innerHTML='<p class="cloud-error">Could not load saved references.</p>'}
+      }
+      async function openReference(id){
+        try{const r=await window.fsCloud.getReferenceDocument(id);$('#reference-viewer-title').textContent=r.title;$('#reference-viewer-version').textContent='VERSION '+r.version_number;$('#reference-viewer-body').innerHTML=r.preview_html;$('#reference-viewer-data').textContent=JSON.stringify(r.preview_data,null,2);$('#reference-viewer').hidden=false;document.body.style.overflow='hidden'}catch(e){$('#reference-save-status').textContent=e.message||'Could not open reference.'}
+      }
+      $('#save-reference')?.addEventListener('click',async()=>{const status=$('#reference-save-status');status.textContent='Saving reference…';try{if(!window.fsCloud?.saveReferenceDocument)throw new Error('Supabase reference saving is not available.');const {previewHtml,previewData}=await referencePayload();const ref=await window.fsCloud.saveReferenceDocument({title:$('#reference-title')?.value.trim()||undefined,previewHtml,previewData});status.textContent=`✓ Saved Version ${ref.version_number}`;$('#reference-title').value='';await refreshReferences()}catch(e){status.textContent=e.message||'Could not save reference.'}});
+      document.querySelectorAll('[data-close-reference]').forEach(x=>x.onclick=()=>{$('#reference-viewer').hidden=true;document.body.style.overflow=''});
+      setTimeout(refreshReferences,700);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,43 +1,130 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Website Selections | Fleming Solutions</title><meta name="description" content="Review and share your selected website design options."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="catalog.css?v=1.20"></head><body><header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="index.html">← Catalog</a><a class="back" href="../index.html">Main site</a></div></header>
-<main><section class="hero"><div class="wrap"><div class="kicker">Customer Website Builder</div><h1>My Website Selections</h1><p>Build your website like a menu. Select the design pieces you like throughout the catalog, then review, copy, print, or email your complete wish list here.</p></div></section><div class="wrap builder-layout"><section class="builder-main"><div class="design-brief-head"><span class="code">WEBSITE DESIGN BRIEF</span><h1>Your Website Direction</h1><p>A visual summary of the design system, components, and project choices you selected.</p></div><div class="builder-toolbar"><div><strong><span id="selection-count">0</span> selections</strong><span class="builder-muted"> Saved automatically on this device.</span></div><div class="builder-actions"><button type="button" id="copy-summary">Copy Summary</button><button type="button" id="print-summary">Print</button><button type="button" id="clear-selections" class="danger-lite">Clear</button></div></div><div id="selection-groups" class="selection-groups"></div><section id="theme-summary-card" class="guided-project-summary">
-  <h2>Website Theme <span class="code">GLOBAL</span></h2>
-  <div id="theme-summary-list" class="guided-feature-list"></div>
-  <a class="demo-btn" href="theme.html">Edit Theme</a>
-</section>
-<section id="guided-project-summary" class="guided-project-summary" hidden>
-  <h2>Website Features <span class="code" id="guided-feature-count">0</span></h2>
-  <div id="guided-feature-list" class="guided-feature-list"></div>
-  <div class="guided-package-line"><strong>Recommended package</strong><span id="guided-package-review"></span></div>
-</section><div id="empty-selections" class="builder-empty"><h2>No selections yet</h2><p>Browse the catalog and press <strong>Select</strong> on any design you like.</p><a class="demo-btn" href="index.html">Browse Design Catalog</a></div></section><aside class="builder-side">
-<div class="builder-panel cloud-account-panel" id="cloud-account-panel">
-  <span class="code">CLOUD PROJECT ACCOUNT</span>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Website Selections | Fleming Solutions</title><meta name="description" content="Review and share your selected website design options."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="catalog.css?v=1.20">
+  <script>
+(() => {
+  let theme = localStorage.getItem('fs-theme');
+  if (!theme) theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (theme === 'dark') document.documentElement.classList.add('fs-dark-boot');
+  document.documentElement.style.colorScheme = theme;
+})();
+</script>
+</head>
+  <body>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="index.html">← Catalog</a><a class="back" href="../index.html">Main site</a>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <div class="kicker">
+            Customer Website Builder
+          </div>
+          <h1>My Website Selections</h1><p>Build your website like a menu. Select the design pieces you like throughout the catalog, then review, copy, print, or email your complete wish list here.</p>
+        </div>
+      </section>
+      <div class="wrap builder-layout">
+        <section class="builder-main">
+          <div class="design-brief-head">
+            <span class="code">WEBSITE DESIGN BRIEF</span><h1>Your Website Direction</h1><p>A visual summary of the design system, components, and project choices you selected.</p>
+          </div>
+          <div class="builder-toolbar">
+            <div>
+              <strong><span id="selection-count">0</span> selections</strong><span class="builder-muted"> Saved automatically on this device.</span>
+            </div>
+            <div class="builder-actions">
+              <button type="button" id="copy-summary">Copy Summary</button><button type="button" id="print-summary">Print</button><button type="button" id="clear-selections" class="danger-lite">Clear</button>
+            </div>
+          </div>
+          <div id="selection-groups" class="selection-groups">
+          </div>
+          <section id="theme-summary-card" class="guided-project-summary">
+            <h2>Website Theme <span class="code">GLOBAL</span></h2>
+            <div id="theme-summary-list" class="guided-feature-list">
+            </div>
+            <a class="demo-btn" href="theme.html">Edit Theme</a>
+          </section>
+          <section id="guided-project-summary" class="guided-project-summary" hidden>
+            <h2>Website Features <span class="code" id="guided-feature-count">0</span></h2>
+            <div id="guided-feature-list" class="guided-feature-list">
+            </div>
+            <div class="guided-package-line">
+              <strong>Recommended package</strong><span id="guided-package-review"></span>
+            </div>
+          </section>
+          <div id="empty-selections" class="builder-empty">
+            <h2>No selections yet</h2><p>Browse the catalog and press <strong>Select</strong> on any design you like.</p><a class="demo-btn" href="index.html">Browse Design Catalog</a>
+          </div>
+        </section>
+        <aside class="builder-side">
+          <div class="builder-panel cloud-account-panel" id="cloud-account-panel">
+            <span class="code">CLOUD PROJECT ACCOUNT</span>
   <h2>Save & continue later</h2>
   <p class="builder-muted" id="active-cloud-project">Local draft — not saved to cloud yet</p>
-  <div id="cloud-logged-out">
-    <label class="builder-field">Email<input id="cloud-email" type="email" placeholder="you@example.com" autocomplete="email"></label>
+            <div id="cloud-logged-out">
+              <label class="builder-field">Email<input id="cloud-email" type="email" placeholder="you@example.com" autocomplete="email"></label>
     <label class="builder-field">Password<input id="cloud-password" type="password" autocomplete="current-password"></label>
     <button id="cloud-sign-in" class="demo-btn" type="button">Sign In</button>
     <button id="cloud-create-account" type="button">Create Account</button>
     <p class="builder-muted" style="margin-top:10px">New here? Create an account to save this design and your project details.</p>
-  </div>
-  <div id="cloud-logged-in" hidden>
-    <p class="cloud-signed-in">Signed in as <strong id="cloud-user-email"></strong></p>
-    <div class="cloud-actions">
-      <button id="cloud-save-project" class="demo-btn" type="button">Save Project</button>
+            </div>
+            <div id="cloud-logged-in" hidden>
+              <p class="cloud-signed-in">Signed in as <strong id="cloud-user-email"></strong></p>
+              <div class="cloud-actions">
+                <button id="cloud-save-project" class="demo-btn" type="button">Save Project</button>
       <button id="cloud-new-project" type="button">New Project</button>
       <button id="cloud-sign-out" type="button">Sign Out</button>
-    </div>
-    <h3 class="cloud-projects-title">My Projects</h3>
-    <div id="cloud-project-list"></div>
-  </div>
-  <p id="cloud-status" class="cloud-status" role="status"></p>
-</div>
-<div class="builder-panel"><span class="code">LIVE PREVIEW</span><h2>Your direction</h2><div class="website-preview" id="website-preview"><div class="preview-nav"><b>YOUR LOGO</b><span>Home &nbsp; Services &nbsp; Work</span><i>Contact</i></div><div class="preview-hero"><small>YOUR WEBSITE</small><h3>Designed around your selections.</h3><p>Colors and selected design direction appear here as you build.</p><button>Get Started</button></div><div class="preview-cards"><span></span><span></span><span></span></div></div></div>
-<div class="builder-panel design-system-panel">
-  <span class="code">GLOBAL DESIGN SYSTEM</span>
+              </div>
+              <h3 class="cloud-projects-title">My Projects</h3>
+              <div id="cloud-project-list">
+              </div>
+            </div>
+            <p id="cloud-status" class="cloud-status" role="status"></p>
+          </div>
+          <div class="builder-panel">
+            <span class="code">LIVE PREVIEW</span><h2>Your direction</h2>
+            <div class="website-preview" id="website-preview">
+              <div class="preview-nav">
+                <b>YOUR LOGO</b><span>Home &nbsp; Services &nbsp; Work</span><i>Contact</i>
+              </div>
+              <div class="preview-hero">
+                <small>YOUR WEBSITE</small><h3>Designed around your selections.</h3><p>Colors and selected design direction appear here as you build.</p><button>Get Started</button>
+              </div>
+              <div class="preview-cards">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div class="builder-panel design-system-panel">
+            <span class="code">GLOBAL DESIGN SYSTEM</span>
   <h2>Website-wide colors</h2>
   <p class="builder-muted">Components use these colors unless you create a custom override.</p>
-  <div class="global-color-grid" id="global-color-grid"></div>
-  <div id="global-contrast-summary" class="global-contrast-summary"></div>
-</div>
-<div class="builder-panel"><span class="code">PROJECT DETAILS</span><h2>Tell me about the site</h2><label class="builder-field">Project Name<input id="client-project-name" type="text" placeholder="My Website Project"></label><label class="builder-field">Name<input id="client-name" type="text" placeholder="Your name"></label><label class="builder-field">Business<input id="client-business" type="text" placeholder="Business name"></label><label class="builder-field">Email<input id="client-email" type="email" placeholder="you@example.com"></label><label class="builder-field">Phone<input id="client-phone" type="tel" placeholder="(555) 555-5555"></label><label class="builder-field">Notes<textarea id="client-notes" rows="4" placeholder="Anything else you want me to know…"></textarea></label><button id="attach-contact" class="demo-btn" type="button">Attach to Contact Request</button><button id="email-selections" class="demo-btn" type="button">Email My Selections</button></div></aside></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="catalog.js?v=1.20"></script><script src="preview-renderer.js?v=1.20"></script><script src="workspace.js?v=1.20"></script><script src="../supabase-app.js"></script></body></html>
+            <div class="global-color-grid" id="global-color-grid">
+            </div>
+            <div id="global-contrast-summary" class="global-contrast-summary">
+            </div>
+          </div>
+          <div class="builder-panel">
+            <span class="code">PROJECT DETAILS</span><h2>Tell me about the site</h2><label class="builder-field">Project Name<input id="client-project-name" type="text" placeholder="My Website Project"></label><label class="builder-field">Name<input id="client-name" type="text" placeholder="Your name"></label><label class="builder-field">Business<input id="client-business" type="text" placeholder="Business name"></label><label class="builder-field">Email<input id="client-email" type="email" placeholder="you@example.com"></label><label class="builder-field">Phone<input id="client-phone" type="tel" placeholder="(555) 555-5555"></label><label class="builder-field">Notes
+            <textarea id="client-notes" rows="4" placeholder="Anything else you want me to know…">
+            </textarea>
+            </label><button id="attach-contact" class="demo-btn" type="button">Attach to Contact Request</button><button id="email-selections" class="demo-btn" type="button">Email My Selections</button>
+          </div>
+        </aside>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <script src="catalog.js?v=1.20">
+    </script>
+    <script src="preview-renderer.js?v=1.20">
+    </script>
+    <script src="workspace.js?v=1.20">
+    </script>
+    <script src="../supabase-app.js">
+    </script>
+  </body>
+</html>

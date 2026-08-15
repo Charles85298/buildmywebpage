@@ -8,6 +8,7 @@
   if (topbarInner) topbarInner.appendChild(themeBtn);
   const applyTheme = mode => {
     document.body.classList.toggle('dark', mode === 'dark');
+    document.documentElement.style.colorScheme = mode === 'dark' ? 'dark' : 'light';
     themeBtn.textContent = mode === 'dark' ? '☀' : '◐';
     themeBtn.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
     themeBtn.title = themeBtn.getAttribute('aria-label');
@@ -17,7 +18,12 @@
   applyTheme(preferred);
   themeBtn.addEventListener('click', () => {
     const next = document.body.classList.contains('dark') ? 'light' : 'dark';
-    localStorage.setItem('fs-theme', next); applyTheme(next);
+    localStorage.setItem('fs-theme', next);
+    applyTheme(next);
+    window.dispatchEvent(new CustomEvent('fs-display-theme-change',{detail:{theme:next}}));
+  });
+  window.addEventListener('storage',e=>{
+    if(e.key==='fs-theme' && e.newValue)applyTheme(e.newValue);
   });
   let toastTimer;
   const toast = msg => {
