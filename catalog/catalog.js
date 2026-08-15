@@ -551,6 +551,35 @@
  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
  function renderDrawer(){const d=document.querySelector('.design-cart-drawer');if(!d)return;const data=vals();d.querySelector('.cart-body').innerHTML=FLOW.map(([p,n,page])=>{const x=data.find(v=>String(v.code||'').startsWith(p+'-')),skip=localStorage.getItem('fs-skip-'+p)==='1';return `<div class="cart-row"><span>${n}</span>${x?`<a href="${page}">✓ ${x.code}</a>`:skip?`<em>Skipped</em>`:`<a href="${page}">Choose</a>`}</div>`}).join('')}
  window.addEventListener('fs-selection-change',updateFlow);addSkip();updateFlow();
+
+  // Design Studio search/filter toolbar (v1.9)
+  document.querySelectorAll('[data-studio-toolbar]').forEach(toolbar => {
+    const scope = toolbar.parentElement;
+    const input = toolbar.querySelector('input[type="search"]');
+    const buttons = [...toolbar.querySelectorAll('[data-filter]')];
+    const count = toolbar.querySelector('.studio-result-count');
+    let active = 'all';
+    const items = () => [...scope.querySelectorAll('[data-studio-item]')];
+    const apply = () => {
+      const q = (input?.value || '').trim().toLowerCase();
+      let visible = 0;
+      items().forEach(item => {
+        const hay = `${item.dataset.search || ''} ${item.textContent || ''}`.toLowerCase();
+        const tags = (item.dataset.filterTags || '').toLowerCase().split(/\s+/);
+        const show = (!q || hay.includes(q)) && (active === 'all' || tags.includes(active));
+        item.hidden = !show;
+        if (show) visible++;
+      });
+      if (count) count.textContent = `${visible} shown`;
+    };
+    input?.addEventListener('input', apply);
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      active = btn.dataset.filter || 'all';
+      buttons.forEach(x => x.classList.toggle('active', x === btn));
+      apply();
+    }));
+    apply();
+  });
 })();
 
 
