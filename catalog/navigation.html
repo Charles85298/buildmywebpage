@@ -10,6 +10,51 @@
   document.documentElement.style.colorScheme = theme;
 })();
 </script>
+  <link rel="stylesheet" href="index-button-system.css">
+  <link rel="stylesheet" href="../auth-buttons.css">
+
+<style id="navigation-preview-contrast-fix">
+/* NV-04 — sidebar sits on a dark navy background, so all menu text must be light. */
+.visual-catalog-card[data-code="NV-04"] .nav-mini-sidebar,
+.visual-catalog-card[data-code="NV-04"] .nav-mini-sidebar b,
+.visual-catalog-card[data-code="NV-04"] .nav-mini-sidebar span,
+.visual-catalog-card[data-code="NV-04"] .nav-mini-sidebar i {
+  color: #fff !important;
+}
+.visual-catalog-card[data-code="NV-04"] .nav-mini-sidebar span {
+  opacity: .88 !important;
+}
+.visual-catalog-card[data-code="NV-04"] .nav-mini-sidebar .active {
+  color: #fff !important;
+  background: rgba(255,255,255,.14) !important;
+  opacity: 1 !important;
+}
+
+/* NV-08 — make the mobile navigation visible on its dark blue bar. */
+.visual-catalog-card[data-code="NV-08"] .nav-mini-mobile,
+.visual-catalog-card[data-code="NV-08"] .nav-mini-mobile b,
+.visual-catalog-card[data-code="NV-08"] .nav-mini-mobile span {
+  color: #fff !important;
+}
+.visual-catalog-card[data-code="NV-08"] .nav-mini-mobile b {
+  opacity: 1 !important;
+}
+.visual-catalog-card[data-code="NV-08"] .nav-mini-mobile span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  background: rgba(255,255,255,.14) !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+}
+</style>
+
+  <link rel="stylesheet" href="../responsive.css?v=1.0">
+  <link rel="stylesheet" href="responsive-overrides.css?v=1.0">
 </head>
   <body>
     <header class="topbar">

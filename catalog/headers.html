@@ -10,8 +10,149 @@
   document.documentElement.style.colorScheme = theme;
 })();
 </script>
+  <link rel="stylesheet" href="index-button-system.css">
+  <link rel="stylesheet" href="../auth-buttons.css">
+
+<style id="header-dark-frame-text-fix">
+/* Dark header/frame specimens: force preview text and navigation to white. */
+.headers-catalog-page .sample :is(.dark,.header-dark,.nav-dark,.dark-header,.dark-frame),
+.headers-catalog-page .sample :is(.dark,.header-dark,.nav-dark,.dark-header,.dark-frame) *,
+.headers-catalog-page .sample [data-theme="dark"],
+.headers-catalog-page .sample [data-theme="dark"] *,
+.headers-catalog-page .sample [data-bg="dark"],
+.headers-catalog-page .sample [data-bg="dark"] *{
+  color:#fff !important;
+}
+
+/* HD-04 is the dark full-width header specimen shown in the catalog. */
+.headers-catalog-page [data-id="HD-04"] .preview *,
+.headers-catalog-page [data-id="HD-04"] .sample-preview *,
+.headers-catalog-page #HD-04 .preview *,
+.headers-catalog-page #HD-04 .sample-preview *{
+  color:#fff !important;
+}
+
+/* Preserve blue CTA buttons on dark frames. */
+.headers-catalog-page .sample :is(.dark,.header-dark,.nav-dark,.dark-header,.dark-frame) .demo-btn,
+.headers-catalog-page .sample [data-theme="dark"] .demo-btn,
+.headers-catalog-page .sample [data-bg="dark"] .demo-btn,
+.headers-catalog-page [data-id="HD-04"] .demo-btn{
+  color:#fff !important;
+}
+
+/* JS-added class supports any other specimen whose computed background is dark. */
+.headers-catalog-page .fs-dark-preview,
+.headers-catalog-page .fs-dark-preview *{
+  color:#fff !important;
+}
+</style>
+
+
+<style id="header-dark-frame-text-fix-v2">
+/* The hero panels in the header catalog use dark blue/image backgrounds.
+   Force all hero copy to white for proper contrast. */
+.headers-catalog-page .visual-site-thumb .mini-hero,
+.headers-catalog-page .visual-site-thumb .mini-hero small,
+.headers-catalog-page .visual-site-thumb .mini-hero strong,
+.headers-catalog-page .visual-site-thumb .mini-hero span{
+  color:#ffffff !important;
+}
+
+/* Dark/overlay navigation bars also use white text. */
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-nav,
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-nav b,
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-nav span{
+  color:#ffffff !important;
+}
+
+/* Keep CTA labels white. */
+.headers-catalog-page .visual-site-thumb .mini-hero em,
+.headers-catalog-page .visual-site-thumb .mini-nav i{
+  color:#ffffff !important;
+}
+</style>
+
+
+<style id="hd04-layout-fix">
+/* HD-04: keep overlay navigation clear of hero content. */
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-nav{
+  top:10px;
+  left:14px;
+  right:14px;
+  height:42px;
+  z-index:3;
+}
+
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero{
+  height:100%;
+  min-height:100%;
+  padding:76px 28px 24px;
+  align-items:flex-start;
+}
+
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero > div{
+  max-width:58%;
+}
+
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero strong{
+  font-size:1rem;
+  line-height:1.05;
+  margin:4px 0 6px;
+  color:#fff !important;
+}
+
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero small,
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero span{
+  color:#fff !important;
+}
+
+@media(max-width:760px){
+  .headers-catalog-page .visual-site-thumb.thumb-overlay .mini-nav{
+    left:8px;
+    right:8px;
+  }
+  .headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero{
+    padding:72px 20px 20px;
+  }
+  .headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero > div{
+    max-width:65%;
+  }
+}
+</style>
+
+
+<style id="header-card-font-size-match">
+/* Keep HD-03 and HD-04 preview typography on the same scale. */
+.headers-catalog-page .visual-site-thumb .mini-hero small{
+  font-size:.52rem !important;
+  line-height:1.15 !important;
+}
+
+.headers-catalog-page .visual-site-thumb .mini-hero strong{
+  font-size:1.9rem !important;
+  line-height:1.03 !important;
+  letter-spacing:-.035em !important;
+}
+
+.headers-catalog-page .visual-site-thumb .mini-hero span{
+  font-size:.52rem !important;
+  line-height:1.25 !important;
+}
+
+/* Give HD-04 enough room for the same headline size. */
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero > div{
+  max-width:68% !important;
+}
+
+.headers-catalog-page .visual-site-thumb.thumb-overlay .mini-hero{
+  padding-top:70px !important;
+}
+</style>
+
+  <link rel="stylesheet" href="../responsive.css?v=1.0">
+  <link rel="stylesheet" href="responsive-overrides.css?v=1.0">
 </head>
-  <body>
+  <body class="headers-catalog-page">
     <header class="topbar">
       <div class="wrap topbar-inner">
         <a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="builder.html">My Selections</a><a class="back" href="../marketing.html#design-catalog">← Main site</a>
@@ -304,5 +445,25 @@
          refresh();
         })();
       </script>
-    </body>
+    
+<script id="header-dark-frame-detector">
+document.addEventListener('DOMContentLoaded', () => {
+  const isDark = (color) => {
+    const m = String(color || '').match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+    if (!m) return false;
+    const r=+m[1], g=+m[2], b=+m[3];
+    return (0.2126*r + 0.7152*g + 0.0722*b) < 105;
+  };
+  document.querySelectorAll('.sample [class*="preview"], .sample .frame, .sample header, .sample nav').forEach(el => {
+    let node=el, dark=false;
+    for(let i=0; node && i<3; i++, node=node.parentElement){
+      const s=getComputedStyle(node);
+      if(isDark(s.backgroundColor)){ dark=true; break; }
+    }
+    if(dark) el.classList.add('fs-dark-preview');
+  });
+});
+</script>
+
+</body>
   </html>

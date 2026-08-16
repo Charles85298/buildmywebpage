@@ -1511,3 +1511,108 @@ body.dark .catalog-preview-stage[data-device="tablet"],body.dark .catalog-previe
 .pv-input-15{border-right:5px solid var(--pv-primary)!important}.pv-input-16{background:color-mix(in srgb,var(--pv-primary) 8%,var(--pv-bg))!important}.pv-input-17{border-radius:18px 4px!important}
 .pv-input-18{outline:2px solid color-mix(in srgb,var(--pv-primary) 28%,transparent);outline-offset:2px}.pv-input-19{font-weight:800}.pv-input-20{letter-spacing:.03em}
 .pv-input-21{border-color:var(--pv-heading)!important}.pv-input-22{border-radius:22px!important;box-shadow:inset 0 0 0 1px var(--pv-soft)}.pv-input-23{background:transparent!important}.pv-input-24{border:2px solid var(--pv-primary)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--pv-primary) 10%,transparent)}
+
+
+/* ===== Floating Open Full Preview control =====
+   Mirrors the My Website floating pill and stays on the opposite side. */
+.studio-preview-link{
+  position:fixed !important;
+  left:18px !important;
+  bottom:18px !important;
+  right:auto !important;
+  top:auto !important;
+  z-index:89 !important;
+  width:auto !important;
+  min-width:0 !important;
+  max-width:calc(100vw - 36px) !important;
+  min-height:47px !important;
+  padding:12px 16px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:#0e2a47 !important;
+  color:#fff !important;
+  box-shadow:0 14px 35px rgba(0,0,0,.25) !important;
+  font-size:.78rem !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  text-decoration:none !important;
+}
+.studio-preview-link:hover{
+  transform:translateY(-1px);
+  box-shadow:0 17px 40px rgba(0,0,0,.28) !important;
+}
+.studio-preview-link:focus-visible{
+  outline:3px solid rgba(22,151,230,.32);
+  outline-offset:3px;
+}
+/* On editor pages both floating controls move above the bottom stepper. */
+.editor-stepper ~ .studio-preview-link,
+.ordered-editor-stepper ~ .studio-preview-link{
+  bottom:82px !important;
+}
+@media(max-width:600px){
+  .studio-preview-link{
+    left:14px !important;
+    bottom:14px !important;
+    width:auto !important;
+    max-width:calc(100vw - 28px) !important;
+  }
+}
+
+
+/* ===== Restore floating Open Full Preview control on all catalog screens ===== */
+.studio-preview-link{
+  display:inline-flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:fixed !important;
+  left:16px !important;
+  right:auto !important;
+  bottom:18px !important;
+  top:auto !important;
+  z-index:9999 !important;
+  width:auto !important;
+  max-width:calc(100vw - 32px) !important;
+  min-height:48px !important;
+  padding:0 18px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border:none !important;
+  border-radius:999px !important;
+  background:#0E2A47 !important;
+  color:#fff !important;
+  box-shadow:0 14px 35px rgba(0,0,0,.28) !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  text-decoration:none !important;
+  white-space:nowrap !important;
+  pointer-events:auto !important;
+  transform:none !important;
+}
+
+/* Keep My Website on the opposite side. */
+.my-website-float,
+.mobile-preview-fab,
+[data-my-website-float]{
+  right:16px !important;
+  left:auto !important;
+  bottom:18px !important;
+  z-index:9998 !important;
+}
+
+/* On smaller screens stack the two floating controls so neither falls off-screen. */
+@media (max-width:700px){
+  .studio-preview-link{
+    left:12px !important;
+    bottom:74px !important;
+    max-width:calc(100vw - 24px) !important;
+  }
+
+  .my-website-float,
+  .mobile-preview-fab,
+  [data-my-website-float]{
+    right:12px !important;
+    bottom:14px !important;
+  }
+}
