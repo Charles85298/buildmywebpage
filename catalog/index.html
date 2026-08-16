@@ -15,6 +15,80 @@
   <link rel="stylesheet" href="../responsive.css?v=1.0">
   <link rel="stylesheet" href="responsive-overrides.css?v=1.0">
   <link rel="stylesheet" href="webapp-responsive-fix.css?v=1.0">
+
+  <style id="fs-mobile-friendly-index">
+    /* Mobile-friendly catalog home overrides */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+    img, svg, video, canvas { max-width: 100%; height: auto; }
+
+    @media (max-width: 768px) {
+      .wrap { width: min(100% - 28px, 1200px); margin-inline: auto; }
+      .topbar-inner { gap: 12px; flex-wrap: wrap; }
+      .brand { min-width: 0; font-size: .95rem; }
+      .back { margin-left: auto; white-space: nowrap; }
+
+      .start-design-flow {
+        margin: 16px 14px;
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .start-design-flow h2 { font-size: clamp(1.35rem, 6vw, 1.8rem); line-height: 1.15; }
+      .start-design-flow .demo-btn { width: 100%; justify-content: center; text-align: center; }
+
+      .hero { padding-block: 34px 24px; }
+      .hero h1 { font-size: clamp(2rem, 10vw, 3rem); line-height: 1.02; overflow-wrap: normal; word-break: normal; }
+      .hero p { font-size: 1rem; line-height: 1.65; }
+
+      .catalog-home-preview { padding-inline: 0; }
+      .catalog-preview-heading { display: grid; grid-template-columns: 1fr; gap: 18px; }
+      .catalog-preview-heading h2 { font-size: clamp(1.5rem, 7vw, 2.1rem); line-height: 1.15; }
+      .catalog-progress { width: 100%; min-width: 0; }
+
+      .catalog-preview-toolbar {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        align-items: stretch;
+      }
+      .catalog-device-switcher, .catalog-preview-actions {
+        display: flex;
+        width: 100%;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .catalog-device-switcher button { flex: 1 1 30%; min-width: 0; }
+      .catalog-preview-actions > * { flex: 1 1 calc(50% - 8px); min-width: 0; justify-content: center; text-align: center; }
+
+      .catalog-preview-stage { width: 100%; overflow: hidden; }
+      .catalog-preview-browser { width: 100%; max-width: 100%; min-width: 0; }
+      .catalog-preview-browserbar div { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .catalog-home-live-preview { width: 100%; min-width: 0; overflow-x: hidden; }
+
+      /* Force the embedded preview to use its true mobile layout on phones. */
+      .catalog-preview-stage[data-device="mobile"] .catalog-preview-browser {
+        width: 100% !important;
+        max-width: 430px !important;
+        margin-inline: auto;
+      }
+      .catalog-preview-stage[data-device="mobile"] .catalog-home-live-preview {
+        width: 100% !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .wrap { width: min(100% - 20px, 1200px); }
+      .topbar-inner { padding-block: 10px; }
+      .brand i { width: 34px; height: 34px; flex: 0 0 34px; }
+      .catalog-device-switcher span,
+      .catalog-preview-actions button span { display: none; }
+      .catalog-device-switcher button, .catalog-preview-actions > * { min-height: 44px; }
+      .catalog-preview-actions > a { flex-basis: 100%; }
+    }
+  </style>
+
 </head>
   <body>
     <header class="topbar">
@@ -94,6 +168,19 @@
         const tip = document.getElementById('catalog-edit-tip');
         const required = ['CP','HD','HR','NV','FT','SC','CD','GA','IN','BT','FO','EF'];
         let editMode = true;
+
+        const applyPhonePreviewMode = () => {
+          if (!stage) return;
+          const isPhone = window.matchMedia('(max-width: 600px)').matches;
+          if (!isPhone) return;
+          stage.dataset.device = 'mobile';
+          document.querySelectorAll('[data-preview-device]').forEach(x => {
+            const active = x.dataset.previewDevice === 'mobile';
+            x.classList.toggle('is-active', active);
+            x.setAttribute('aria-pressed', String(active));
+          });
+        };
+        applyPhonePreviewMode();
 
         const selections = () => {
           try { return Object.values(JSON.parse(localStorage.getItem('fs-builder-selections') || '{}')); }
@@ -216,6 +303,7 @@
         });
         window.addEventListener('fs-selection-change', updateProgress);
         window.addEventListener('storage', updateProgress);
+        window.addEventListener('resize', applyPhonePreviewMode);
       })();
     </script>
   </body>
