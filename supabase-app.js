@@ -708,11 +708,16 @@
   function updateSharedAccountUI(){
     const mainBtn=$('#account-nav-button');
     const catBtn=$('#catalog-account-button');
+    const accountOpeners=[...document.querySelectorAll('[data-account-open]')];
     const signedOut=$('#account-modal-signed-out');
     const signedIn=$('#account-modal-signed-in');
     const userEmail=$('#account-modal-user-email');
-    if(mainBtn) mainBtn.textContent=state.user?'My Account':'Create Account';
-    if(catBtn) catBtn.textContent=state.user?'My Account':'Create Account';
+    if(mainBtn && !mainBtn.hasAttribute('data-account-open')) mainBtn.textContent=state.user?'My Account':'Create Account';
+    if(catBtn && !catBtn.hasAttribute('data-account-open')) catBtn.textContent=state.user?'My Account':'Create Account';
+    accountOpeners.forEach(btn=>{
+      const mode=btn.dataset.accountOpen||'signup';
+      btn.textContent=state.user?'My Account':(mode==='signin'?'Log In':'Create Account');
+    });
     if(signedOut) signedOut.hidden=!!state.user;
     if(signedIn) signedIn.hidden=!state.user;
     if(userEmail) userEmail.textContent=state.user?.email||'';
@@ -773,7 +778,7 @@
     const signup=collectSignupData();
     localStorage.setItem(PENDING_SIGNUP,JSON.stringify(signup.project));
     modalStatus('Creating your account…');
-    const redirectTo=new URL('/catalog/builder.html?confirmed=1',location.origin).href;
+    const redirectTo=new URL('/catalog/index.html?confirmed=1',location.origin).href;
     const {data,error}=await client.auth.signUp({
       email,
       password,
@@ -787,7 +792,10 @@
       state.user=data.user;
       await finalizePendingSignup();
       updateSharedAccountUI();updateCloudUI();
-      modalStatus('✓ Account created and signed in.','success');
+      modalStatus('✓ Account created and signed in. Opening the Design Studio…','success');
+      if (!location.pathname.includes('/catalog/')) {
+        setTimeout(() => { location.href = 'catalog/index.html'; }, 350);
+      }
     }else{
       modalStatus('✓ Account created. Check your email and click the confirmation link. Your current website design will be waiting when you return.','success');
       const actions=$('.account-wizard-actions'); if(actions)actions.hidden=true;
@@ -805,7 +813,10 @@
     await finalizePendingSignup();
     updateSharedAccountUI();updateCloudUI();
     await loadProjectList();
-    modalStatus('✓ Signed in successfully.','success');
+    modalStatus('✓ Signed in successfully. Opening the Design Studio…','success');
+    if (!location.pathname.includes('/catalog/')) {
+      setTimeout(() => { location.href = 'catalog/index.html'; }, 300);
+    }
   }
 
   async function finalizePendingSignup(){
@@ -839,8 +850,15 @@
       modalStatus('');
     };
 
-    $('#account-nav-button')?.addEventListener('click',()=>openAccountModal('signup'));
-    $('#catalog-account-button')?.addEventListener('click',()=>openAccountModal('signup'));
+    const boundOpeners=new Set();
+    document.querySelectorAll('[data-account-open]').forEach(btn=>{
+      boundOpeners.add(btn);
+      btn.addEventListener('click',()=>openAccountModal(state.user?'signin':(btn.dataset.accountOpen||'signup')));
+    });
+    const mainAccount=$('#account-nav-button');
+    const catalogAccount=$('#catalog-account-button');
+    if(mainAccount && !boundOpeners.has(mainAccount)) mainAccount.addEventListener('click',()=>openAccountModal('signup'));
+    if(catalogAccount && !boundOpeners.has(catalogAccount)) catalogAccount.addEventListener('click',()=>openAccountModal('signup'));
     $('#save-my-design-main')?.addEventListener('click',async()=>{
       if(!state.user){openAccountModal('signup');return;}
       try{await saveProject();modalStatus('✓ Current design saved.','success');}
@@ -1085,6 +1103,7 @@
     saveReferenceDocument,
     listReferenceDocuments,
     getReferenceDocument,
+    openAccountModal,
     refreshSession,
     buildSnapshot
   };
