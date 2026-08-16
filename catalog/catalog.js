@@ -127,9 +127,27 @@
 (() => {
   const STORE='fs-builder-selections';
   const DETAILS='fs-builder-details';
+  const BUTTON_OVERRIDE_STORE='fs-button-overrides-v1';
+  const COMPONENT_OVERRIDE_STORE='fs-component-overrides-v1';
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const query=new URLSearchParams(location.search);
+  const buttonTarget=location.pathname.endsWith('/buttons.html')||location.pathname.endsWith('buttons.html') ? query.get('target') : null;
+  const buttonReturn=query.get('return')||'website-preview.html';
+  const fileName=location.pathname.split('/').pop();
+  const componentPages={
+    'sections.html':'SC','frames.html':'FR','cards.html':'CD','tables.html':'TB','galleries.html':'GA','inputs.html':'IN'
+  };
+  const componentPrefix=componentPages[fileName]||null;
+  const componentTarget=!buttonTarget&&componentPrefix?query.get('target'):null;
+  const componentReturn=query.get('return')||'website-preview.html';
+  const componentLabel=query.get('label')||'Selected Website Element';
+  const buttonTargetNames={'header-cta':'Header CTA','side-cta':'Side Navigation CTA','hero-primary':'Hero Primary Button','hero-secondary':'Hero Secondary Button','form-submit':'Form Submit Button'};
   const read=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'{}')}catch(e){return {}}};
   const write=data=>{localStorage.setItem(STORE,JSON.stringify(data)); updateFab();};
+  const readButtonOverrides=()=>{try{return JSON.parse(localStorage.getItem(BUTTON_OVERRIDE_STORE)||'{}')}catch(e){return {}}};
+  const writeButtonOverrides=data=>{localStorage.setItem(BUTTON_OVERRIDE_STORE,JSON.stringify(data));};
+  const readComponentOverrides=()=>{try{return JSON.parse(localStorage.getItem(COMPONENT_OVERRIDE_STORE)||'{}')}catch(e){return {}}};
+  const writeComponentOverrides=data=>{localStorage.setItem(COMPONENT_OVERRIDE_STORE,JSON.stringify(data));};
   const category=()=>document.querySelector('.hero h1')?.textContent.trim()||'Catalog';
   const getInfo=card=>({code:$('.code',card)?.textContent.trim()||'',name:$('h3',card)?.textContent.trim()||'Design option',category:category(),page:location.pathname.split('/').pop()});
   const PALETTE_STORE='fs-builder-selections';
@@ -224,11 +242,20 @@
     if(changed)write(data);
   }
   migrateLegacySelections();
-  function selected(code){return !!read()[code]}
+  function selected(code){
+    if(buttonTarget)return readButtonOverrides()[buttonTarget]?.code===code;
+    if(componentTarget)return readComponentOverrides()[componentTarget]?.code===code;
+    return !!read()[code];
+  }
   function setCard(card,on){
     card.classList.toggle('builder-selected',on);
     const b=$('.select-design',card);
-    if(b){b.textContent=on?'✓ Selected':'+ Select'; b.setAttribute('aria-pressed',String(on));}
+    if(b){b.textContent=on?(buttonTarget?'✓ Applied to This Button':'✓ Selected'):(buttonTarget?'Apply to This Button':'+ Select'); b.setAttribute('aria-pressed',String(on));}
+    if(buttonTarget){
+      $('.item-color-controls',card)?.remove();
+      if(!on)restoreOriginalStyle(card);
+      return;
+    }
     renderColorControls(card,on);
     if(on){const data=read(), info=getInfo(card); applyColorPreview(card,data[info.code]?.colors||defaultColorPrefs());}
     else restoreOriginalStyle(card);
@@ -370,10 +397,33 @@
   function toggle(card){
     const info=getInfo(card);
     if(!info.code)return;
+    if(buttonTarget){
+      const overrides=readButtonOverrides();
+      const globalItem=read()[info.code]||{};
+      overrides[buttonTarget]={...info,colors:globalItem.colors||defaultColorPrefs(),selectedAt:Date.now()};
+      writeButtonOverrides(overrides);
+      document.querySelectorAll('.specimen').forEach(c=>setCard(c,getInfo(c).code===info.code));
+      const status=$('#button-target-status');
+      if(status)status.textContent=`${info.name} (${info.code}) is applied to this button.`;
+      window.dispatchEvent(new Event('fs-selection-change'));
+      return;
+    }
+    if(componentTarget){
+      if(!String(info.code||'').startsWith(componentPrefix+'-'))return;
+      const overrides=readComponentOverrides();
+      const globalItem=read()[info.code]||{};
+      overrides[componentTarget]={...info,prefix:componentPrefix,colors:globalItem.colors||defaultColorPrefs(),selectedAt:Date.now()};
+      writeComponentOverrides(overrides);
+      document.querySelectorAll('.specimen').forEach(c=>setCard(c,getInfo(c).code===info.code));
+      const status=$('#component-target-status');
+      if(status)status.textContent=`${info.name} (${info.code}) is applied to this element.`;
+      window.dispatchEvent(new Event('fs-selection-change'));
+      return;
+    }
     const data=read();
     const prefix=String(info.code).split('-')[0];
     const isPalette=prefix==='CP';
-    const isSingleChoice=['CP','HD','HR','NV','FT','FO'].includes(prefix);
+    const isSingleChoice=['CP','HD','HR','NV','FT','BT','FO'].includes(prefix);
     const already=!!data[info.code];
 
     if(isSingleChoice){
@@ -427,8 +477,48 @@
   }
   $$('.specimen').forEach(buildVariantPreview);
 
+  function setupButtonTargetEditor(){
+    if(!buttonTarget)return;
+    document.body.classList.add('button-target-mode');
+    const host=document.querySelector('.studio-shell')||document.querySelector('main')||document.body;
+    const bar=document.createElement('section');
+    bar.className='button-target-editor';
+    const current=readButtonOverrides()[buttonTarget];
+    const name=buttonTargetNames[buttonTarget]||'Selected Button';
+    bar.innerHTML=`<div><small>INDIVIDUAL BUTTON EDIT</small><strong>${name}</strong><span id="button-target-status">${current?`${current.name||current.code} (${current.code}) is applied to this button.`:'Choose any button style below. Only this button will change.'}</span></div><div class="button-target-actions"><button type="button" id="button-target-reset">Use Global Button Style</button><a class="demo-btn" id="button-target-return" href="${buttonReturn.replace(/"/g,'&quot;')}">Return to Preview →</a></div>`;
+    host.prepend(bar);
+    $('#button-target-reset',bar)?.addEventListener('click',()=>{
+      const overrides=readButtonOverrides();
+      delete overrides[buttonTarget];
+      writeButtonOverrides(overrides);
+      document.querySelectorAll('.specimen').forEach(c=>setCard(c,false));
+      $('#button-target-status',bar).textContent='This button now uses the global button style.';
+      window.dispatchEvent(new Event('fs-selection-change'));
+    });
+  }
+
   // Add explicit selection buttons to every coded specimen.
   $$('.specimen').forEach(card=>{const info=getInfo(card);if(!info.code)return;let b=$('.select-design',card);if(!b){b=document.createElement('button');b.type='button';b.className='select-design';b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();toggle(card)});card.appendChild(b)}setCard(card,selected(info.code));card.addEventListener('dblclick',e=>{if(e.target.closest('button,input,textarea,select,a'))return;e.preventDefault();toggle(card)});});
+  function setupComponentTargetEditor(){
+    if(!componentTarget)return;
+    document.body.classList.add('component-target-mode');
+    const host=document.querySelector('.studio-shell')||document.querySelector('main')||document.body;
+    const bar=document.createElement('section');
+    bar.className='button-target-editor component-target-editor';
+    const current=readComponentOverrides()[componentTarget];
+    bar.innerHTML=`<div><small>INDIVIDUAL ELEMENT EDIT</small><strong>${componentLabel.replace(/[<>]/g,'')}</strong><span id="component-target-status">${current?`${current.name||current.code} (${current.code}) is applied to this element.`:`Choose any ${category().toLowerCase()} style below. Only this element will change.`}</span></div><div class="button-target-actions"><button type="button" id="component-target-reset">Use Global Style</button><a class="demo-btn" id="component-target-return" href="${componentReturn.replace(/"/g,'&quot;')}">Return to Preview →</a></div>`;
+    host.prepend(bar);
+    $('#component-target-reset',bar)?.addEventListener('click',()=>{
+      const overrides=readComponentOverrides();
+      delete overrides[componentTarget];
+      writeComponentOverrides(overrides);
+      document.querySelectorAll('.specimen').forEach(c=>setCard(c,false));
+      $('#component-target-status',bar).textContent='This element now uses the global style.';
+      window.dispatchEvent(new Event('fs-selection-change'));
+    });
+  }
+  setupButtonTargetEditor();
+  setupComponentTargetEditor();
   function updateFab(){
     // The newer .design-cart replaces the old .selection-fab.
     // Remove any legacy FAB so only one floating "My Website" control exists.

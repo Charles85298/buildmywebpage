@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website Preview | BuildMyWebpage</title><link rel="stylesheet" href="catalog.css?v=1.20">
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Website Preview | BuildMyWebpage</title><link rel="stylesheet" href="catalog.css?v=1.31">
   <script>
 (() => {
   let theme = localStorage.getItem('fs-theme');
@@ -26,8 +26,9 @@
       <section class="project-preview-toolbar">
         <div class="preview-toolbar">
           <strong>Responsive Preview</strong>
-          <div>
+          <div class="preview-toolbar-actions">
             <button data-pv="desktop" class="active">Desktop</button><button data-pv="tablet">Tablet</button><button data-pv="mobile">Mobile</button>
+            <button id="final-preview-edit-toggle" class="active" type="button" aria-pressed="true" title="Click website elements to edit them">✎ Edit Preview</button>
           </div>
         </div>
         <div class="preview-completion">
@@ -38,7 +39,8 @@
   <button id="save-reference" class="demo-btn" type="button">Save Reference Snapshot</button>
         </div>
       </section>
-      <div class="project-device desktop" id="project-device">
+      <p class="final-preview-edit-help" id="final-preview-edit-help">Edit mode is on. Click a section, card, frame, table, gallery, form field, button, navigation area, or footer to make one last change.</p>
+      <div class="project-device desktop final-edit-enabled" id="project-device">
         <div class="assembled-site" id="assembled-site">
           <header id="assembled-header">
             <b>YOURLOGO</b><button class="assembled-menu">☰</button>
@@ -79,6 +81,7 @@
             <b>YOUR BUSINESS</b><span>Home · Services · About · Contact</span>
           </footer>
         </div>
+        <div class="final-preview-edit-tip" id="final-preview-edit-tip" hidden></div>
       </div>
       <section class="saved-reference-panel">
         <div class="saved-reference-head">
@@ -123,11 +126,11 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
-    <script src="catalog.js?v=1.20">
+    <script src="catalog.js?v=1.31">
     </script>
-    <script src="preview-renderer.js?v=1.20">
+    <script src="preview-renderer.js?v=1.40">
     </script>
-    <script src="workspace.js?v=1.20">
+    <script src="workspace.js?v=1.31">
     </script>
     <script src="../supabase-app.js">
     </script>
@@ -136,6 +139,51 @@
       const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
       const FLOW=[['CP','Color Theme'],['HD','Header / Hero'],['NV','Navigation'],['FT','Typography'],['SC','Sections & Layouts'],['CD','Cards'],['GA','Images & Galleries'],['IN','Forms & Inputs'],['BT','Buttons & CTAs'],['FO','Footer'],['FX','Effects & Animation']];
       let latestState=null,latestPct=0;
+      let finalEditMode=true;
+      const finalEditTip=$('#final-preview-edit-tip');
+      const finalEditHelp=$('#final-preview-edit-help');
+      const finalEditTargets=[
+        ['.pv-footer','footers.html','Edit Footer'],
+        ['.pv-form','inputs.html','Edit Forms & Inputs'],
+        ['.pv-gallery','galleries.html','Edit Images & Galleries'],
+        ['.pv-cards','cards.html','Edit Cards'],
+        ['.pv-nav,.pv-side-nav','navigation.html','Edit Navigation'],
+        ['.pv-hero','headers.html?focus=hero','Edit Hero'],
+        ['.pv-header','headers.html','Edit Header'],
+        ['.pv-section','sections.html','Edit Sections & Layouts']
+      ];
+      const buttonNames={
+        'header-cta':'Header CTA',
+        'side-cta':'Side Navigation CTA',
+        'hero-primary':'Hero Primary Button',
+        'hero-secondary':'Hero Secondary Button',
+        'form-submit':'Form Submit Button'
+      };
+      function finalEditTarget(node){
+        if(!node||!node.closest)return null;
+        const component=node.closest('[data-component-slot][data-edit-page]');
+        if(component&&assembled.contains(component)){
+          const slot=component.dataset.componentSlot;
+          const page=component.dataset.editPage;
+          const label=component.dataset.editLabel||'Website Element';
+          return {el:component,href:`${page}?target=${encodeURIComponent(slot)}&label=${encodeURIComponent(label)}&return=${encodeURIComponent('website-preview.html')}`,label:`Edit ${label}`};
+        }
+        const button=node.closest('[data-button-slot]');
+        if(button&&assembled.contains(button)){
+          const slot=button.dataset.buttonSlot;
+          const name=buttonNames[slot]||'Button';
+          return {el:button,href:`buttons.html?target=${encodeURIComponent(slot)}&return=${encodeURIComponent('website-preview.html')}`,label:`Edit ${name}`};
+        }
+        for(const [selector,href,label] of finalEditTargets){
+          const el=node.closest(selector);
+          if(el&&assembled.contains(el))return {el,href,label};
+        }
+        return null;
+      }
+      function clearFinalEditHover(){
+        assembled.querySelectorAll('.pv-edit-hover').forEach(x=>x.classList.remove('pv-edit-hover'));
+        if(finalEditTip)finalEditTip.hidden=true;
+      }
       function updateMeta(state){
         latestState=state;
         const vals=state.vals;
@@ -150,7 +198,51 @@
         window.FSPreview.watch(assembled,{compact:false,onRender:updateMeta});
         updateMeta(window.FSPreview.state());
       }
-      $$('[data-pv]').forEach(b=>b.onclick=()=>{$$('[data-pv]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#project-device').className='project-device '+b.dataset.pv});
+      $$('[data-pv]').forEach(b=>b.onclick=()=>{
+        $$('[data-pv]').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        const device=$('#project-device');
+        device.classList.remove('desktop','tablet','mobile');
+        device.classList.add(b.dataset.pv);
+      });
+
+      $('#final-preview-edit-toggle')?.addEventListener('click',e=>{
+        finalEditMode=!finalEditMode;
+        e.currentTarget.classList.toggle('active',finalEditMode);
+        e.currentTarget.setAttribute('aria-pressed',String(finalEditMode));
+        $('#project-device')?.classList.toggle('final-edit-enabled',finalEditMode);
+        if(finalEditHelp){
+          finalEditHelp.textContent=finalEditMode
+            ? 'Edit mode is on. Click a section, card, frame, table, gallery, form field, button, navigation area, or footer to make one last change.'
+            : 'Edit mode is off. Turn on Edit Preview when you want to change a website element.';
+        }
+        clearFinalEditHover();
+      });
+
+      assembled.addEventListener('mousemove',e=>{
+        if(!finalEditMode)return;
+        const hit=finalEditTarget(e.target);
+        assembled.querySelectorAll('.pv-edit-hover').forEach(x=>x.classList.remove('pv-edit-hover'));
+        if(!hit){if(finalEditTip)finalEditTip.hidden=true;return;}
+        hit.el.classList.add('pv-edit-hover');
+        if(finalEditTip){
+          finalEditTip.textContent=hit.label;
+          finalEditTip.hidden=false;
+          const device=$('#project-device');
+          const rect=device.getBoundingClientRect();
+          finalEditTip.style.left=`${Math.min(rect.width-155,Math.max(12,e.clientX-rect.left+14))}px`;
+          finalEditTip.style.top=`${Math.min(rect.height-46,Math.max(12,e.clientY-rect.top+14))}px`;
+        }
+      });
+      assembled.addEventListener('mouseleave',clearFinalEditHover);
+      assembled.addEventListener('click',e=>{
+        if(!finalEditMode)return;
+        const hit=finalEditTarget(e.target);
+        if(!hit)return;
+        e.preventDefault();
+        e.stopPropagation();
+        location.href=hit.href;
+      });
       
       async function referencePayload(){
         const state=window.FSPreview?.state()||latestState||{};
@@ -162,6 +254,8 @@
           design_system:state.design||{},
           header_editor:state.hh||{},
           navigation_editor:state.navs||{},
+          button_overrides:state.buttonOverrides||{},
+          component_overrides:state.componentOverrides||{},
           skipped_steps:FLOW.map(x=>x[0]).filter(p=>localStorage.getItem('fs-skip-'+p)==='1'),
           completion_percent:latestPct
         };
@@ -181,7 +275,24 @@
       async function openReference(id){
         try{const r=await window.fsCloud.getReferenceDocument(id);$('#reference-viewer-title').textContent=r.title;$('#reference-viewer-version').textContent='VERSION '+r.version_number;$('#reference-viewer-body').innerHTML=r.preview_html;$('#reference-viewer-data').textContent=JSON.stringify(r.preview_data,null,2);$('#reference-viewer').hidden=false;document.body.style.overflow='hidden'}catch(e){$('#reference-save-status').textContent=e.message||'Could not open reference.'}
       }
-      $('#save-reference')?.addEventListener('click',async()=>{const status=$('#reference-save-status');status.textContent='Saving reference…';try{if(!window.fsCloud?.saveReferenceDocument)throw new Error('Supabase reference saving is not available.');const {previewHtml,previewData}=await referencePayload();const ref=await window.fsCloud.saveReferenceDocument({title:$('#reference-title')?.value.trim()||undefined,previewHtml,previewData});status.textContent=`✓ Saved Version ${ref.version_number}`;$('#reference-title').value='';await refreshReferences()}catch(e){status.textContent=e.message||'Could not save reference.'}});
+      $('#save-reference')?.addEventListener('click',async()=>{
+        const status=$('#reference-save-status');
+        try{
+          if(!window.fsCloud?.saveReferenceDocument)throw new Error('Supabase reference saving is not available.');
+          const {data}=await window.fsCloud.client.auth.getSession();
+          if(!data?.session?.user){
+            status.textContent='Sign in to save your reference snapshot.';
+            window.fsCloud.openAccountModal?.('signin');
+            return;
+          }
+          status.textContent='Saving reference…';
+          const {previewHtml,previewData}=await referencePayload();
+          const ref=await window.fsCloud.saveReferenceDocument({title:$('#reference-title')?.value.trim()||undefined,previewHtml,previewData});
+          status.textContent=`✓ Saved Version ${ref.version_number}`;
+          $('#reference-title').value='';
+          await refreshReferences();
+        }catch(e){status.textContent=e.message||'Could not save reference.'}
+      });
       document.querySelectorAll('[data-close-reference]').forEach(x=>x.onclick=()=>{$('#reference-viewer').hidden=true;document.body.style.overflow=''});
       setTimeout(refreshReferences,700);
       })();

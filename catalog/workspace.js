@@ -44,7 +44,7 @@
     return aside;
   }
   function rail(){
-    if(['website-preview.html','builder.html'].includes(file))return null;
+    if(['index.html','website-preview.html','builder.html'].includes(file))return null;
     const a=document.createElement('aside');a.className='workspace-rail';a.innerHTML=`<div class="rail-head"><div><small>LIVE PROJECT</small><h3>Your Website Preview</h3></div><a href="website-preview.html">Open ↗</a><button class="workspace-rail-close" type="button" aria-label="Close website preview">×</button></div>
       <div class="mini-site" id="workspace-mini-preview" aria-label="Live website preview"></div>
       <div class="rail-selections"><div class="rail-selection-head"><b>Your Selections</b><a href="builder.html">View All</a></div><div id="rail-selection-list"></div></div>

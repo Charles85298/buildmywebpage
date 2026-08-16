@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Design Catalog | Fleming Solutions Design Catalog</title><meta content="Browse a customer-friendly menu of professional website components and visual treatments." name="description"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/><link href="catalog.css?v=1.20" rel="stylesheet"/>
+    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Design Catalog | Fleming Solutions Design Catalog</title><meta content="Browse a customer-friendly menu of professional website components and visual treatments." name="description"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/><link href="catalog.css?v=1.30" rel="stylesheet"/>
   <script>
 (() => {
   let theme = localStorage.getItem('fs-theme');
@@ -14,7 +14,7 @@
   <body>
     <header class="topbar">
       <div class="wrap topbar-inner">
-        <a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="../index.html#design-catalog">← Main site</a>
+        <a class="brand" href="../index.html"><i>FS</i> Fleming Solutions</a><a class="back" href="../marketing.html#design-catalog">← Main site</a>
       </div>
     </header>
     <main>
@@ -32,102 +32,186 @@
           <h1>Design Catalog</h1><p>Browse a customer-friendly menu of professional website components and visual treatments. Choose the specimen you like and reference its catalog code when requesting your website.</p>
         </div>
       </section>
-      <div class="wrap catalog-grid">
-        <a class="specimen" href="colors.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            01
+      <section class="wrap catalog-home-preview" aria-labelledby="catalog-preview-title">
+        <div class="catalog-preview-heading">
+          <div>
+            <span class="code">YOUR WEBSITE PREVIEW</span>
+            <h2 id="catalog-preview-title">See your design come together.</h2>
+            <p>Your saved choices appear here as one website. Click any highlighted area of the preview to edit that part of the design.</p>
+          </div>
+          <div class="catalog-progress" aria-label="Website design progress">
+            <div><strong id="catalog-progress-label">0 of 12 selected</strong><span id="catalog-progress-percent">0%</span></div>
+            <div class="catalog-progress-track"><i id="catalog-progress-bar"></i></div>
           </div>
         </div>
-        <h3>Color Theme</h3><small>Choose the color system that sets the direction for every component that follows.</small></a>
-<a class="specimen" href="headers.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            02
+
+        <div class="catalog-preview-toolbar" aria-label="Website preview controls">
+          <div class="catalog-device-switcher" role="group" aria-label="Preview device">
+            <button type="button" class="is-active" data-preview-device="desktop" aria-pressed="true">▱ <span>Desktop</span></button>
+            <button type="button" data-preview-device="tablet" aria-pressed="false">▯ <span>Tablet</span></button>
+            <button type="button" data-preview-device="mobile" aria-pressed="false">▯ <span>Mobile</span></button>
+          </div>
+          <div class="catalog-preview-actions">
+            <button type="button" id="catalog-preview-refresh" title="Refresh preview">↻ <span>Refresh</span></button>
+            <button type="button" id="catalog-preview-edit-toggle" class="is-active" aria-pressed="true" title="Click preview sections to edit">✎ <span>Edit Preview</span></button>
+            <button type="button" id="catalog-preview-fullscreen" title="Open preview full screen">⛶ <span>Full Screen</span></button>
+            <a href="website-preview.html">Open Full Preview ↗</a>
           </div>
         </div>
-        <h3>Header</h3><small>Logo placement, utility areas, contact details, announcement bars, and first-impression structure.</small></a>
-<a class="specimen" href="headers.html?focus=hero">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            03
+
+        <div class="catalog-preview-stage" data-device="desktop" id="catalog-preview-stage">
+          <div class="catalog-preview-browser" id="catalog-preview-browser">
+            <div class="catalog-preview-browserbar" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <div>Website Preview</div>
+            </div>
+            <div class="catalog-home-live-preview" id="catalog-home-live-preview"></div>
+            <div class="catalog-edit-tip" id="catalog-edit-tip" hidden></div>
           </div>
         </div>
-        <h3>Hero</h3><small>Headline, imagery, calls-to-action, and high-impact opening layouts.</small></a>
-<a class="specimen" href="navigation.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            04
-          </div>
-        </div>
-        <h3>Navigation</h3><small>Menus, tabs, side navigation, breadcrumbs, mobile controls, and mega-menu patterns.</small></a>
-<a class="specimen" href="fonts.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            05
-          </div>
-        </div>
-        <h3>Typography</h3><small>Font personalities, heading treatments, editorial type, gradients, and display styles.</small></a>
-<a class="specimen" href="sections.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            06
-          </div>
-        </div>
-        <h3>Sections &amp; Layouts</h3><small>Services, process, testimonials, pricing, FAQs, CTAs, content splits, and page structure.</small></a>
-<a class="specimen" href="cards.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            07
-          </div>
-        </div>
-        <h3>Cards</h3><small>Service, feature, pricing, testimonial, stats, media, and contact cards in one organized library.</small></a>
-<a class="specimen" href="galleries.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            08
-          </div>
-        </div>
-        <h3>Images &amp; Galleries</h3><small>Grid, masonry, carousel, lightbox, before/after, and portfolio presentation styles.</small></a>
-<a class="specimen" href="inputs.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            09
-          </div>
-        </div>
-        <h3>Forms &amp; Inputs</h3><small>Contact forms, text fields, search, selects, toggles, uploads, and modern controls.</small></a>
-<a class="specimen" href="buttons.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            10
-          </div>
-        </div>
-        <h3>Buttons &amp; CTAs</h3><small>Conversion-focused buttons from minimal and professional to glass, 3D, glow, and animation.</small></a>
-<a class="specimen" href="footers.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            11
-          </div>
-        </div>
-        <h3>Footer</h3><small>Contact, navigation, social proof, newsletter, legal, and conversion-focused footer structures.</small></a>
-<a class="specimen" href="effects.html">
-        <div class="sample">
-          <div style="font-size:2.4rem;font-weight:900;color:#4f46e5">
-            12
-          </div>
-        </div>
-        <h3>Effects &amp; Animation</h3><small>Glass, glow, gradients, shadows, textures, hover treatments, separators, and micro-interactions.</small></a>
-      </div>
+      </section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
     </script>
-    <script src="catalog.js?v=1.20">
+    <script src="catalog.js?v=1.30">
     </script>
-    <script src="preview-renderer.js?v=1.20">
+    <script src="preview-renderer.js?v=1.40">
     </script>
-    <script src="workspace.js?v=1.20">
+    <script src="workspace.js?v=1.30">
     </script>
     <script src="../supabase-app.js">
+    </script>
+    <script>
+      (() => {
+        const preview = document.getElementById('catalog-home-live-preview');
+        const stage = document.getElementById('catalog-preview-stage');
+        const browser = document.getElementById('catalog-preview-browser');
+        const tip = document.getElementById('catalog-edit-tip');
+        const required = ['CP','HD','HR','NV','FT','SC','CD','GA','IN','BT','FO','EF'];
+        let editMode = true;
+
+        const selections = () => {
+          try { return Object.values(JSON.parse(localStorage.getItem('fs-builder-selections') || '{}')); }
+          catch(e) { return []; }
+        };
+        const categoryDone = (prefix, vals) => {
+          if (prefix === 'SC') return vals.some(v => /section/i.test(String(v.category || '')) || String(v.code || '').startsWith('SC-'));
+          if (prefix === 'EF') return vals.some(v => /^E[FX]-/.test(String(v.code || '')) || /effect/i.test(String(v.category || '')));
+          return vals.some(v => String(v.code || '').startsWith(prefix + '-'));
+        };
+        const updateProgress = () => {
+          const vals = selections();
+          const done = required.filter(p => categoryDone(p, vals)).length;
+          const pct = Math.round(done / required.length * 100);
+          document.getElementById('catalog-progress-label').textContent = `${done} of ${required.length} selected`;
+          document.getElementById('catalog-progress-percent').textContent = `${pct}%`;
+          document.getElementById('catalog-progress-bar').style.width = `${pct}%`;
+        };
+        const render = () => {
+          if (preview && window.FSPreview) window.FSPreview.render(preview, { compact: false });
+          updateProgress();
+        };
+        if (preview && window.FSPreview) window.FSPreview.watch(preview, { compact: false, onRender: updateProgress });
+        updateProgress();
+
+        document.querySelectorAll('[data-preview-device]').forEach(btn => btn.addEventListener('click', () => {
+          const device = btn.dataset.previewDevice;
+          stage.dataset.device = device;
+          document.querySelectorAll('[data-preview-device]').forEach(x => {
+            const active = x === btn;
+            x.classList.toggle('is-active', active);
+            x.setAttribute('aria-pressed', String(active));
+          });
+        }));
+
+        document.getElementById('catalog-preview-refresh')?.addEventListener('click', render);
+        document.getElementById('catalog-preview-edit-toggle')?.addEventListener('click', e => {
+          editMode = !editMode;
+          e.currentTarget.classList.toggle('is-active', editMode);
+          e.currentTarget.setAttribute('aria-pressed', String(editMode));
+          browser.classList.toggle('preview-edit-off', !editMode);
+          tip.hidden = true;
+        });
+        document.getElementById('catalog-preview-fullscreen')?.addEventListener('click', async () => {
+          if (browser.requestFullscreen) {
+            try { await browser.requestFullscreen(); return; } catch(e) {}
+          }
+          location.href = 'website-preview.html';
+        });
+
+        const editable = [
+          ['.pv-footer','footers.html','Edit Footer'],
+          ['.pv-form','inputs.html','Edit Forms & Inputs'],
+          ['.pv-gallery','galleries.html','Edit Images & Galleries'],
+          ['.pv-cards','cards.html','Edit Cards'],
+          ['.pv-nav,.pv-side-nav','navigation.html','Edit Navigation'],
+          ['.pv-hero','headers.html?focus=hero','Edit Hero'],
+          ['.pv-header','headers.html','Edit Header'],
+          ['.pv-section','sections.html','Edit Sections & Layouts']
+        ];
+        const buttonNames = {
+          'header-cta':'Header CTA',
+          'side-cta':'Side Navigation CTA',
+          'hero-primary':'Hero Primary Button',
+          'hero-secondary':'Hero Secondary Button',
+          'form-submit':'Form Submit Button'
+        };
+        const targetFor = node => {
+          if (!node || !node.closest) return null;
+          const component = node.closest('[data-component-slot][data-edit-page]');
+          if (component && preview.contains(component)) {
+            const slot = component.dataset.componentSlot;
+            const page = component.dataset.editPage;
+            const label = component.dataset.editLabel || 'Website Element';
+            return {
+              el: component,
+              href: `${page}?target=${encodeURIComponent(slot)}&label=${encodeURIComponent(label)}&return=${encodeURIComponent('index.html')}`,
+              label: `Edit ${label}`
+            };
+          }
+          const button = node.closest('[data-button-slot]');
+          if (button && preview.contains(button)) {
+            const slot = button.dataset.buttonSlot;
+            const name = buttonNames[slot] || 'Button';
+            return {
+              el: button,
+              href: `buttons.html?target=${encodeURIComponent(slot)}&return=${encodeURIComponent('index.html')}`,
+              label: `Edit ${name}`
+            };
+          }
+          for (const [selector, href, label] of editable) {
+            const el = node.closest(selector);
+            if (el && preview.contains(el)) return {el, href, label};
+          }
+          return null;
+        };
+        preview.addEventListener('mousemove', e => {
+          if (!editMode) return;
+          const hit = targetFor(e.target);
+          preview.querySelectorAll('.pv-edit-hover').forEach(x => x.classList.remove('pv-edit-hover'));
+          if (!hit) { tip.hidden = true; return; }
+          hit.el.classList.add('pv-edit-hover');
+          tip.textContent = hit.label;
+          tip.hidden = false;
+          const rect = browser.getBoundingClientRect();
+          tip.style.left = `${Math.min(rect.width - 145, Math.max(12, e.clientX - rect.left + 12))}px`;
+          tip.style.top = `${Math.max(56, e.clientY - rect.top + 12)}px`;
+        });
+        preview.addEventListener('mouseleave', () => {
+          preview.querySelectorAll('.pv-edit-hover').forEach(x => x.classList.remove('pv-edit-hover'));
+          tip.hidden = true;
+        });
+        preview.addEventListener('click', e => {
+          if (!editMode) return;
+          const hit = targetFor(e.target);
+          if (!hit) return;
+          e.preventDefault();
+          e.stopPropagation();
+          location.href = hit.href;
+        });
+        window.addEventListener('fs-selection-change', updateProgress);
+        window.addEventListener('storage', updateProgress);
+      })();
     </script>
   </body>
 </html>
