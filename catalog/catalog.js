@@ -766,39 +766,6 @@
 })();
 
 
-/* Fleming Solutions floating Welcome shortcut */
-(function ensureWelcomeFloat(){
-  function mount(){
-    if (document.getElementById('fs-welcome-float')) return;
-    const a = document.createElement('a');
-    a.id = 'fs-welcome-float';
-    a.className = 'fs-welcome-float';
-    a.href = 'index.html';
-    a.textContent = 'Welcome';
-    a.setAttribute('aria-label', 'Go to Welcome');
-    a.style.cssText = [
-      'position:fixed',
-      'right:16px',
-      'bottom:138px',
-      'z-index:9996',
-      'min-height:48px',
-      'padding:0 18px',
-      'display:inline-flex',
-      'align-items:center',
-      'justify-content:center',
-      'border:0',
-      'border-radius:999px',
-      'background:#0E2A47',
-      'color:#fff',
-      'box-shadow:0 14px 35px rgba(0,0,0,.25)',
-      'font-size:.82rem',
-      'font-weight:900',
-      'line-height:1',
-      'text-decoration:none',
-      'white-space:nowrap'
-    ].join(';');
-    document.body.appendChild(a);
-  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', mount, {once:true});
   } else {
