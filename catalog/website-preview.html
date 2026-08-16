@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="index-button-system.css">
   <link rel="stylesheet" href="../auth-buttons.css">
   <link rel="stylesheet" href="../responsive.css?v=1.0">
-  <link rel="stylesheet" href="responsive-overrides.css?v=1.0">
+  <link rel="stylesheet" href="responsive-overrides.css?v=1.2">
   <link rel="stylesheet" href="webapp-responsive-fix.css?v=1.0">
 </head>
   <body>
@@ -203,13 +203,22 @@
         window.FSPreview.watch(assembled,{compact:false,onRender:updateMeta});
         updateMeta(window.FSPreview.state());
       }
-      $$('[data-pv]').forEach(b=>b.onclick=()=>{
-        $$('[data-pv]').forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
+      function setPreviewDevice(mode){
         const device=$('#project-device');
+        if(!device)return;
+        $$('[data-pv]').forEach(x=>x.classList.toggle('active',x.dataset.pv===mode));
         device.classList.remove('desktop','tablet','mobile');
-        device.classList.add(b.dataset.pv);
-      });
+        device.classList.add(mode);
+      }
+      $$('[data-pv]').forEach(b=>b.onclick=()=>setPreviewDevice(b.dataset.pv));
+
+      // Phones should render the actual mobile website layout instead of
+      // squeezing the desktop grid into a narrow preview frame.
+      const phonePreview=window.matchMedia('(max-width: 600px)');
+      const syncPhonePreview=()=>{ if(phonePreview.matches)setPreviewDevice('mobile'); };
+      syncPhonePreview();
+      if(phonePreview.addEventListener) phonePreview.addEventListener('change',syncPhonePreview);
+      else if(phonePreview.addListener) phonePreview.addListener(syncPhonePreview);
 
       $('#final-preview-edit-toggle')?.addEventListener('click',e=>{
         finalEditMode=!finalEditMode;

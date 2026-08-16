@@ -146,3 +146,79 @@ table{min-width:560px}
     max-width:310px !important;
   }
 }
+
+
+/* ===== Phone Full Preview v1.2 =====
+   On an actual phone, the full website preview should use the website's
+   mobile layout. Do not squeeze a desktop two-column hero into 300px. */
+@media (max-width:600px){
+  .project-preview-layout .preview-toolbar-actions [data-pv="desktop"],
+  .project-preview-layout .preview-toolbar-actions [data-pv="tablet"]{
+    display:none !important;
+  }
+
+  .project-preview-layout .preview-toolbar-actions [data-pv="mobile"]{
+    display:inline-flex !important;
+  }
+
+  .project-preview-layout .project-device.mobile{
+    width:min(92vw,390px) !important;
+    max-width:390px !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-live-site{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    overflow:hidden !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-header{
+    padding:12px 14px !important;
+    gap:10px !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-nav,
+  .project-preview-layout .project-device.mobile .pv-cta{
+    display:none !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-menu{
+    display:block !important;
+    margin-left:auto !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-hero{
+    grid-template-columns:minmax(0,1fr) !important;
+    padding:44px 22px !important;
+    min-height:0 !important;
+    gap:22px !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-hero-copy{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-hero h1{
+    font-size:clamp(2rem,10vw,3rem) !important;
+    line-height:1.02 !important;
+    overflow-wrap:normal !important;
+    word-break:normal !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-hero-art{
+    min-height:190px !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-cards,
+  .project-preview-layout .project-device.mobile .pv-form{
+    grid-template-columns:minmax(0,1fr) !important;
+  }
+
+  .project-preview-layout .project-device.mobile .pv-footer{
+    flex-direction:column !important;
+    text-align:center !important;
+  }
+}
