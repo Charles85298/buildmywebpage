@@ -1,0 +1,574 @@
+
+/* ============================================================
+   Fleming Solutions Design Studio
+   Consolidated tablet + mobile correction layer
+   Loads after catalog.css and responsive-overrides.css.
+   ============================================================ */
+
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+body.catalog-workspace,
+body.builder-home{
+  min-width:0 !important;
+}
+
+.catalog-workspace main,
+.builder-home main,
+.catalog-workspace .wrap,
+.builder-home .wrap,
+.catalog-home-preview,
+.catalog-preview-heading,
+.catalog-preview-toolbar,
+.catalog-preview-stage,
+.catalog-preview-browser,
+.catalog-home-live-preview{
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box;
+}
+
+.catalog-home-live-preview,
+.catalog-home-live-preview > .pv-live-site,
+.pv-live-site,
+.pv-site-content{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+}
+
+/* Prevent content generated inside the website preview from widening the app. */
+.pv-live-site img,
+.pv-live-site video,
+.pv-live-site svg,
+.pv-live-site canvas,
+.pv-live-site iframe{
+  max-width:100% !important;
+  height:auto;
+}
+
+.pv-live-site *{
+  min-width:0;
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width:1279px){
+  body.catalog-workspace{
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+
+  /* Left catalog navigation becomes an off-canvas drawer. */
+  .builder-sidebar{
+    display:flex !important;
+    position:fixed !important;
+    top:0 !important;
+    bottom:0 !important;
+    left:0 !important;
+    width:min(320px,88vw) !important;
+    transform:translateX(-105%) !important;
+    transition:transform .22s ease !important;
+    z-index:1200 !important;
+    box-shadow:22px 0 55px rgba(0,0,0,.26) !important;
+  }
+
+  body.workspace-menu-open .builder-sidebar{
+    transform:translateX(0) !important;
+  }
+
+  .workspace-menu-toggle{
+    display:grid !important;
+    place-items:center !important;
+    position:fixed !important;
+    left:12px !important;
+    top:12px !important;
+    width:44px !important;
+    height:44px !important;
+    z-index:1250 !important;
+  }
+
+  /* Right preview rail also becomes a drawer instead of consuming viewport width. */
+  .workspace-rail{
+    display:block !important;
+    position:fixed !important;
+    top:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    left:auto !important;
+    width:min(430px,92vw) !important;
+    transform:translateX(105%) !important;
+    transition:transform .22s ease !important;
+    z-index:1220 !important;
+    overflow-y:auto !important;
+    box-shadow:-22px 0 55px rgba(0,0,0,.22) !important;
+  }
+
+  body.workspace-preview-open .workspace-rail{
+    transform:translateX(0) !important;
+  }
+
+  .workspace-preview-toggle{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    position:fixed !important;
+    right:12px !important;
+    top:12px !important;
+    min-height:44px !important;
+    z-index:1250 !important;
+  }
+
+  .workspace-rail-close{
+    display:grid !important;
+  }
+
+  .workspace-rail-backdrop{
+    z-index:1190 !important;
+  }
+
+  body.workspace-preview-open .workspace-rail-backdrop{
+    display:block !important;
+  }
+
+  body.catalog-workspace .hero{
+    padding-top:72px !important;
+  }
+
+  .builder-home .hero .wrap,
+  .builder-home .catalog-home-preview,
+  body.catalog-workspace .wrap{
+    width:min(calc(100% - 30px),1000px) !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  /* The control bar must not cover content on tablets. */
+  .catalog-preview-toolbar{
+    position:relative !important;
+    top:auto !important;
+    left:auto !important;
+    right:auto !important;
+    width:100% !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+    align-items:center !important;
+    gap:8px !important;
+  }
+
+  .catalog-device-switcher{
+    flex:1 1 280px !important;
+  }
+
+  .catalog-preview-actions{
+    flex:1 1 360px !important;
+    justify-content:flex-end !important;
+    flex-wrap:wrap !important;
+  }
+
+  .catalog-preview-stage{
+    width:100% !important;
+    overflow:hidden !important;
+  }
+
+  .catalog-preview-stage[data-device="desktop"] .catalog-preview-browser{
+    width:100% !important;
+  }
+
+  .catalog-preview-stage[data-device="tablet"] .catalog-preview-browser{
+    width:min(820px,100%) !important;
+  }
+
+  .catalog-preview-stage[data-device="mobile"] .catalog-preview-browser{
+    width:min(390px,100%) !important;
+  }
+
+  .catalog-preview-stage[data-device="tablet"],
+  .catalog-preview-stage[data-device="mobile"]{
+    padding:14px !important;
+  }
+
+  /* Catalog grids */
+  .catalog-workspace .catalog-grid,
+  .visual-catalog-grid,
+  .studio-component-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .visual-catalog-card,
+  .studio-component-card,
+  .specimen{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+  }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width:700px){
+  body.catalog-workspace .wrap,
+  .builder-home .hero .wrap,
+  .builder-home .catalog-home-preview{
+    width:calc(100% - 20px) !important;
+    max-width:none !important;
+  }
+
+  body.catalog-workspace .hero{
+    padding-top:68px !important;
+    padding-bottom:14px !important;
+  }
+
+  .builder-sidebar{
+    width:min(320px,92vw) !important;
+  }
+
+  .workspace-rail{
+    width:100vw !important;
+    max-width:100vw !important;
+    padding:16px 12px 96px !important;
+  }
+
+  .workspace-preview-toggle{
+    max-width:44vw !important;
+    padding:0 12px !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    white-space:nowrap !important;
+  }
+
+  .catalog-preview-heading{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:12px !important;
+  }
+
+  .catalog-progress{
+    width:100% !important;
+  }
+
+  .catalog-preview-toolbar{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+    padding:8px !important;
+  }
+
+  .catalog-device-switcher{
+    width:100% !important;
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:6px !important;
+  }
+
+  .catalog-preview-actions{
+    width:100% !important;
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:6px !important;
+  }
+
+  .catalog-preview-toolbar button,
+  .catalog-preview-toolbar a{
+    width:100% !important;
+    min-width:0 !important;
+    min-height:42px !important;
+    padding:0 6px !important;
+    font-size:.66rem !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  .catalog-preview-toolbar button span{
+    display:none !important;
+  }
+
+  .catalog-preview-stage{
+    min-height:0 !important;
+    width:100% !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    border-radius:14px !important;
+  }
+
+  .catalog-preview-stage[data-device="tablet"],
+  .catalog-preview-stage[data-device="mobile"]{
+    padding:8px !important;
+  }
+
+  .catalog-preview-browser{
+    width:100% !important;
+    max-width:100% !important;
+    border-radius:13px !important;
+  }
+
+  .catalog-preview-stage[data-device="tablet"] .catalog-preview-browser,
+  .catalog-preview-stage[data-device="mobile"] .catalog-preview-browser{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  .catalog-preview-browserbar{
+    height:38px !important;
+    padding:0 9px !important;
+  }
+
+  .catalog-preview-browserbar > div{
+    min-width:0 !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  .catalog-home-live-preview,
+  .catalog-home-live-preview > .pv-live-site{
+    min-height:500px !important;
+    overflow:hidden !important;
+  }
+
+  /* Real preview website becomes phone friendly, regardless of selected design. */
+  .pv-header{
+    padding:12px 14px !important;
+    gap:10px !important;
+  }
+
+  .pv-header .pv-nav{
+    display:none !important;
+  }
+
+  .pv-menu{
+    display:inline-flex !important;
+  }
+
+  .pv-hero{
+    min-height:300px !important;
+    padding:44px 18px !important;
+  }
+
+  .pv-hero h1{
+    max-width:100% !important;
+    font-size:clamp(1.8rem,9vw,2.7rem) !important;
+    line-height:1.02 !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  .pv-hero p{
+    max-width:100% !important;
+    font-size:.86rem !important;
+  }
+
+  .pv-hero-actions,
+  .pv-actions{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:8px !important;
+  }
+
+  .pv-section{
+    padding:28px 16px !important;
+  }
+
+  .pv-cards,
+  .pv-card-grid,
+  .assembled-cards{
+    grid-template-columns:1fr !important;
+  }
+
+  .pv-gallery{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .pv-form{
+    width:100% !important;
+  }
+
+  .pv-form input,
+  .pv-form textarea,
+  .pv-form select{
+    width:100% !important;
+    min-width:0 !important;
+    font-size:16px !important;
+  }
+
+  .pv-footer{
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    gap:8px !important;
+  }
+
+  .catalog-workspace .catalog-grid,
+  .visual-catalog-grid,
+  .studio-component-grid,
+  .compact-library{
+    grid-template-columns:1fr !important;
+  }
+
+  .visual-card-actions{
+    grid-template-columns:1fr !important;
+  }
+
+  .visual-card-actions > *{
+    width:100% !important;
+  }
+
+  .studio-toolbar{
+    position:relative !important;
+    top:auto !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+  }
+
+  .studio-search{
+    width:100% !important;
+    flex:1 0 100% !important;
+  }
+
+  .studio-filter-group{
+    width:100% !important;
+    max-width:100% !important;
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    overscroll-behavior-x:contain !important;
+    -webkit-overflow-scrolling:touch !important;
+    padding-bottom:4px !important;
+  }
+
+  .studio-filter{
+    flex:0 0 auto !important;
+    min-height:42px !important;
+    white-space:nowrap !important;
+  }
+
+  /* Editors */
+  .component-editor-shell,
+  .builder-layout,
+  .theme-builder-layout,
+  .guided-shell{
+    grid-template-columns:1fr !important;
+  }
+
+  .editor-controls{
+    position:relative !important;
+    top:auto !important;
+    max-height:none !important;
+    width:100% !important;
+  }
+
+  .editor-appbar{
+    grid-template-columns:1fr !important;
+  }
+
+  .editor-devices,
+  .editor-actions{
+    width:100% !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:7px !important;
+  }
+
+  .editor-preview-frame,
+  .editor-preview-frame.tablet,
+  .editor-preview-frame.mobile,
+  .project-device,
+  .project-device.desktop,
+  .project-device.tablet,
+  .project-device.mobile,
+  .guided-device,
+  .theme-device{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  /* Floating controls: intentionally stacked and reachable. */
+  .design-cart{
+    right:12px !important;
+    bottom:12px !important;
+    z-index:1400 !important;
+  }
+
+  .fs-site-preview-float{
+    right:12px !important;
+    bottom:70px !important;
+    z-index:1399 !important;
+  }
+
+  #fs-welcome-float,
+  .fs-welcome-float{
+    right:12px !important;
+    bottom:128px !important;
+    z-index:1398 !important;
+  }
+
+  .studio-preview-link{
+    left:12px !important;
+    right:auto !important;
+    bottom:12px !important;
+    max-width:calc(100vw - 185px) !important;
+    z-index:1397 !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  .design-cart-drawer{
+    width:100vw !important;
+    max-width:100vw !important;
+  }
+
+  .cart-foot{
+    grid-template-columns:1fr !important;
+  }
+
+  /* Avoid content being hidden under fixed floating controls. */
+  main{
+    padding-bottom:max(120px,env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width:430px){
+  .catalog-preview-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .catalog-preview-toolbar button span{
+    display:inline !important;
+  }
+
+  .studio-preview-link{
+    max-width:46vw !important;
+    font-size:.7rem !important;
+    padding-inline:12px !important;
+  }
+
+  .design-cart{
+    padding:11px 13px !important;
+  }
+
+  .design-cart-label{
+    display:none !important;
+  }
+
+  .pv-gallery{
+    grid-template-columns:1fr !important;
+  }
+}
+
+/* iPad landscape and short-height tablets */
+@media (min-width:701px) and (max-width:1180px){
+  .catalog-preview-stage{
+    min-height:520px !important;
+  }
+
+  .catalog-home-live-preview,
+  .catalog-home-live-preview > .pv-live-site{
+    min-height:520px !important;
+  }
+
+  .catalog-preview-actions{
+    flex-wrap:wrap !important;
+  }
+}

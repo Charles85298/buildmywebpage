@@ -774,7 +774,7 @@
     a.id = 'fs-welcome-float';
     a.className = 'fs-welcome-float';
     a.href = 'index.html';
-    a.textContent = 'Preview Website';
+    a.textContent = 'Welcome';
     a.setAttribute('aria-label', 'Go to Welcome');
     a.style.cssText = [
       'position:fixed',

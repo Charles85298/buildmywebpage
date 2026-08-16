@@ -1616,3 +1616,45 @@ body.dark .catalog-preview-stage[data-device="tablet"],body.dark .catalog-previe
     bottom:14px !important;
   }
 }
+
+
+/* Floating Site Preview shortcut — companion to My Website */
+.fs-site-preview-float{
+  position:fixed !important;
+  right:16px !important;
+  bottom:78px !important;
+  z-index:9997 !important;
+  min-height:48px !important;
+  padding:0 18px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:#0E2A47 !important;
+  color:#fff !important;
+  box-shadow:0 14px 35px rgba(0,0,0,.25) !important;
+  font-size:.82rem !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  text-decoration:none !important;
+  white-space:nowrap !important;
+  transition:transform .18s ease,box-shadow .18s ease !important;
+}
+.fs-site-preview-float:hover{
+  color:#fff !important;
+  transform:translateY(-1px) !important;
+  box-shadow:0 17px 40px rgba(0,0,0,.28) !important;
+}
+.fs-site-preview-float:focus-visible{
+  outline:3px solid rgba(22,151,230,.32) !important;
+  outline-offset:3px !important;
+}
+@media(max-width:700px){
+  .fs-site-preview-float{
+    right:12px !important;
+    bottom:72px !important;
+    min-height:46px !important;
+    padding:0 16px !important;
+  }
+}
