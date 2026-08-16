@@ -95,3 +95,54 @@ table{min-width:560px}
   .mini-hero,.nav-mini-screen,.nav-mini-content{overflow:hidden}
   .workspace-confirm{width:min(94vw,520px)!important}
 }
+
+/* ===== Phone-sized Full Preview v1.1 =====
+   Keep desktop/tablet previews unchanged. On phones, present the full
+   website preview as a smaller centered device canvas so it does not
+   overwhelm the screen. */
+@media (max-width:600px){
+  .project-preview-layout .project-device,
+  .project-preview-layout .project-device.desktop,
+  .project-preview-layout .project-device.tablet,
+  .project-preview-layout .project-device.mobile{
+    width:min(86vw,340px) !important;
+    max-width:340px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    border-radius:18px !important;
+    overflow:hidden !important;
+    box-shadow:0 18px 44px rgba(14,42,71,.16) !important;
+  }
+
+  .project-preview-layout .project-device .pv-live-site,
+  .project-preview-layout .project-device .assembled-site{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  /* Keep the preview toolbar full-width while only shrinking the website canvas. */
+  .project-preview-toolbar,
+  .final-preview-edit-help,
+  .saved-reference-panel,
+  .preview-selection-summary{
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  /* The slide-out live preview also gets a little breathing room on phones. */
+  .workspace-rail .mini-site{
+    width:92% !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+}
+
+@media (max-width:390px){
+  .project-preview-layout .project-device,
+  .project-preview-layout .project-device.desktop,
+  .project-preview-layout .project-device.tablet,
+  .project-preview-layout .project-device.mobile{
+    width:min(84vw,310px) !important;
+    max-width:310px !important;
+  }
+}
