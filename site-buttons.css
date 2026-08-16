@@ -1,0 +1,71 @@
+
+/* Fleming Solutions shared button system — matches root index.html */
+:root{
+  --fs-btn-blue:#1697e6;
+  --fs-btn-blue-2:#55c3ff;
+  --fs-btn-blue-dark:#0c6fbe;
+  --fs-btn-navy:#0e2a47;
+  --fs-btn-line:#dce7f0;
+}
+
+.btn,
+.btn-metallic-blue,
+.nav-cta,
+.account-nav-button,
+button.btn,
+a.btn{
+  min-height:46px;
+  padding:0 19px;
+  border:1px solid transparent;
+  border-radius:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4em;
+  font:inherit;
+  font-weight:850;
+  line-height:1;
+  text-decoration:none;
+  cursor:pointer;
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease,border-color .18s ease;
+}
+
+.btn:hover,
+.btn-metallic-blue:hover,
+.nav-cta:hover,
+.account-nav-button:hover{
+  transform:translateY(-1px);
+}
+
+.btn-primary,
+.btn-metallic-blue,
+.nav-cta,
+.account-nav-button{
+  color:#fff !important;
+  background:linear-gradient(135deg,var(--fs-btn-blue-2),var(--fs-btn-blue) 55%,var(--fs-btn-blue-dark)) !important;
+  border-color:transparent !important;
+  box-shadow:0 10px 25px rgba(22,151,230,.28),inset 0 1px 0 rgba(255,255,255,.35) !important;
+  text-shadow:none !important;
+}
+
+.btn-secondary{
+  color:var(--fs-btn-navy) !important;
+  background:#fff !important;
+  border-color:var(--fs-btn-line) !important;
+  box-shadow:0 5px 14px rgba(14,42,71,.06) !important;
+}
+
+.btn:focus-visible,
+.btn-metallic-blue:focus-visible,
+.nav-cta:focus-visible,
+.account-nav-button:focus-visible{
+  outline:3px solid rgba(22,151,230,.25);
+  outline-offset:3px;
+}
+
+.btn:active,
+.btn-metallic-blue:active,
+.nav-cta:active,
+.account-nav-button:active{
+  transform:translateY(1px) scale(.99);
+}

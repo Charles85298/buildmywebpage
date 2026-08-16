@@ -1116,3 +1116,30 @@
     refreshSession().then(updateSharedAccountUI);
   });
 })();
+
+
+/* Auth color guard: override legacy red modal actions after dynamic modal creation. */
+(function(){
+  const AUTH_STYLE_ID='fs-auth-blue-guard';
+  function installAuthBlueGuard(){
+    if(document.getElementById(AUTH_STYLE_ID)) return;
+    const s=document.createElement('style');
+    s.id=AUTH_STYLE_ID;
+    s.textContent=`
+      #account-modal button,.account-modal button,.auth-modal button,[data-account-modal] button,
+      .account-modal-content button,.auth-card button,.auth-form button[type="submit"]{
+        color:#fff!important;background:linear-gradient(135deg,#55c3ff,#1697e6 55%,#0c6fbe)!important;
+        border-color:transparent!important;border-radius:12px!important;
+        box-shadow:0 10px 25px rgba(22,151,230,.28),inset 0 1px 0 rgba(255,255,255,.35)!important;
+        font-weight:850!important;text-shadow:none!important;
+      }
+      #account-modal .btn-secondary,.account-modal .btn-secondary,.auth-modal .btn-secondary,
+      .account-modal-content .btn-secondary,.auth-card .btn-secondary{
+        color:#0e2a47!important;background:#fff!important;border-color:#dce7f0!important;
+        box-shadow:0 5px 14px rgba(14,42,71,.06)!important;
+      }`;
+    document.head.appendChild(s);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',installAuthBlueGuard);
+  else installAuthBlueGuard();
+})();

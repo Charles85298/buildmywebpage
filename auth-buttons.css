@@ -1,0 +1,52 @@
+
+/* Auth modal button correction — keep login/create-account actions on-brand. */
+#account-modal button,
+.account-modal button,
+.auth-modal button,
+[data-account-modal] button,
+#account-modal .btn,
+.account-modal .btn,
+.auth-modal .btn,
+[data-account-modal] .btn,
+#account-modal button[type="submit"],
+.account-modal button[type="submit"],
+.auth-modal button[type="submit"]{
+  min-height:46px !important;
+  padding:0 19px !important;
+  border:1px solid transparent !important;
+  border-radius:12px !important;
+  color:#fff !important;
+  background:linear-gradient(135deg,#55c3ff,#1697e6 55%,#0c6fbe) !important;
+  box-shadow:0 10px 25px rgba(22,151,230,.28),inset 0 1px 0 rgba(255,255,255,.35) !important;
+  font:inherit !important;
+  font-weight:850 !important;
+  text-shadow:none !important;
+  cursor:pointer !important;
+  transition:transform .18s ease,box-shadow .18s ease !important;
+}
+#account-modal button:hover,
+.account-modal button:hover,
+.auth-modal button:hover,
+[data-account-modal] button:hover{
+  transform:translateY(-1px) !important;
+  filter:none !important;
+}
+#account-modal button:focus-visible,
+.account-modal button:focus-visible,
+.auth-modal button:focus-visible,
+[data-account-modal] button:focus-visible{
+  outline:3px solid rgba(22,151,230,.25) !important;
+  outline-offset:3px !important;
+}
+/* Secondary auth actions stay white/navy instead of red. */
+#account-modal .secondary,
+.account-modal .secondary,
+.auth-modal .secondary,
+#account-modal .btn-secondary,
+.account-modal .btn-secondary,
+.auth-modal .btn-secondary{
+  color:#0e2a47 !important;
+  background:#fff !important;
+  border-color:#dce7f0 !important;
+  box-shadow:0 5px 14px rgba(14,42,71,.06) !important;
+}

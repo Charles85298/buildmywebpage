@@ -1,0 +1,204 @@
+/* Fleming Solutions shared site shell: header, navigation, footer, theme */
+:root{
+  --fs-navy:#071a2e;
+  --fs-navy-2:#0d2946;
+  --fs-blue:#1597e5;
+  --fs-blue-2:#59c7ff;
+  --fs-ink:#102238;
+  --fs-muted:#66788b;
+  --fs-line:#dbe5ee;
+  --fs-surface:#ffffff;
+  --fs-soft:#f5f9fc;
+  --fs-shell-shadow:0 18px 52px rgba(5,26,47,.10);
+}
+
+.fs-site-header,
+.site-header.fs-unified,
+.builder-root-topbar.fs-unified{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(255,255,255,.92);
+  border-bottom:1px solid rgba(204,219,231,.88);
+  backdrop-filter:blur(18px) saturate(145%);
+  box-shadow:0 8px 32px rgba(5,26,47,.06);
+}
+.fs-shell-nav{
+  width:min(1180px,calc(100% - 36px));
+  min-height:78px;
+  margin-inline:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.fs-shell-brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:max-content;
+  text-decoration:none;
+  color:var(--fs-ink);
+}
+.fs-shell-brand img{
+  width:44px;
+  height:44px;
+  object-fit:contain;
+  filter:drop-shadow(0 5px 10px rgba(21,151,229,.18));
+}
+.fs-shell-brand-copy{display:grid;line-height:1.05;gap:4px}
+.fs-shell-brand-copy strong{font-size:1rem;font-weight:850;letter-spacing:-.025em}
+.fs-shell-brand-copy small{font-size:.67rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:#708399}
+.fs-shell-links{display:flex;align-items:center;gap:5px;margin-left:auto}
+.fs-shell-links a{
+  display:inline-flex;
+  align-items:center;
+  min-height:42px;
+  padding:0 12px;
+  border-radius:11px;
+  color:#40546a;
+  font-size:.88rem;
+  font-weight:700;
+  text-decoration:none;
+  transition:background .18s ease,color .18s ease,transform .18s ease;
+}
+.fs-shell-links a:hover{background:#edf7fd;color:#0e7fc3}
+.fs-shell-links a.is-active{background:#eaf6fd;color:#087ec5;box-shadow:inset 0 0 0 1px rgba(21,151,229,.14)}
+.fs-shell-actions{display:flex;align-items:center;gap:8px;min-width:max-content}
+.fs-account-btn,
+.fs-theme-btn{
+  min-height:42px;
+  border-radius:12px;
+  font:inherit;
+  font-size:.86rem;
+  font-weight:800;
+  cursor:pointer;
+}
+.fs-account-btn{
+  border:1px solid #087fc8;
+  padding:0 17px;
+  color:#fff;
+  background:linear-gradient(145deg,#65d0ff 0%,#158fdf 34%,#0869b4 68%,#1aa4ee 100%);
+  box-shadow:inset 0 1px rgba(255,255,255,.55),0 8px 19px rgba(9,115,185,.22);
+}
+.fs-theme-btn{
+  width:42px;
+  padding:0;
+  border:1px solid #d2e0ea;
+  color:#19324b;
+  background:#fff;
+  display:grid;
+  place-items:center;
+}
+.fs-menu-toggle{
+  display:none;
+  width:44px;
+  height:44px;
+  border:1px solid #d2e0ea;
+  border-radius:12px;
+  background:#fff;
+  color:#173049;
+  font-size:1.35rem;
+  cursor:pointer;
+}
+
+.fs-site-footer,
+.footer.fs-unified-footer{
+  margin-top:0;
+  background:linear-gradient(145deg,#061524,#09233c 62%,#0b2c4b);
+  color:#dbe8f2;
+  border-top:1px solid rgba(91,199,255,.18);
+}
+.fs-footer-grid{
+  width:min(1180px,calc(100% - 40px));
+  margin-inline:auto;
+  padding:58px 0 38px;
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr 1.1fr;
+  gap:36px;
+}
+.fs-footer-brand{color:#fff;margin-bottom:16px;display:inline-flex}
+.fs-footer-brand .fs-shell-brand-copy small{color:#8ca9c0}
+.fs-footer-intro{max-width:390px;color:#adc0d1;line-height:1.75;font-size:.92rem}
+.fs-footer-col h3{color:#fff;font-size:.84rem;letter-spacing:.1em;text-transform:uppercase;margin:3px 0 15px}
+.fs-footer-col a,.fs-footer-col span{display:block;color:#b9cbd9;text-decoration:none;font-size:.9rem;margin:10px 0}
+.fs-footer-col a:hover{color:#62c9ff}
+.fs-footer-bottom{
+  width:min(1180px,calc(100% - 40px));
+  margin-inline:auto;
+  min-height:70px;
+  padding:18px 0;
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:center;
+  color:#89a3b9;
+  font-size:.8rem;
+}
+
+body.dark .fs-site-header,
+body.dark .site-header.fs-unified,
+body.dark .builder-root-topbar.fs-unified,
+.builder-root-page.dark .builder-root-topbar.fs-unified{
+  background:rgba(6,21,36,.93);
+  border-bottom-color:#254158;
+  box-shadow:0 8px 32px rgba(0,0,0,.18);
+}
+body.dark .fs-shell-brand,
+body.dark .fs-shell-brand-copy strong,
+.builder-root-page.dark .fs-shell-brand,
+.builder-root-page.dark .fs-shell-brand-copy strong{color:#f4f8fb}
+body.dark .fs-shell-brand-copy small,
+.builder-root-page.dark .fs-shell-brand-copy small{color:#8ea6ba}
+body.dark .fs-shell-links a,
+.builder-root-page.dark .fs-shell-links a{color:#b8c9d6}
+body.dark .fs-shell-links a:hover,
+body.dark .fs-shell-links a.is-active,
+.builder-root-page.dark .fs-shell-links a:hover,
+.builder-root-page.dark .fs-shell-links a.is-active{background:#102c43;color:#62c9ff}
+body.dark .fs-theme-btn,
+body.dark .fs-menu-toggle,
+.builder-root-page.dark .fs-theme-btn,
+.builder-root-page.dark .fs-menu-toggle{background:#0d273d;border-color:#31516b;color:#eef7fd}
+
+/* Give the two primary pages a consistent page rhythm. */
+body:not(.builder-root-page) main > section:first-child{scroll-margin-top:90px}
+.builder-root-page main{background:linear-gradient(180deg,#f8fbfd 0,#fff 32%)}
+.builder-root-page.dark main{background:linear-gradient(180deg,#071725 0,#0b1d2c 34%)}
+.builder-root-page .builder-root-hero{padding-top:64px}
+.builder-root-page .start-design-flow{margin-top:22px}
+
+@media(max-width:980px){
+  .fs-shell-links{position:fixed;left:18px;right:18px;top:86px;display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:14px;background:#fff;border:1px solid #d9e5ee;border-radius:18px;box-shadow:0 24px 60px rgba(5,26,47,.18);transform:translateY(-14px);opacity:0;pointer-events:none;transition:.2s ease}
+  .fs-shell-links.open{transform:translateY(0);opacity:1;pointer-events:auto}
+  .fs-shell-links a{min-height:46px;padding:0 14px}
+  .fs-menu-toggle{display:grid;place-items:center}
+  body.dark .fs-shell-links,.builder-root-page.dark .fs-shell-links{background:#0a2134;border-color:#31516b}
+}
+@media(max-width:650px){
+  .fs-shell-nav{width:min(100% - 24px,1180px);min-height:70px;gap:10px}
+  .fs-shell-brand img{width:38px;height:38px}
+  .fs-shell-brand-copy small{display:none}
+  .fs-shell-brand-copy strong{font-size:.91rem}
+  .fs-account-btn{padding:0 12px;font-size:.8rem}
+  .fs-theme-btn{width:40px}
+  .fs-footer-grid{grid-template-columns:1fr 1fr;padding-top:44px}
+  .fs-footer-grid>div:first-child{grid-column:1/-1}
+  .fs-footer-bottom{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:430px){
+  .fs-shell-brand-copy strong{display:none}
+  .fs-account-btn{padding:0 11px}
+  .fs-footer-grid{grid-template-columns:1fr}
+  .fs-footer-grid>div:first-child{grid-column:auto}
+}
+
+
+/* Functional shell safeguards */
+.root-mobile-actions{display:flex;gap:10px;padding:12px 14px 4px;border-top:1px solid rgba(120,150,175,.18);margin-top:8px}
+.root-mobile-account,.root-mobile-theme{min-height:42px;border-radius:12px;font:inherit;font-weight:800;cursor:pointer}
+.root-mobile-account{flex:1;border:1px solid #087fc8;color:#fff;background:linear-gradient(145deg,#65d0ff 0%,#158fdf 34%,#0869b4 68%,#1aa4ee 100%)}
+.root-mobile-theme{border:1px solid #d2e0ea;background:#fff;color:#19324b;padding:0 14px}
+.builder-root-page.dark .root-mobile-theme{background:#0d273d;border-color:#31516b;color:#eef7fd}
+@media(min-width:981px){.root-mobile-menu{display:none!important}}
