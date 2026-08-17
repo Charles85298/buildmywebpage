@@ -76,6 +76,21 @@
       .catalog-preview-stage[data-device="mobile"] .catalog-home-live-preview {
         width: 100% !important;
       }
+
+      /* Scale the live website preview down on actual phones so the entire
+         mock website fits comfortably inside the available viewport. */
+      .catalog-preview-stage[data-device="mobile"] .catalog-home-live-preview {
+        width: 142.857% !important;
+        transform: scale(.70);
+        transform-origin: top left;
+        min-height: 980px;
+        margin-bottom: -29%;
+      }
+
+      .catalog-preview-stage[data-device="mobile"] .catalog-preview-browser {
+        max-width: 390px !important;
+        overflow: hidden;
+      }
     }
 
     @media (max-width: 480px) {
@@ -86,6 +101,14 @@
       .catalog-preview-actions button span { display: none; }
       .catalog-device-switcher button, .catalog-preview-actions > * { min-height: 44px; }
       .catalog-preview-actions > a { flex-basis: 100%; }
+      .catalog-preview-stage[data-device="mobile"] .catalog-preview-browser {
+        max-width: 340px !important;
+      }
+      .catalog-preview-stage[data-device="mobile"] .catalog-home-live-preview {
+        width: 166.667% !important;
+        transform: scale(.60);
+        margin-bottom: -40%;
+      }
     }
   </style>
 
