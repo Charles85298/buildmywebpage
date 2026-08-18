@@ -30,6 +30,9 @@
   const THEME = 'fs-project-theme-v1';
   const ACTIVE_PROJECT = 'fs-active-project-id';
   const PENDING_SIGNUP = 'fs-pending-signup-v1';
+  const SESSION_STARTED_AT = 'fs-session-started-at';
+  const SESSION_MAX_AGE = 60 * 60 * 1000; // 1 hour
+
 
   const $ = (s, r=document) => r.querySelector(s);
   const readJSON = (key, fallback={}) => {
@@ -790,6 +793,7 @@
     if(error){modalStatus(error.message,'error');return;}
     if(data?.session){
       state.user=data.user;
+      startOneHourSession();
       await finalizePendingSignup();
       updateSharedAccountUI();updateCloudUI();
       modalStatus('✓ Account created and signed in. Opening the Design Studio…','success');
@@ -810,6 +814,7 @@
     const {data,error}=await client.auth.signInWithPassword({email,password});
     if(error){modalStatus(error.message,'error');return;}
     state.user=data.user;
+    startOneHourSession();
     await finalizePendingSignup();
     updateSharedAccountUI();updateCloudUI();
     await loadProjectList();
@@ -879,7 +884,7 @@
       catch(err){modalStatus(err.message||'Could not save design.','error');}
     });
     $('#account-modal-signout')?.addEventListener('click',async()=>{
-      await client.auth.signOut();state.user=null;state.activeProjectId=null;localStorage.removeItem(ACTIVE_PROJECT);
+      await client.auth.signOut();localStorage.removeItem(SESSION_STARTED_AT);state.user=null;state.activeProjectId=null;localStorage.removeItem(ACTIVE_PROJECT);
       updateSharedAccountUI();updateCloudUI();setAccountMode('signin');modalStatus('Signed out. Your local draft remains on this device.');
     });
     document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAccountModal()});
@@ -899,13 +904,55 @@
     updateSharedAccountUI();
   }
 
+  async function enforceOneHourSession(session) {
+    if (!session?.user) {
+      localStorage.removeItem(SESSION_STARTED_AT);
+      return false;
+    }
+
+    let startedAt = Number(localStorage.getItem(SESSION_STARTED_AT) || 0);
+    if (!startedAt) {
+      startedAt = Date.now();
+      localStorage.setItem(SESSION_STARTED_AT, String(startedAt));
+    }
+
+    if (Date.now() - startedAt >= SESSION_MAX_AGE) {
+      await client.auth.signOut();
+      localStorage.removeItem(SESSION_STARTED_AT);
+      state.user = null;
+      state.activeProjectId = null;
+      localStorage.removeItem(ACTIVE_PROJECT);
+      updateCloudUI();
+      return true;
+    }
+
+    return false;
+  }
+
+  function startOneHourSession() {
+    localStorage.setItem(SESSION_STARTED_AT, String(Date.now()));
+  }
+
   async function refreshSession() {
     const {data, error} = await client.auth.getSession();
     if (error) console.error(error);
     state.user = data?.session?.user || null;
+    if (await enforceOneHourSession(data?.session)) return;
     updateCloudUI();
     if (state.user) {
       await finalizePendingSignup();
+
+      // The root index.html is the signed-out entry page. If Supabase restores
+      // an existing session here, skip the login/create-account screen and
+      // send the user directly into the Design Catalog.
+      const path = location.pathname.replace(/\/+$/, '') || '/';
+      const isRootEntry = path === '/' || /\/index\.html$/i.test(path);
+      const isCatalog = path.includes('/catalog');
+      if (isRootEntry && !isCatalog) {
+        location.replace('catalog/index.html');
+        return;
+      }
+
       await loadProjectList();
     }
   }
@@ -921,6 +968,7 @@
       const {data,error}=await client.auth.signInWithPassword({email,password});
       if(error){setStatus(error.message,'error');return;}
       state.user=data.user;
+      startOneHourSession();
       await finalizePendingSignup();
       setStatus('✓ Signed in.', 'success');
       updateCloudUI();
@@ -937,6 +985,7 @@
 
     $('#cloud-sign-out')?.addEventListener('click', async () => {
       await client.auth.signOut();
+      localStorage.removeItem(SESSION_STARTED_AT);
       state.user = null;
       state.activeProjectId = null;
       localStorage.removeItem(ACTIVE_PROJECT);
@@ -957,6 +1006,12 @@
 
     client.auth.onAuthStateChange(async (_event, session) => {
       state.user = session?.user || null;
+      if (state.user) {
+        if (!localStorage.getItem(SESSION_STARTED_AT)) startOneHourSession();
+        if (await enforceOneHourSession(session)) return;
+      } else {
+        localStorage.removeItem(SESSION_STARTED_AT);
+      }
       updateCloudUI();
       if(state.user){
         await finalizePendingSignup();
@@ -1114,6 +1169,12 @@
     initContactForm();
     initAutosave();
     refreshSession().then(updateSharedAccountUI);
+
+    // Check once per minute so an open page is also signed out after one hour.
+    setInterval(async () => {
+      const { data } = await client.auth.getSession();
+      if (data?.session) await enforceOneHourSession(data.session);
+    }, 60 * 1000);
   });
 })();
 
